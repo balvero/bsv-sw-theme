@@ -1,9 +1,18 @@
 {# Render collection items (products, categories, galleries or gallery photos) #}
 {% set type = item_type|default('product') %}
 {% set classes = classes|default('small-up-2 medium-up-3 large-up-4') %}
+
+{% if type == 'algolia' %}
+    <div class="row column algolia-search-page" data-initial-query="{{ initial_query|default('') }}">
+        <div id="autocomplete-input" class="algolia-autocomplete-input"></div>
+        <div id="hits" class="products items-container row large-up-4"></div>
+        <div id="pagination"></div>
+    </div>
+{% else %}
 <div class="products items-container row large-up-4 {{ classes }}" data-class="{{ classes }}"{% if rangeSlider %} data-slides="{{ items|length }}" {% endif %} data-equalizer="boxes" data-equalize-by-row="true">
     {% include 'partials/item.twig' with { 'item_type': type } %}
 </div>
 {% if rangeSlider %}
     {{ theme.slider('', '', 0, items|length) }}
+{% endif %}
 {% endif %}
