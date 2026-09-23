@@ -38,6 +38,9 @@
         {{ html.stylesheet('//cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.1/jquery.fancybox.min.css') }}
         {{ html.stylesheet('//cdn.jsdelivr.net/npm/froala-editor@2.8.5/css/froala_style.css') }}
         {{ html.stylesheet('//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800') }}
+        {% if gts.text_algolia_app_id and gts.text_algolia_api_key %}
+            {{ html.stylesheet('//cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic@1.19.2/dist/theme.min.css') }}
+        {% endif %}
         {{ html.stylesheet(asset_url('scss/theme.css')) }}
         {{ html.stylesheet('//cdn.jsdelivr.net/combine/npm/jquery-ui-1-11-4@1.11.4/jquery-ui.min.css') }}
     {% endblock %}
@@ -65,6 +68,15 @@
             {{ html.script('//cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.1/jquery.fancybox.min.js') }}
             {{ html.script('//cdnjs.cloudflare.com/ajax/libs/unveil/1.3.0/jquery.unveil.min.js') }}
             {{ html.script('//s3-eu-west-1.amazonaws.com/shopwired-theme-assets/v3/js/plugins.min.js') }}
+            {% if gts.text_algolia_app_id and gts.text_algolia_api_key %}
+                {{ html.script('//cdn.jsdelivr.net/npm/algoliasearch@4.24.0/dist/algoliasearch-lite.umd.js') }}
+                {{ html.script('//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js') }}
+                {{ html.script('//cdn.jsdelivr.net/npm/@algolia/autocomplete-js') }}
+                <script>
+                    const { autocomplete, getAlgoliaResults } = window['@algolia/autocomplete-js'];
+                    const { gts } = {{ _context|json_encode|raw }};
+                </script>
+            {% endif %}
             {{ html.script(asset_url('js/application.js')) }}
     	{% endblock %}
         {% include 'partials/theme_editor.twig' %}
