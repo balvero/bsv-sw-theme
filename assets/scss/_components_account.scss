@@ -1,0 +1,766 @@
+// colours
+
+$sw-colour_border: #f7f7f7;
+$sw-colour_shade: #eaeaea;
+$sw-colour_grey: #959494;
+$sw-colour_black: #2d2d2d;
+
+$sw-colour_success: #1ab500;
+$sw-colour_danger: #db0000;
+$sw-colour_danger_txt: #d70000;
+$sw-colour_error: #d70000;
+
+$colour_black: #000;
+$colour_white: #fff;
+
+// vars
+
+$sw-box-padding: 2rem;
+
+// fonts
+
+$icomoon-font-family: "sw-account" !default;
+$icomoon-font-path: "../fonts" !default;
+
+$icon-back: "\e90f";
+$icon-profile: "\e910";
+$icon-account-home: "\e900";
+$icon-address-book: "\e901";
+$icon-check-in-checkbox: "\e902";
+$icon-delete: "\e903";
+$icon-edit: "\e904";
+$icon-log-out: "\e905";
+$icon-my-details: "\e906";
+$icon-my-favourites: "\e907";
+$icon-my-orders: "\e908";
+$icon-my-password: "\e909";
+$icon-my-subscriptions: "\e90a";
+$icon-PDF: "\e90b";
+$icon-re-order: "\e90c";
+$icon-referred-friends: "\e90d";
+$icon-reward-points: "\e90e";
+
+
+@font-face {
+    font-family: '#{$icomoon-font-family}';
+    src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?v19ase3');
+    src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?v19ase3#iefix') format('embedded-opentype'),
+        url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?v19ase3') format('truetype'),
+        url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?v19ase3') format('woff'),
+        url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?v19ase3##{$icomoon-font-family}') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: '#{$icomoon-font-family}' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-back {
+    &:before {
+        content: $icon-back;
+    }
+}
+.icon-profile {
+    &:before {
+        content: $icon-profile;
+    }
+}
+.icon-account-home {
+    &:before {
+        content: $icon-account-home;
+    }
+}
+.icon-address-book {
+    &:before {
+        content: $icon-address-book;
+    }
+}
+.icon-check-in-checkbox {
+    &:before {
+        content: $icon-check-in-checkbox;
+    }
+}
+.icon-delete {
+    &:before {
+        content: $icon-delete;
+    }
+}
+.icon-edit {
+    &:before {
+        content: $icon-edit;
+    }
+}
+.icon-log-out {
+    &:before {
+        content: $icon-log-out;
+    }
+}
+.icon-my-details {
+    &:before {
+        content: $icon-my-details;
+    }
+}
+.icon-my-favourites {
+    &:before {
+        content: $icon-my-favourites;
+    }
+}
+.icon-my-orders {
+    &:before {
+        content: $icon-my-orders;
+    }
+}
+.icon-my-password {
+    &:before {
+        content: $icon-my-password;
+    }
+}
+.icon-my-subscriptions {
+    &:before {
+        content: $icon-my-subscriptions;
+    }
+}
+.icon-PDF {
+    &:before {
+        content: $icon-PDF;
+    }
+}
+.icon-re-order {
+    &:before {
+        content: $icon-re-order;
+    }
+}
+.icon-referred-friends {
+    &:before {
+        content: $icon-referred-friends;
+    }
+}
+.icon-reward-points {
+    &:before {
+        content: $icon-reward-points;
+    }
+}
+
+$futura-font-family: 'futura_pt', 'Trebuchet MS', Arial, sans-serif;
+
+@font-face {
+    font-family: 'futura_pt';
+    src: url('https://fonts.shopwired.co.uk/futura_pt/futura_pt_700_normal.eot');
+    src: url('https://fonts.shopwired.co.uk/futura_pt/futura_pt_700_normal.eot?#iefix700') format('embedded-opentype'),
+         url('https://fonts.shopwired.co.uk/futura_pt/futura_pt_700_normal.woff2') format('woff2'),
+         url('https://fonts.shopwired.co.uk/futura_pt/futura_pt_700_normal.woff') format('woff'),
+         url('https://fonts.shopwired.co.uk/futura_pt/futura_pt_700_normal.ttf') format('truetype'),
+         url('https://fonts.shopwired.co.uk/futura_pt/futura_pt_700_normal.svg#700') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+$proxima-font-family: 'proxima_nova', Arial, sans-serif;
+
+@font-face {
+    font-family: 'proxima_nova';
+    src: url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_400_normal.eot');
+    src: url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_400_normal.eot?#iefix400') format('embedded-opentype'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_400_normal.woff2') format('woff2'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_400_normal.woff') format('woff'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_400_normal.ttf') format('truetype'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_400_normal.svg#400') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'proxima_nova';
+    src: url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_600_normal.eot');
+    src: url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_600_normal.eot?#iefix600') format('embedded-opentype'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_600_normal.woff2') format('woff2'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_600_normal.woff') format('woff'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_600_normal.ttf') format('truetype'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_600_normal.svg#600') format('svg');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'proxima_nova';
+    src: url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_700_normal.eot');
+    src: url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_700_normal.eot?#iefix700') format('embedded-opentype'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_700_normal.woff2') format('woff2'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_700_normal.woff') format('woff'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_700_normal.ttf') format('truetype'),
+         url('https://fonts.shopwired.co.uk/proxima_nova/proxima_nova_700_normal.svg#700') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+// extends
+
+%unpad_x {
+    margin-left: -$sw-box-padding;
+    margin-right: -$sw-box-padding;
+}
+
+%unpad-y {
+    margin-top: -$sw-box-padding;
+    margin-bottom: -$sw-box-padding;
+}
+
+
+// account
+.sw-account {
+    padding: $sw-box-padding 0;
+    font-family: $proxima-font-family;
+    font-size: 12.75px;
+    font-weight: 600;
+
+    hr {
+        border-color: #eaeaea;
+    }
+
+    &-box {
+        //border: 2px solid $sw-colour_border;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.09);
+        //box-shadow: 0 0 4px #ccc;
+        margin-bottom: 1.5rem;
+        padding: $sw-box-padding;
+
+        > *:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &-header {
+        padding: 1rem 0;
+        position: relative;
+        margin-top: -$sw-box-padding;
+
+        br {
+            display: none;
+        }
+    }
+
+    &-initial-blob {
+        background-color: $colour_black;
+        border-radius: 5rem;
+        color: $white;
+        position: absolute;
+        @include transform( translateY(-50%) );
+        left: -2rem;
+        top: 50%;
+        width: 6rem;
+        height: 6rem;
+        font-family: $futura-font-family;
+        font-size: 2.5rem;
+        font-weight: 600;
+        line-height: 6rem;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    &-name {
+        color: $colour_black;
+        font-size: 1.25rem;
+    }
+
+    &-company {
+        font-size: .85rem;
+    }
+
+    &-menu {
+        margin: 0 (-$sw-box-padding) (-$sw-box-padding);
+        text-transform: capitalize;
+
+        li + li a:after {
+            border-top: 1px solid $sw-colour_shade;
+        }
+
+        li {
+
+            &.active {
+
+                a {
+                    background-color: $sw-colour_border;
+                    color: $colour_black;
+
+                    &:before {
+                        position: absolute;
+                        content: '';
+                        border-left: 3px solid $colour_black;
+                        top: 0;
+                        left: -4px;
+                        bottom: 0;
+                        width: 2px;
+                    }
+
+                    &:after {
+                        border: 0;
+                    }
+                }
+
+                & + li a:after {
+                    border: 0;
+                }
+            }
+        }
+
+        a {
+            color: $colour_black;
+            position: relative;
+            font-size: .95rem;
+            font-weight: 600;
+            padding: 1.4rem 1rem 1.4rem 4.25rem !important;
+
+            i {
+                position: absolute;
+                left: 1.5rem;
+                top: 50%;
+                margin-top: -.75rem;
+                font-size: 1.5rem;
+            }
+
+            &:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 1.25rem;
+                right: 1.25rem;            }
+
+            &.active {
+                background-color: $sw-colour_border;
+
+                &:before {
+                    position: absolute;
+                    content: '';
+                    border-left: 3px solid $colour_black;
+                    top: 0;
+                    left: -4px;
+                    bottom: 0;
+                    width: 2px;
+                }
+            }
+        }
+    }
+
+    &-heading {
+        text-transform: uppercase;
+        font-family: $proxima-font-family;
+        font-size: 1.325rem;
+        font-weight: 800;
+        margin-bottom: .75rem;
+
+        i {
+            padding-right: .75rem;
+            font-size: 2rem;
+            position: relative;
+            top: .25rem;
+        }
+    }
+
+    &-subheading {
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: .5rem;
+    }
+
+    &-line-heading {
+        font-size: 1.025rem;
+        color: $sw-colour_grey;
+        text-align: center;
+        position: relative;
+        text-transform: uppercase;
+        margin: .75rem 0;
+
+        &:before {
+            content: '';
+            position: absolute;
+            display: block;
+            left: 0;
+            right: 0;
+            top: 50%;
+            border-top: 1px solid $sw-colour_grey;
+        }
+
+        span {
+            position: relative;
+            display: inline-block;
+            padding: .25rem 1rem;
+            background-color: $colour_white;
+        }
+
+    }
+
+
+    &-block {
+        background: $colour_black;
+        color: $colour_white;
+        padding: 1.5rem $sw-box-padding;
+        @extend %unpad_x;
+        margin-top: $sw-box-padding;
+        margin-bottom: $sw-box-padding;
+
+        &-label {
+            text-transform: uppercase;
+            font-size: .9rem;
+            font-weight: 600;
+            margin-bottom: .25rem;
+        }
+    }
+
+    &-panel {
+        background: $sw-colour_border;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+
+        &.list-item {
+            margin-bottom: .25rem;
+        }
+
+        :last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &-link {
+        color: $sw-colour_black;
+        text-decoration: underline;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: $proxima-font-family;
+    }
+
+    &-icon-link {
+        color: $sw-colour_black;
+        text-transform: uppercase;
+        font-weight: 500;
+        cursor: pointer;
+
+        i {
+            &:first-child {
+               margin-right: .35em;
+            }
+            &:last-child {
+                margin-left: .35em;
+            }
+
+        }
+
+        span {
+            text-decoration: underline;
+        }
+
+        &:hover {
+            color: $sw-colour_black;
+        }
+    }
+
+
+    // activity list
+    &-activity-list {
+        border: 1px solid $sw-colour_shade;
+        list-style: none;
+        margin-left: 0;
+
+        > li {
+            padding: 1rem;
+
+            & + li {
+                border-top: 1px solid $sw-colour_shade;
+            }
+        }
+
+        time {
+            color: $sw-colour_grey;
+            font-weight: 600;
+            font-size: .95em;
+        }
+    }
+
+    // address box
+    &-container-box {
+        border: 1px solid $sw-colour_shade;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+
+        %box_children {
+            background-color: $sw-colour_border;
+            padding: 1rem 1.5rem;
+            font-size: .9em;
+        }
+
+        &-header {
+            @extend %box_children;
+            border-bottom: 1px solid $sw-colour_shade;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+        }
+
+
+        &-footer {
+            @extend %box_children;
+            border-top: 1px solid $sw-colour_shade;
+            margin: 1.5rem -1.5rem -1.5rem -1.5rem;
+        }
+
+        &-list {
+            margin: -1.5rem;
+        }
+
+        &-item {
+            padding: 1.5rem;
+
+            & + & {
+                border-top: 1px solid $sw-colour_shade;
+            }
+
+            &-title {
+                display: block;
+            }
+        }
+    }
+
+    &-def-list {
+        line-height: 1.2;
+
+        dt, dd {
+            display: inline-block;
+            float: left;
+        }
+
+        dt {
+            clear: left;
+            font-weight: normal;
+
+            &:after {
+                content: ':';
+                padding-right: .2rem;
+            }
+        }
+    }
+
+    &-button {
+        background-color: $colour_black;
+        color: $colour_white;
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: .25em;
+        font-family: $proxima-font-family;
+        font-weight: 700;
+        padding: 1em 2.5em;
+
+        &:hover,
+        &:active,
+        &:focus {
+            background-color: $colour_black;
+            color: $colour_white;
+        }
+
+        &.small {
+            font-size: .8rem;
+            text-transform: lowercase;
+            letter-spacing: normal;
+            font-weight: 600;
+            padding: .5em 1.5em;
+            margin-bottom: .5rem;
+        }
+
+        &-clear {
+            text-transform: uppercase;
+            font-size: .85rem !important;
+            font-family: $proxima-font-family;
+            font-weight: 700;
+        }
+
+        &-pdf {
+            i {
+                font-size: 1.75rem;
+                color: $colour_black;
+            }
+        }
+    }
+
+
+    // forms
+
+    &-label {
+        font-weight: 700;
+        font-size: .9rem;
+    }
+
+    &-input {
+        box-shadow: none;
+        border-color: $sw-colour_shade;
+        height: 3rem;
+
+        &.input-group-field {
+            border-right-width: 0;
+        }
+
+        &:focus {
+            border-color: $sw-colour_shade;
+            box-shadow: none;
+        }
+
+        select& {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .input-group-button button {
+        height: 3rem;
+        background-color: $white;
+        border: 1px solid $sw-colour_shade;
+        border-width: 1px 1px 1px 0;
+        color: $black;
+    }
+
+
+    &-input-indicator {
+        display: inline-block;
+        margin-right: .5rem;
+        background-color: $sw-colour_danger;
+        width: .75rem;
+        height: .75rem;
+        border-radius: .75rem;
+
+        &.valid {
+            background-color: $sw-colour_success;
+        }
+    }
+
+    &-home-button {
+        font-size: 1.75rem;
+        color: $colour_black;
+    }
+
+}
+
+@media screen and (min-width: 40em) {
+    .sw-account {
+
+        &-initial-blob {
+            left: -2.75rem;
+        }
+
+        &-header br {
+            display: block;
+        }
+    }
+}
+
+@media screen and (min-width: 64em) {
+    .sw-account {
+
+        &-header {
+            padding: 3.5rem 0 3.5rem 5rem;
+        }
+
+        &-sidebar {
+            width: 31%;
+        }
+
+        &-content {
+            width: 69%;
+        }
+    }
+}
+
+.account-login {
+
+    &.panel {
+        padding: 0;
+    }
+
+    .inner {
+        padding: 2rem;
+    }
+
+    input {
+        padding-left: 2.5rem !important;
+
+        &[type="email"] {
+            background: $white url(../images/user.svg) left 1rem bottom 1rem / 1rem no-repeat;
+        }
+        &[type="password"] {
+            background: $white url(../images/padlock.svg) left 1rem bottom 1rem / 1rem no-repeat;
+        }
+    }
+
+    .account-login__newsletter {
+        display: block;
+        height: 3.5rem;
+    }
+
+    .account-login__login button {
+        //margin-top: 4.5rem;
+    }
+}
+
+// validation
+.js-password-group {
+
+    &.error {
+        //border: 1px solid $sw-colour_error;
+        //padding-bottom: 1px;
+
+        input, select, button, textarea {
+            border-color: $sw-colour_error;
+        }
+    }
+}
+
+span.error-text {
+    color: $sw-colour_danger;
+    display: block;
+    text-align: right;
+    margin: -.5rem 0 1rem;
+}
+
+
+// helpers
+
+.sw-upper {
+    text-transform: uppercase;
+}
+
+.sw-margin-b-xs {
+    margin-bottom: .25rem;
+}
+
+.sw-margin-b-s {
+    margin-bottom: .5rem;
+}
+
+.sw-margin-b {
+    margin-bottom: 1rem;
+}
+
+.sw-inline-block {
+    display: inline-block;
+}
+
+.sw-text-danger {
+    color: $sw-colour_danger_txt;
+
+    &:hover {
+        color: $sw-colour_danger_txt;
+    }
+}
+
+
+
+
+

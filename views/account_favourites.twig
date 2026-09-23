@@ -1,0 +1,13 @@
+{% extends 'templates/account_pages.twig' %}
+
+{% set title = 'Mine favoritter' %}
+
+{% block page_content %}
+    <h2 class="sw-account-heading">
+        <i class="icon-my-favourites" aria-hidden="true"></i>
+        <span>Mine favoritter</span>
+    </h2>
+    <br>
+    {% set favorite_products = global.customer.favorite_products(9) %}
+    {% include 'partials/items.twig' with { 'items': favorite_products, 'classes': 'small-up-2' } %}
+{% endblock %}

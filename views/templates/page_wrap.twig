@@ -1,0 +1,48 @@
+{# Extend master template #}
+{% extends 'templates/master.twig' %}
+
+{% block content %}
+    <div id="content" class="content">
+        <div class="inner-wrapper">
+        	<div class="row column">
+        		<ul class="breadcrumbs main-breadcrumbs">
+        			{# Render breadcrumbs #}
+        			<li>
+        				<a href="/">
+        					Home
+        				</a>
+        			</li>
+        			{% block breadcrumbs %}{% endblock %}
+        			<li>
+        				{{ breadcrumb_title|default(title) }}
+        			</li>
+        		</ul>
+        		<section class="main-content">
+        			{# Render info message #}
+        			{% if global.info_message %}
+        				<div class="secondary callout" data-closable>
+        					<button type="button" class="close-button" data-close>
+        						<span aria-hidden="true">&times;</span>
+        					</button>
+        					{{ global.info_message|raw }}
+        				</div>
+        			{% endif %}
+        			{% if title %}
+                        <div class="block-header text-center">
+            				<h1 {% if hideTitle %}class="show-for-sr"{% endif %}{% if title_setting %} data-name="{{ title_setting }}" id="{{ title_setting }}"{% endif %}>
+            					{{ title }}
+            				</h1>
+                            {% if description and not hideDesc %}
+                                <p class="header__sub html-snippet"{% if description_setting %} data-name="{{ description_setting }}" id="{{ description_setting }}"{% endif %}>
+                                    {{ description|raw }}
+                                </p>
+                            {% endif %}
+                        </div>
+        			{% endif %}
+        			{% block page_content %}{% endblock %}
+        		</section>
+        	</div>
+        </div>
+    </div>
+
+{% endblock %}

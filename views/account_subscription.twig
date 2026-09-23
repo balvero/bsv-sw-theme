@@ -1,0 +1,171 @@
+{% extends 'templates/account_pages.twig' %}
+
+{% set title = 'Mine abonnementer' %}
+
+{% block page_content %}
+    <h1 class="sw-account-heading">
+        <i class="icon-my-subscriptions" aria-hidden="true"></i>
+        <span>Abonnement #{{ subscription.id }}</span>
+    </h1>
+    <p class="sw-account-panel">
+        Du kan se detaljerne i dit abonnement nedenfor
+    </p>
+    <div class="sw-account-panel">
+        <div class="row sw-margin-b-xs">
+            <div class="column medium-6 large-5">
+                <strong class="sw-upper">Abonnement reference</strong>
+            </div>
+            <div class="column medium-6 large-7">
+                <span>{{ subscription.id }}</span>
+            </div>
+        </div>
+        <div class="row sw-margin-b-xs">
+            <div class="column medium-6 large-5">
+                <strong class="sw-upper">Start dato</strong>
+            </div>
+            <div class="column medium-6 large-7">
+                <span>{{ subscription.created|date('jS F Y') }}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column medium-6 large-5">
+                <strong class="sw-account-subheading">Status</strong>
+            </div>
+            <div class="column medium-6 large-7">
+                <span>{{ subscription.status|capitalize }}
+                {% if subscription.status == 'active' %}
+                    /
+                    <form action="/account/subscription/{{ subscription.id }}" method="post" class="sw-inline-block">
+                        <button type="submit" name="cancel" value="1" class="sw-account-link sw-text-danger js-cancel-sub">
+                            Klik her for at afmelde
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {# subs items list #}
+    <div class="sw-account-container-box">
+        <div class="sw-account-container-box-header">
+            <strong class="sw-upper">{{ order.products|length }} {{ order.products|length == 1 ? 'stk' : 'skt.' }}</strong>
+        </div>
+        <ul class="sw-account-container-box-list no-bullet">
+            {% for product in order.products %}
+                <li class="sw-account-container-box-item">
+                    <div class="row" data-equalizer>
+                        <div class="small-2 column" data-equalizer-watch>
+                            <div class="image-container" data-fit="0">
+                                <img src="{{ product.photo_url }}" alt="{{ product.photo_description }}">
+                            </div>
+                        </div>
+                        <div class="small-10 column" data-equalizer-watch>
+                            <div class="row">
+                                <div class="large-5 column">
+                                    <strong class="sw-account-container-box-item-title">{{ product.name|raw }}</strong>
+                                    <div class="sw-margin-b-xs">{{ format_price(product.original_price_including_vat) }}</div>
+                                    <a href="{{ product.url }}" class="sw-account-button small" target="_blank">
+                                        Se produkt
+                                    </a>
+                                </div>
+                                <div class="large-4 column">
+                                    <dl class="sw-account-def-list">
+                                        {% for option in product.options %}
+                                            <dt>{{ option.name }}</dt>
+                                            <dd>{{ option.value }}</dd>
+                                        {% endfor %}
+                                    </dl>
+                                </div>
+                                <div class="large-3 column sw-upper">
+                                    <span>Antal: </span>
+                                    <span>{{ product.quantity }}</span>
+                                    <br>
+                                    <span class="price">{{ format_price(product.original_price_including_vat * product.quantity) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="sw-account-panel">
+        <div class="row">
+            <div class="column medium-6">
+                <strong class="sw-account-subheading">Fakturerings adresse</strong>
+
+                {{ order.billing_name }} <br>
+                {{ order.billing_address|nl2br }} <br>
+                {{ order.billing_phone }} <br>
+                {{ order.billing_email }} <br>
+            </div>
+            <div class="column medium-6">
+                <strong class="sw-account-subheading">Leverings adresse</strong>
+
+                {{ order.shipping_name }} <br>
+                {{ order.shipping_address|nl2br }} <br>
+                {{ order.shipping_phone }} <br>
+                {{ order.shipping_email }} <br>
+            </div>
+        </div>
+    </div>
+    <div class="sw-account-panel">
+        <strong class="sw-account-subheading">Ordre i alt</strong>
+        <div class="row sw-margin-b-xs">
+            <div class="column medium-6 large-5">
+                Produkter i alt
+            </div>
+            <div class="column medium-6 large-7">
+                <strong>{{ format_price( order.original_sub_total_including_vat ) }}</strong>
+            </div>
+        </div>
+        <div class="row sw-margin-b-xs">
+            <div class="column medium-6 large-5">
+                Levering i alt
+            </div>
+            <div class="column medium-6 large-7">
+                <strong>{{ format_price( order.original_shipping_total_including_vat ) }}</strong>
+            </div>
+        </div>
+        <div class="row sw-margin-b-xs">
+            <div class="column medium-6 large-5">
+                Rabat i alt
+            </div>
+            <div class="column medium-6 large-7">
+                <strong>{{ format_price( discount.price ) }}</strong>
+            </div>
+        </div>
+        {% if order.vat %}
+            <div class="row sw-margin-b-xs">
+                <div class="column medium-6 large-5">
+                    Inklusiv moms
+                </div>
+                <div class="column medium-6 large-7">
+                    <strong>{{ format_price( order.vat ) }}</strong>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="column medium-6 large-5">
+                I alt
+            </div>
+            <div class="column medium-6 large-7">
+                <div class="row collapse">
+                    <div class="column medium-4">
+                        <strong>{{ format_price( order.total ) }}</strong>
+                    </div>
+                    <div class="column medium-8">
+                        {% for partial_payment in order.partial_payments %}
+                            Delbetaling på <strong>{{ format_price( partial_payment.amount ) }}</strong> blev tilføjet
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if product.reward_points_enabled %}
+        <p>
+            <i class="icon-reward-points" aria-hidden="true"></i>
+            Du har optjent <strong>{{ product.reward_points }} point{{ product.reward_points|length == 1 ? '' : '' }}</strong> on this order
+        </p>
+    {% endif %}
+{% endblock %}

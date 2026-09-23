@@ -1,0 +1,373 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set split = checkout.processing_form ? '' : ' split' %}
+{% set bodyClass = 'checkout-address' %}
+{% set breadcrumb_title = 'Checkout' %}
+{% set title = 'Checkout' %}
+{% set description = 'Enter your billing and delivery address below and click to make your payment.' %}
+{% set hideTitle = 0 %}
+{% set hideDesc = 1 %}
+{% set full_width = 1 %}
+{% set labels = {
+    'company': 'Company',
+    'name': 'Full Name',
+    'email': 'Email',
+    'phone': 'Telephone Number',
+    'address1': 'Address Line 1',
+    'address2': 'Address Line 2',
+    'city': 'Town/City',
+    'province': 'County',
+    'state': 'State',
+    'postcode': 'Postcode',
+    'country': 'Country'
+} %}
+{% set small = [
+    'company',
+    'name',
+    'email',
+    'phone',
+    'address1',
+    'address2',
+    'city',
+    'province',
+    'state',
+    'postcode',
+    'country'
+] %}
+
+{# Billing fields valid? #}
+{% set billing_valid = true %}
+{% for item in checkout.billing %}
+    {% if item.required and item.value == '' %}
+        {% set billing_valid = false %}
+    {% endif %}
+{% endfor %}
+{# Shipping fields valid? #}
+{% set shipping_valid = true %}
+{% for item in checkout.shipping %}
+    {% if item.required and item.value == '' %}
+        {% set shipping_valid = false %}
+    {% endif %}
+{% endfor %}
+{# Set open section #}
+{% set firstOpen = not billing_valid ? 1 : not shipping_valid ? 2 : not checkout.comments|length ? 3 : 4 %}
+
+{% block page_content %}
+
+    {% if checkout.processing_form %}
+        <div class="row column">
+            <h6>
+                Please wait...
+            </h6>
+            {# Render payment processor form #}
+            {{ checkout.processing_form|raw }}
+        {% else %}
+
+            {# Render errors #}
+            {{ theme.errors(errors) }}
+            {# Render checkout form #}
+            {{ block('form') }}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block form %}
+
+    <div class="row">
+        <div class="column large-7">
+            <form action="{{ global.current_url }}" method="post" class="form-with-validation checkout-form" id="checkout-form"
+                  data-email="{{ email_valid ? 1 : 0 }}"
+                  data-billing="{{ billing_valid ? 1 : 0 }}"
+                  data-shipping="{{ shipping_valid ? 1 : 0 }}"
+                  data-tab="{{ firstOpen }}"
+               >
+                <ul class="accordion" data-accordion>
+                    <li class="accordion-item{{ firstOpen == 1 ? ' is-active' : '' }}{{ billing_valid ? ' valid' : '' }}" data-accordion-item id="checkout-section-2">
+                        {# Billing details #}
+                        <a href="#" class="accordion-title">
+                            Billing Address
+                        </a>
+                        <div class="accordion-content" data-tab-content>
+                            <div class="checkout-details checkout-billing-details row">
+                                {# Render billing fields #}
+                                {% for name, label in labels|slice(0, 4) %}
+                                    {% set field = checkout.billing[name] %}
+                                    {% set shipVal = checkout.shipping[name].value %}
+                                    {% set size = name in small ? 1 : 0 %}
+                                    {{ theme.checkout_form_field(name, field, label, size, shipVal, true) }}
+                                {% endfor %}
+                                <div class="column">
+                                    <h4 class="subheader">
+                                        Address details
+                                    </h4>
+                                </div>
+                                {% for name, label in labels|slice(4) %}
+                                    {% set field = checkout.billing[name] %}
+                                    {% set shipVal = checkout.shipping[name].value %}
+                                    {% set size = name in small ? 1 : 0 %}
+                                    {{ theme.checkout_form_field(name, field, label, size, shipVal, true) }}
+                                {% endfor %}
+                            </div>
+                            <div class="row">
+                                <div class="column medium-6 medium-push-6 large-5 large-push-7">
+                                    <button class="button expanded next-section" type="button">
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="accordion-item{{ firstOpen == 2 ? ' is-active' : '' }}{{ shipping_valid ? ' valid' : '' }}" data-accordion-item id="checkout-section-3">
+                        <fieldset class="copy-address">
+                            <input id="billing-same" type="checkbox" class="mod" name="billing-same">
+                            <label for="billing-same">Same as billing address?</label>
+                        </fieldset>
+                        {# Billing details #}
+                        <a href="#" class="accordion-title">
+                            Shipping Address
+                        </a>
+                        <div class="accordion-content" data-tab-content>
+                            <div class="checkout-details checkout-shipping-details row">
+                                {# Render delivery fields #}
+                                {% for name, label in labels|slice(0, 4) %}
+                                    {% set field = checkout.shipping[name] %}
+                                    {% set shipVal = '' %}
+                                    {% set size = name in small ? 1 : 0 %}
+                                    {{ theme.checkout_form_field(name, field, label, size, '', false) }}
+                                {% endfor %}
+                                <div class="column">
+                                    <h4 class="subheader">
+                                        Address details
+                                    </h4>
+                                </div>
+                                {% for name, label in labels|slice(4) %}
+                                    {% set field = checkout.shipping[name] %}
+                                    {% set shipVal = '' %}
+                                    {% set size = name in small ? 1 : 0 %}
+                                    {{ theme.checkout_form_field(name, field, label, size, '', false) }}
+                                {% endfor %}
+
+                            </div>
+                            <div class="row">
+                                <div class="column medium-6 medium-push-6 large-5 large-push-7">
+                                    <button class="button expanded next-section" type="button">
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="accordion-item{{ firstOpen == 3 ? ' is-active' : '' }}{{ checkout.comments|length ? ' valid' : '' }}" data-accordion-item id="checkout-section-4">
+                        {# Billing details #}
+                        <a href="#" class="accordion-title">
+                            Additional information
+                        </a>
+                        <div class="accordion-content" data-tab-content>
+                            <div class="row column">
+                                <label class="field-block">
+                                    <span class="field-label">Additional order information</span>
+                                    <textarea cols="30" rows="3" name="comments" value="{{ checkout.comments }}"></textarea>
+                                </label>
+                            </div>
+                            {# Render customer sources drop down #}
+                            {% if customer_sources|length %}
+                                <label class="field-block">
+                                    <span class="field-label">How did you hear about us?</span>
+                                    <select name="source">
+                                        <option value="">Please select...</option>
+                                        {% for value, label in customer_sources %}
+                                            <option value="{{ value }}">
+                                                {{ label }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </label>
+                            {% endif %}
+                            {# newsletter sub #}
+                            <div class="row column checkbox-container">
+                                <input id="marketing" type="checkbox" name="marketing" class="mod">
+                                <label for="marketing">Subscribe to our newsletter?</label>
+                            </div>
+                            <div class="row column checkbox-container">
+                                <input id="terms" type="checkbox" name="terms" class="required mod">
+                                <label for="terms">By ticking this box you confirm you accept the <a href="/terms-conditions" target="_blank" class="link--emphasis">terms and conditions</a></label>
+                            </div>
+                            <div class="row">
+                                <div class="column medium-6 medium-push-6 large-5 large-push-7">
+                                    <button class="button expanded next-section" type="button">
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="accordion-item{{ firstOpen == 4 ? ' is-active' : '' }}" data-accordion-item id="checkout-section-5">
+                        {# Billing details #}
+                        <a href="#" class="accordion-title">
+                            <div class="row">
+                                <div class="column medium-6">
+                                    Payment Options
+                                </div>
+                                <div class="column medium-6">
+                                    {% include 'partials/payment_icons.twig' %}
+                                </div>
+                            </div>
+                        </a>
+                        <div class="accordion-content" data-tab-content>
+                            <div class="buttons checkout" data-count={{ checkout.buttons|length }}>
+                                {% set special_buttons = {
+                                    "34": {"label": "Pay by PayPal", "class": "paypal-button image-button button expanded b34"},
+                                    "5": {"label": gts.button_offline_payment|default("Offline Payment"), "class": "button tertiary offline-button b5 expanded", "separate": true },
+                                    "1": {"label": "Pay by PayPal", "class": "paypal-button image-button button expanded b1"}
+                                } %}
+                                {% for id, button in checkout.buttons %}
+                                    {% if not special_buttons[id] %}
+                                        <button name="{{ button.name }}" class="button button-secure-payment expanded">
+                                            {{ gts.button_payment_gateway|default("Proceed To Secure Payment") }}
+                                        </button>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for id, button in special_buttons %}
+                                    {% if checkout.buttons[id] %}
+                                        {% if button.separate %}<br>{% endif %}
+                                        <button name="{{ checkout.buttons[id].name }}" class="{{ button.class }}">
+                                            {% if checkout.buttons[id].id == '1' or checkout.buttons[id].id == '34' %}
+                                                <img src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/gold-rect-paypalcheckout-60px.png" alt="Check out with PayPal" width="170">
+                                            {% else %}
+                                                {{ button.label }}
+                                            {% endif %}
+                                        </button>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <div class="column large-5 show-for-large">
+            <aside class="checkout-summary display-box ghost">
+                <div class="row">
+                    <div class="column medium-7 large-8">
+                        <h3>
+                            Order summary
+                        </h3>
+                    </div>
+                    <div class="column medium-5 large-4 medium-text-right">
+                        <a href="/checkout/basket" class="inline-link">
+                            Edit basket
+                        </a>
+                    </div>
+                </div>
+                <div class="checkout-items">
+                    <div class="row item-headers">
+                        <div class="small-8 column">
+                            <span>Product(s)</span>
+                        </div>
+                        <div class="small-2 column text-center">
+                            <span>Qty</span>
+                        </div>
+                        <div class="small-2 column text-right">
+                            <span>Total</span>
+                        </div>
+                    </div>
+                    {% for item in basket_items() %}
+                        <div class="item">
+                            <div class="row collapse" data-equalizer>
+                                <div class="column small-2" data-equalizer-watch>
+                                    {# Render photo #}
+                                    <div class="item-image">
+                                        <div class="image-container" data-filt="1">
+                                            <img src="{{ item.product.photo_url }}" alt="{{ item.is_gift_voucher ? 'Gift voucher' : 'item.product.photo_description' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column small-6" data-equalizer-watch>
+                                    <div class="inner">
+                                        <h4>
+                                            {# Render title #}
+                                            {% if item.is_gift_voucher %}
+                                                {{ item.product.title|raw }}
+                                            {% else %}
+                                                {{ item.product.title }}
+                                            {% endif %}
+                                        </h4>
+                                        {# Render options and extras #}
+                                        {% for name, value in item.options %}
+                                            {% set parts = value|split(':#') %}
+                                            {% set proper = parts[0] %}
+                                            {% set hex = parts[1] ? parts[1] : '' %}
+                                            <div class="item-option">
+                                                {{ name }}:
+                                                {{ proper }}
+                                            </div>
+                                        {% endfor %}
+                                        {% for name, value in item.alt_options %}
+                                            <div class="item-option">
+                                                {{ name }}:
+                                                {{ value }}
+                                            </div>
+                                        {% endfor %}
+                                        {% for extra in item.extras %}
+                                            <div class="item-option">
+                                                {{ extra.name }}:
+                                                {{ format_price(extra.price) }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="column small-2 text-center" data-equalizer-watch>
+                                    {# Render quantity #}
+                                    <div class="item-quantity">
+                                        {{ item.quantity }}
+                                    </div>
+                                </div>
+                                <div class="column small-2 text-right" data-equalizer-watch>
+                                    {# Render total #}
+                                    <div class="price single">
+                                        {# Render price #}
+                                        {% if item.product.reward_points_enabled %}
+                                            {{ item.price }}
+                                            points
+                                        {% else %}
+                                            {{ format_price(item.price) }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <table class="checkout-totals unstriped">
+                        <tr>
+                            <td>Sub Total</td>
+                            <td>
+                                <span class="checkout-sub-total">{{ format_price(checkout.sub_total) }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Delivery</td>
+                            <td>
+                                <span class="checkout-delivery">{{ format_price(checkout.original_shipping) }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Discounts</td>
+                            <td>
+                                <span class="checkout-discounts">{{ format_price(checkout.discount) }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td>
+                                <span class="checkout-total">{{ format_price(checkout.total) }}</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+//  display platform messages as banner overlay
+.shopwired-info-message {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 400;
+    padding: 25px;
+    background: #000;
+    background-color: rgba(0, 0, 0, 0.8);
+    text-align: center;
+    z-index: 9999;
+    opacity: 0;
+
+    a {
+        color: inherit;
+    }
+}
+
+// position contained images
+.image-container {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    height: 0;
+    padding-top: 100%;
+
+    img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: auto;
+        height: auto;
+    }
+}

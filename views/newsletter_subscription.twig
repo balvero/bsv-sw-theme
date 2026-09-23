@@ -1,0 +1,11 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Your Newsletter Subscription' %}
+{% set breadcrumb_title = 'Newsletter Subscription' %}
+
+{% block page_content %}
+	<p>
+		{{ theme.text_snippet('newsletter') }}
+	</p>
+{% endblock %}

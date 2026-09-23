@@ -1,0 +1,57 @@
+{% extends 'templates/account_pages.twig' %}
+
+{% set title = 'Min bonus status' %}
+
+{% block page_content %}
+    <h1 class="sw-account-heading">
+        <i class="icon-reward-points" aria-hidden="true"></i>
+        <span>Bonus point</span>
+    </h1>
+    <div class="sw-account-block">
+        <div class="sw-account-block-label">Nuværende point</div>
+        <strong class="stat">{{ global.customer.reward_points }}</strong>
+    </div>
+    <h2 class="sw-account-heading">
+        Aktive point
+    </h2>
+    {% if global.theme.settings.ref_friends_accounts_pages %}
+        <p>
+            <a href="/account/referred-friends" class="sw-account-link">Klik her</a> for at se de point du har optjent ved at henvise venner.
+        </p>
+    {% endif %}
+    {# activity list #}
+    <ul class="sw-account-activity-list">
+        {% for order in global.customer.orders if order.status %}
+            {% if order.reward_points.earned %}
+                <li>
+                    <div class="row">
+                        <div class="column medium-6">
+                            <div>
+                                <strong>{{ order.reward_points.earned ? '+' ~ order.reward_points.earned : 0 }}</strong> optjente point
+                            </div>
+                            <small>Ordre <a href="{{ order.url }}" class="sw-account-link">#{{ order.reference }}</a></small>
+                        </div>
+                        <div class="column medium-6 medium-text-right">
+                            <time datetime="{{ order.date|date('Y-m-d') }}">{{ order.date|date('jS F Y') }}</time>
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
+            {% if order.reward_points.converted %}
+                <li>
+                    <div class="row">
+                        <div class="column medium-6">
+                            <div>
+                                <strong>{{ order.reward_points.converted ? '-' ~ order.reward_points.converted : 0 }}</strong> brugte point
+                            </div>
+                            <small>Ordre <a href="{{ order.url }}" class="sw-account-link">#{{ order.reference }}</a></small>
+                        </div>
+                        <div class="column medium-6 medium-text-right">
+                            <time datetime="{{ order.date|date('Y-m-d') }}">{{ order.date|date('jS F Y') }}</time>
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

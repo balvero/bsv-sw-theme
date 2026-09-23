@@ -1,0 +1,16 @@
+{# Extend collection template #}
+{% extends 'templates/collection.twig' %}
+
+{% set title = 'Our Brands' %}
+{% set show_sidebar = 0 %}
+
+{% block sidebar %}
+    {# Render category menu #}
+    {% include 'partials/category_menu.twig' %}
+
+{% endblock %}
+
+{% block items %}
+	{# Render brands #}
+	{% include 'partials/items.twig' with { 'items': brands, 'item_type': 'brand', 'classes': 'small-up-2 medium-up-3' } %}
+{% endblock %}

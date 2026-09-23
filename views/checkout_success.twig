@@ -1,0 +1,41 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Your Order Has Been Received' %}
+{% set breadcrumb_title = 'Order Confirmation' %}
+
+{% block page_content %}
+
+	{% if confirmation_text %}
+		{{ confirmation_text|raw }}
+	{% else %}
+		<p>
+			Your order has been successfully received. You have been sent an email confirmation of your order. If you have any questions about your order please
+			<a href="/contact-us">contact us</a>.
+		</p>
+	{% endif %}
+	{# Render order details #}
+	{% if order %}
+		<p>
+			Your Name:
+			<strong>
+				{{ order.shipping_name }}
+			</strong>
+		</p>
+		{% if order.reference %}
+			<p>
+				Order ID:
+				<strong>
+					#{{ order.reference }}
+				</strong>
+			</p>
+		{% endif %}
+		<p>
+			Order Amount:
+			<strong>
+				{{ format_price(order.total) }}
+			</strong>
+		</p>
+	{% endif %}
+
+{% endblock %}

@@ -1,0 +1,292 @@
+{# Renders a text snippet #}
+{% macro text_snippet(name, raw) %}
+    {% set short_codes = {
+        '[[YEAR]]': 'now'|date('Y'),
+        '[[EMAIL]]': global.business.email,
+        '[[PHONE]]': global.business.phone,
+        '[[ADDRESS]]': global.business.one_line_address
+    } %}
+
+    {% if global.theme.is_preview_mode_enabled %}
+        <span data-name="text_{{ name }}" id="text_{{ name }}"{{ not raw ? 'class="html-snippet"' : '' }}>
+    {% endif %}
+
+    {% if raw %}
+        {{ global.theme.settings['text_' ~ name]|replace(short_codes) }}
+    {% else %}
+        {{ global.theme.settings['text_' ~ name]|replace(short_codes)|raw }}
+    {% endif %}
+
+    {% if global.theme.is_preview_mode_enabled %}
+        </span>
+    {% endif %}
+{% endmacro %}
+
+{# Render Icon #}
+{% macro sw_icon(name, text) %}
+    <i class="sw-icon-{{ name }}" aria-hidden="true"></i>
+    {% if text %}
+        <span class="show-for-sr">{{ text }}</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro social_icon(name, text) %}
+    <i class="social-icon-{{ name }}" aria-hidden="true"></i>
+    {% if text %}
+        <span class="show-for-sr">{{ text }}</span>
+    {% endif %}
+{% endmacro %}
+
+{# Render product label #}
+{% macro product_label(name, classes) %}
+    {% if name == '3 for 2' %}
+        <span class="label primary three-for-two{{ classes ? ' ' ~ classes : '' }}">3 for 2</span>
+    {% elseif name == '2 for 1' %}
+        <span class="label primary two-for-one{{ classes ? ' ' ~ classes : '' }}">2 for 1</span>
+    {% elseif name == 'new' %}
+        <span class="label secondary new{{ classes ? ' ' ~ classes : '' }}">New</span>
+    {% endif %}
+{% endmacro %}
+
+{# Remove hexidecimal value from string #}
+{% macro filter_hex(value) %}
+    {{ value|split(':#')[0] }}
+{% endmacro %}
+
+{# Renders a link list #}
+{% macro link_list(name, class, include_title) %}
+	{% set link_list = global.theme.settings['list_' ~ name] %}
+	{% if link_list and link_list.links %}
+		{% if include_title and link_list.title %}
+			<h4>
+				{{ link_list.title }}
+			</h4>
+		{% endif %}
+		<ul class="{{ class }}"{% if global.theme.is_preview_mode_enabled %} id="list_{{ name }}"{% endif %}>
+			{% for link in link_list.links %}
+				<li>
+					<a href="{{ link.url }}">
+						{{ link.title }}
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% endmacro %}
+
+{# Renders an error list #}
+{% macro errors(errors) %}
+	{% if errors %}
+		<div class="{{ class|default('shopwired-info-message') }}" role="alert">
+			{% for error in errors %}
+				{% if not loop.first %}
+					<br>
+				{% endif %}
+				{{ error }}.
+			{% endfor %}
+		</div>
+        <noscript>
+            <div class="alert callout hide-for-js" data-closable>
+                <h5>Error</h5>
+                {% for error in errors %}
+                    {% if not loop.first %}
+                        <br>
+                    {% endif %}
+                    {{ error }}.
+                {% endfor %}
+                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </noscript>
+	{% endif %}
+{% endmacro %}
+
+{# Renders a checkout form field #}
+{% macro checkout_form_field(name, field, labels, small, shipVal) %}
+    <div class="checkout-field checkout-field-{{ name }} column large-{{ small ? '6' : '12' }}">
+        {% set label = labels|default(name|title) %}
+        {% set value = field.value|default(shipVal) %}
+        <label class="field-block">
+            <span class="field-label">{{ label }}</span>
+            {% if field.readonly %}
+                <input type="text" value="{{ value }}" data-name="{{ name }}" readonly>
+            {% elseif field.options is defined %}
+                <select name="{{ field.name }}" data-name="{{ name }}"{% if field.required %} class="required"{% endif %}>
+                    <option value="">Please select...</option>
+                    {% for option in field.options %}
+                        <option value="{{ option.id|default(option) }}"{% if option.id|default(option) == value %} selected="selected"{% endif %}>
+                            {{ option.name|default(option) }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <input type="text" name="{{ field.name }}" value="{{ value }}" data-name="{{ name }}"{% if field.required %} class="required"{% endif %}>
+            {% endif %}
+        </label>
+    </div>
+{% endmacro %}
+
+{# Renders a form #}
+{% macro form(fields, errors, labels, button_text, is_account_form, button_class, this_review_recaptcha) %}
+	{{ _self.errors(errors) }}
+	<form action="{{ global.current_url }}" method="post" class="form-with-validation">
+		{% for name, field in fields %}
+			{% set label = labels[name]|default(name|title) %}
+			{% set type = field.type|default('text') %}
+
+            {% if type == 'boolean' %}
+                <div class="row column">
+                    <input id="{{ field.name }}" type="checkbox" name="{{ field.name }}">
+                    <label for="{{ field.name }}">{{ label }}</label>
+                </div>
+            {% else %}
+    			<label class="field-block">
+    				<span class="field-label">{{ label }}</span>
+    				{% if field.values is defined %}
+    					<select name="{{ field.name }}"{% if field.required %} class="required"{% endif %}>
+    						{% if name == 'source' or name == 'rating' %}
+    							<option value="">Please select...</option>
+    						{% endif %}
+    						{% for value, label in field.values %}
+    							<option value="{{ value }}"{% if value == field.value %} selected="selected"{% endif %}>
+    								{{ label }}
+    							</option>
+    						{% endfor %}
+    					</select>
+    				{% elseif type == 'boolean' %}
+    					<br>
+    					<input type="checkbox" name="{{ field.name }}" value="1"{% if field.value %} checked="checked"{% endif %}>
+    				{% elseif type == 'hidden' %}
+    					<input type="hidden" name="{{ field.name }}" value="{{ field.value }}">
+    					{% if name == 'amount' %}
+    						<br>
+    						{{ format_price(field.value) }}
+    					{% endif %}
+    				{% elseif name == 'message' or name == 'content' %}
+    					<textarea name="{{ field.name }}" cols="30" rows="3"{% if field.required %} class="required"{% endif %}>{{ field.value }}</textarea>
+    				{% else %}
+    					<input type="text" name="{{ field.name }}" value="{{ field.value }}"{% if field.required %} class="required"{% endif %}{% if is_account_form and (name == 'email_address' or type == 'password') %} autocomplete="off"{% endif %}>
+    				{% endif %}
+    			</label>
+            {% endif %}
+		{% endfor %}
+		<input type="text" name="{{ global.honeypot_field_name }}" class="hide" autocomplete="off">
+        {% if this_review_recaptcha %}
+            <div class="g-recaptcha margin-bottom"></div>
+        {% endif %}
+		<button type="submit" class="button {{ button_class }}">
+			{{ button_text|default('Submit') }}
+		</button>
+	</form>
+{% endmacro %}
+
+{# Renders Information message #}
+{% macro info_message(class) %}
+    {% if global.info_message %}
+        <div class="{{ class|default('shopwired-info-message') }}">
+            {{ global.info_message|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro custom_form(settings) %}
+    <input type="hidden" name="custom_form" value="1" />
+    {% for name, value in settings %}
+        <input type="hidden" name="custom_form_{{ name }}" value="{{ value }}" />
+    {% endfor %}
+{% endmacro %}
+
+{% macro honeypot(class) %}
+    <input type="text" name="{{ global.honeypot_field_name }}" autocomplete="off" class="{{ class|default('shopwired-form-field') }}" />
+{% endmacro %}
+
+{# Share content via social media #}
+{% macro share_buttons(url, title, description, photo, icon, class, friend) %}
+    <ul class="{{ class|default('menu simple') }}">
+        <li>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url|url_encode }}&t={{ title|url_encode }}"
+               class="facebook"
+               target="_blank">
+               {% if icon %}
+                   {{ _self.sw_icon('facebook') }}
+               {% endif %}
+               <span class="{{ icon ? 'show-for-sr' : 'inner' }}">
+                   Share on Facebook
+               </span>
+            </a>
+        </li>
+        <li>
+            <a href="https://twitter.com/intent/tweet?text={{ (title ~ ' (' ~ url ~ ')')|url_encode }}"
+               class="twitter"
+               target="_blank">
+               {% if icon %}
+                   {{ _self.sw_icon('twitter') }}
+               {% endif %}
+                <span class="{{ icon ? 'show-for-sr' : 'inner' }}">
+                    Share on Twitter
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="https://pinterest.com/pin/create/button/?url={{ url|url_encode }}&media={{ photo|url_encode }}&description={{ description|striptags|slice(0, 500)|trim|url_encode }}"
+               class="pinterest"
+               target="_blank">
+               {% if icon %}
+                   {{ _self.sw_icon('pinterest') }}
+               {% endif %}
+               <span class="{{ icon ? 'show-for-sr' : 'inner' }}">
+                   Pin It
+               </span>
+            </a>
+        </li>
+        {#
+        <li>
+            <a href="https://plus.google.com/share?url={{ url|url_encode }}"
+               class="google"
+               target="_blank">
+               {% if icon %}
+                   {{ _self.sw_icon('google-plus') }}
+               {% endif %}
+               <span class="{{ icon ? 'show-for-sr' : 'inner' }}">
+                   Share on Google+
+               </span>
+            </a>
+        </li>
+        #}
+        <li>
+            <a href="http://www.tumblr.com/share/link?url={{ url|url_encode }}&name={{ title|url_encode }}"
+               class="tumblr"
+               target="_blank">
+               {% if icon %}
+                   {{ _self.sw_icon('tumblr') }}
+               {% endif %}
+               <span class="{{ icon ? 'show-for-sr' : 'inner' }}">
+                   Share on Tumblr
+               </span>
+            </a>
+        </li>
+        {% if friend %}
+            <li>
+                <a data-open="recommendModal"
+                   class="friend">
+                   {% if icon %}
+                       {{ _self.sw_icon('mail1') }}
+                   {% endif %}
+                   <span class="{{ icon ? 'show-for-sr' : 'inner' }}">
+                       Send to a friend
+                   </span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+{% endmacro %}
+
+{# Render range slider #}
+{% macro slider(bind, class, start, end) %}
+    <div class="slider product-slider-control {{ class }}" data-slider data-initial-start="{{ start }}" data-end="{{ end }}">
+        <span class="slider-handle"  data-slider-handle role="slider" tabindex="1" aria-controls="{{ bind }}"></span>
+        <span class="slider-fill" data-slider-fill></span>
+        <input type="hidden" id="{{ bind }}">
+    </div>
+{% endmacro %}

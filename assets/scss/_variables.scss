@@ -1,0 +1,62 @@
+
+// ZF breakpoints  -- eg use @media #{$s-only} {
+$s-only: 'screen and (max-width: 39.9375em)'; // Small only
+$m-up: 'screen and (min-width: 40em)'; // Medium and up
+$m-down: 'screen and (max-width: 63.9375em)'; // Medium and down
+$m-only: 'screen and (min-width: 40em) and (max-width: 63.9375em)'; // Medium only
+$l-up: 'screen and (min-width: 64em)'; // Large and up
+$l-only: 'screen and (min-width: 64em) and (max-width: 74.9375em)'; // Large only
+$xl-up: 'screen and (min-width: 80.6727em)'; // Extra large only
+
+// custom breakpoint (home banners)
+$banner-up: 'screen and (min-width: 55.8545em)'; // desktop banners
+$banner-down: 'screen and (max-width: 55.8544em)'; // desktop banners
+
+
+// specify site width:
+// $site-width: 85rem;
+$site-width: 1440px;
+
+// $base-font-size: 13.75;
+$base-font-size: 16;
+
+// colours
+$colour_main: #357ed0; // royal blue
+$colour_second: #beddff; // sky blue
+$colour_third: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_secondary_titles); // grey
+$colour_forth: #333; // light black
+$colour_fifth: #333; // text grey
+$colour_bodytxt: #484848; // grey
+
+$colour_tangerine: $color_website_colours_accent_colour;
+$colour_casablanca: #f9c348;
+$colour_mineshaft: #333333;
+$colour_grey: #818181;
+$colour_silver: #c9c9c9;
+$colour_alto: #e0e0e0;
+$colour_gallery: #eaeaea;
+$colour_danger: #c93832;
+$colour_porcelain: #f1f3f4;
+$colour_danger: #c93832;
+
+$black: #000;
+$white: #fff;
+$transparent: rgba(255, 255, 255, 0);
+$input-grey: #fafafa;
+$light-grey: #ddd;
+$text-grey: #b7b7b7;
+$text-darker-grey: #666666;
+
+// fonts
+$font_main: $open-sans;
+$font_second: $open-sans;
+$font_third: $open-sans;
+
+$font_heading: $open-sans;
+$font_body: $open-sans;
+
+
+
+
+
+

@@ -1,0 +1,108 @@
+{# Extend page template #}
+{% extends 'templates/account_pages.twig' %}
+
+{% set title = 'Din konto' %}
+{% set breadcrumb_title = 'Min konto' %}
+{% set description = 'Welcome to your account.' %}
+
+{% block page_content %}
+    <h1 class="sw-account-heading">
+        <i class="icon-account-home" aria-hidden="true"></i>
+        <span>Min konto</span>
+    </h1>
+    <p>Velkommen til dit konto overblik.</p>
+    <div class="row small-up-1 medium-up-1 large-up-2" data-equalizer>
+        {# account edit #}
+        <div class="column">
+            <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
+                <p class="sw-account-heading">
+                    <span>Mine oplysninger</span>
+                    <i class="icon-edit float-right" aria-hidden="true"></i>
+                </p>
+                <p>
+                    For at redigere dine oplysninger <a href="/account/edit" class="sw-account-link">klik her</a>.
+                </p>
+            </div>
+        </div>
+        {# account password #}
+        <div class="column">
+            <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
+                <p class="sw-account-heading">
+                    <span>Mit password</span>
+                    <i class="icon-my-password float-right" aria-hidden="true"></i>
+                </p>
+                <p>
+                    For at ændre dit password <a href="/account/password" class="sw-account-link">klik her</a>.
+                </p>
+            </div>
+        </div>
+        {% if global.features.extensions.address_book %}
+            {# address book #}
+            <div class="column">
+                <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
+                    <p class="sw-account-heading">
+                        <span>Min adressebog</span>
+                        <i class="icon-address-book float-right" aria-hidden="true"></i>
+                    </p>
+                    <p>
+                        For at redigere dine oplysninger <a href="/account/addresses" class="sw-account-link">klik her</a>.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+        {# orders #}
+        <div class="column">
+            <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
+                <p class="sw-account-heading">
+                    <span>{{ global.customer.orders|length }} Ordre{{ global.customer.orders|length == 1 ? '' : '' }}</span>
+                    <i class="icon-my-orders float-right" aria-hidden="true"></i>
+                </p>
+                <p>
+                    <a href="/account/orders" class="sw-account-link">Klik her</a> for at se dine ordre.
+                </p>
+            </div>
+        </div>
+        {% if global.features.extensions.stripe_subscriptions %}
+            {# subscriptions #}
+            <div class="column">
+                <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
+                    <p class="sw-account-heading">
+                        <span>Abonnementer</span>
+                        <i class="icon-my-subscriptions float-right" aria-hidden="true"></i>
+                    </p>
+                    <p>
+                        <a href="/account/subscriptions" class="sw-account-link">Klik her</a> for at se dine abonnementer.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+        {% if global.features.apps.reward_points %}
+            {# reward points #}
+            <div class="column">
+                <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
+                    <p class="sw-account-heading">
+                        <span>{{ global.customer.reward_points }} Bonus point{{ global.customer.reward_points == 1 ? '' : '' }}</span>
+                        <i class="icon-reward-points float-right" aria-hidden="true"></i>
+                    </p>
+                    <p>
+                        <a href="/account/reward-points" class="sw-account-link">Klik her</a> for at se en oversigt over dine bonus point.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+        {% if global.theme.settings.ref_friends_accounts_pages %}
+            {# referred friends #}
+            <div class="column">
+                <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
+                    <p class="sw-account-heading">
+                        <span>{{ global.customer.referred_customers|length }} Henvist ven{{ global.customer.referred_customers|length == 1 ? '' : 's' }}</span>
+                        <i class="icon-referred-friends float-right" aria-hidden="true"></i>
+                    </p>
+                    <p>
+                        <a href="/account/referred-friends" class="sw-account-link">Klik her</a> for at se de venner du har henvist.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

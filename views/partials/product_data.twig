@@ -1,0 +1,107 @@
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title|replace('"', "'") }}",
+  "image": "https:{{ product.photo_url }}",
+  "description": "{{ product.description|striptags|replace('"', "'") }}",
+  {% if product.mpn %}
+      "mpn": "{{ product.mpn|replace('"', "'") }}",
+  {% endif %}
+  {% if product.gtin %}
+      "gtin": "{{ product.gtin|replace('"', "'") }}",
+  {% endif %}
+  {% if product.brand %}
+      "brand": {
+        "@type": "Brand",
+        "name": "{{ product.brand.title|replace('"', "'") }}"
+      },
+  {% endif %}
+  {% if product.sku %}
+     "sku": {{ product.sku|json_encode|raw }},
+  {% elseif product.variations %}
+    {% set break = false %}
+    {% for variation in product.variations if not break %}
+        {% if variation.sku %}
+            "sku": {{ variation.sku|json_encode|raw }},
+            {% set break = true %}
+        {% endif %}
+    {% endfor %}
+  {% endif %}
+   {% if global.features.apps.product_reviews %}
+        {% if product.reviews|length > 0 %}
+            {% for review in product.reviews %}
+              "review": {
+                    "@type": "Review",
+                    "reviewRating": {
+                      "@type": "Rating",
+                      "ratingValue": "{{ review.rating }}",
+                      "bestRating": "5"
+                    },
+                    "author": {
+                      "@type": "Person",
+                      "name": "{{ review.name }}"
+                    }
+                  },
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+  {% if global.features.apps.product_reviews %}
+        {% if product.reviews|length > 0 %}
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "{{ product.rating }}",
+                "reviewCount": "{{ product.reviews|length }}"
+            },
+        {% endif %}
+   {% endif %}
+   {% if product.variations %}
+	"offers": [
+		{% for variation in product.variations %}
+			{ 
+			"@type": "Offer",
+			"price": "{{ variation.price }}",
+			"priceCurrency": "GBP",
+			"priceValidUntil": "2039-12-31",
+			"itemCondition": "http://schema.org/NewCondition",
+			"url": "{{ product.url }}",
+			{% if variation.sku %}
+				"sku": {{ variation.sku|json_encode|raw }},
+			{% endif %}
+			{% if variation.gtin %}
+				"gtin": "{{ variation.gtin }}",
+			{% endif %}
+			{% if variation.in_stock %}
+				"availability": "https://schema.org/InStock",
+			{% else %}
+				"availability": "https://schema.org/OutOfStock",
+			{% endif %}
+			"seller": {
+			  "@type": "Organization",
+			  "name": "{{ global.business.name }}" }
+			}{% if loop.last %}{% else %},{% endif %}
+		{% endfor %}
+	]
+  {% else %}
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "GBP",
+       {% if product.sale_price > 0 %}
+       "price": "{{ product.sale_price }}",
+       {% else %}
+       "price": "{{ product.price }}",
+       {% endif %}
+    "url": "{{ product.url }}",
+    "priceValidUntil": "2039-12-31",
+    "itemCondition": "http://schema.org/NewCondition",
+    {% if product.in_stock %}
+        "availability": "https://schema.org/InStock",
+    {% endif %}
+    "seller": {
+      "@type": "Organization",
+      "name": "{{ global.business.name }}"
+    }
+  }
+  {% endif %}
+}
+</script>

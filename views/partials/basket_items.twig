@@ -1,0 +1,64 @@
+{% for item in items %}
+    <div class="item">
+        <div class="row gutter-small">
+            <div class="column small-3">
+                {# Render photo #}
+                <div class="item__image">
+                    {% if item.quantity > 1 %}
+                        <span class="badge">{{ item.quantity }}</span>
+                    {% endif %}
+                    <div class="image-container" data-fit="0">
+                        <img src="{{ item.product.photo_url }}" alt="{{ item.is_gift_voucher ? 'Gift voucher' : 'item.product.photo_description' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="column small-9">
+                <h4>
+                    {# Render title #}
+                    {% if item.is_gift_voucher %}
+                        {{ item.product.title|raw }}
+                    {% else %}
+                        {{ item.product.title }}
+                    {% endif %}
+                </h4>
+
+                {# Render options and extras #}
+                {% for name, value in item.options %}
+                    {% set parts = value|split(':#') %}
+                    {% set proper = parts[0] %}
+                    {% set hex = parts[1] ? parts[1] : '' %}
+                    <div>
+                        {{ name }}:
+                        {{ proper }}
+                    </div>
+                {% endfor %}
+                {% for name, value in item.alt_options %}
+                    <div>
+                        {{ name }}:
+                        {{ value }}
+                    </div>
+                {% endfor %}
+                {% for extra in item.extras %}
+                    <div>
+                        {{ extra.name }}:
+                        {{ format_price(extra.price) }}
+                    </div>
+                {% endfor %}
+
+                <div class="price single">
+                    {# Render price #}
+                    {% if item.product.reward_points_enabled %}
+                        {{ item.price }}
+                        points
+                    {% else %}
+                        {{ format_price(item.price) }}
+                    {% endif %}
+                </div>
+                <a class="remove-button" href="{{ item.remove_url }}">
+                    <i class="sw-icon-cross" aria-hidden="true"></i>
+                    <span class="show-for-sr">Remove</span>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endfor %}

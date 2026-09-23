@@ -1,0 +1,10 @@
+{# Extend collection template #}
+{% extends 'templates/collection.twig' %}
+
+{% set title = 'Din favoritliste' %}
+{% set contentClass = 'bg-shade' %}
+
+{% block items %}
+	{# Render products #}
+	{% include 'partials/items.twig' %}
+{% endblock %}

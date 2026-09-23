@@ -1,0 +1,191 @@
+{% import 'macros/html.twig' as html %}
+{% import 'macros/theme.twig' as theme %}
+{% set type = item_type|default('product') %}
+{% set gts = global.theme.settings %}
+{% set display_price = not global.customer.trade and gts.hide_prices ? 0 : 1 %}
+{% set soft_button = button|default(true) %}
+
+{% for item in items|default(products) %}
+    <div class="column{{ loop.last ? ' end' : '' }}">
+        {# Determine photo URL #}
+        {% set photo_url = type == 'gallery_photo' ? item.url : item.photo_url %}
+
+        <article class="card item-box {{ type }}-box">
+            {# Render photo box #}
+            <div class="item-image">
+                {# Render labels #}
+                {% if type == 'product' %}
+                    {% if item.three_for_two %}
+                        {{ theme.product_label('3 for 2') }}
+                    {% elseif item.two_for_one %}
+                        {{ theme.product_label('2 for 1') }}
+                    {% endif %}
+                    {% if item.new %}
+                        {{ theme.product_label('new') }}
+                    {% endif %}
+                {% endif %}
+                <a  href="{{ item.url }}" class="image-container" data-fit={% if type == 'product' %}"{{ global.theme.settings.image_container_product ? '1' : '0' }}"{% elseif items == brands %}"0"{% elseif type == 'category' %}"{{ global.theme.settings.image_container_category ? '1' : '0' }}"{% else %}"1"{% endif %}>
+                    {# Render image #}
+                    {{ html.image(photo_url, item.photo_description, 'item-img', '', gts.lazyload_images, true) }}
+                </a>
+            </div>
+            <div class="card-section box-data {{ type }}-box-data" data-equalizer-watch="boxes">
+                {% if item.subscription %}
+                    <p class="item-subscription">
+                        {{ item.subscription_interval }} subscription
+                    </p>
+                {% endif %}
+                {% set title = type == 'gallery' or type == 'gallery_photo' ? item.name : item.title %}
+                <h2 class="{{ type }}-box-title{{ item.offers ? ' auto-height' : '' }}">
+                    <a href="{{ item.url }}">{{ title }}</a>
+                </h2>
+                {% if ( type == 'category' and item.from_price and display_price ) or type == 'product' %}
+                    {% if type == 'category' and gts.show_category_from_prices %}
+                        <div class="cat-box-price">
+                            <span>Prices from:</span>
+                            <span class="cat-box-price-value">{{ currency_value(item.from_price) }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if type == 'product' %}
+                        {% if with_raiting and global.features.apps.product_reviews %}
+                            <div class="item-raiting">
+                                {% for i in 1..5 %}
+                                    {% set starClass = ( item.rating >= i ? 'star-on' : 'star' ) %}
+                                    <span class="{{ starClass }}">
+                                        {{ theme.sw_icon( starClass, 'raiting star') }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {# render product offers #}
+                        {% if item.offers %}
+                            <div class="product-offer-container margin-bottom">
+                                {% for offer in item.offers %}
+                                    <div class="product-offer">
+                                        <div class="product-offer-title">
+                                            {{ offer.title }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {# Render product prices #}
+				
+						{% if 11000 > item.price or global.customer.trade  %} 
+						{# previously `global.customer.trade` change to if price is lower than 9.5 #}
+                        <div class="product-box-prices">
+                            {% if item.sale_price and display_price %}
+								{% if item.sale_price != item.price %}
+									<div class="flex-item">
+										<span class="price price--sale">
+											{{ format_price(item.price) }}
+										</span>
+									</div>
+								 {% endif %}
+                            {% endif %}
+                            <div class="flex-item{{ not item.sale_price ? ' full-width' : '' }}">
+                                {% if display_price %}
+                                    <div class="product-box-basket">
+                                        <a href="{{ item.url }}" class="quick-view">
+                                            <i class="sw-icon-basket" aria-hidden="true"></i>
+                                            <span class="show-for-sr">View product</span>
+                                        </a>
+                                        <span class="price">
+
+                                            {{ item.sale_price ? format_price(item.sale_price) : format_price(item.price) }}
+                                        </span>
+                                    </div>
+									<div class="vat-notice">
+										<small>Excl. moms</small>
+									</div>
+                                {% else %}
+                                    {% include 'partials/hidden_prices.twig' %}
+                                {% endif %}
+								
+                            </div>
+                        </div>
+						{% else %}
+				
+							<a data-test="{{item.price ~ ' ' ~ format_price(item.price) }}" href="/account/login?login_redirect={{ global.current_url }}" class="login-price">Log ind for priser</a>
+						{% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </article>
+        {% if type == 'product' %}
+            <article class="item-box--list">
+                <div class="row">
+                    <div class="small-4 medium-3 column">
+                        <div class="inner item-image">
+                            {# Render photo box #}
+                            <a  href="{{ item.url }}" class="image-container" data-fit={% if type == 'product' %}"{{ global.theme.settings.image_container_product ? '1' : '0' }}"{% elseif items == brands %}"0"{% elseif type == 'category' %}"{{ global.theme.settings.image_container_category ? '1' : '0' }}"{% endif %}>
+                                {{ html.image(photo_url, item.photo_description, '', '', gts.lazyload_images, true) }}
+                            </a>
+                            {# Render labels #}
+                            {% if type == 'product' %}
+                                {% if item.two_for_one %}
+                                    <span class="label primary two-for-one">2 for 1</span>
+                                {% endif %}
+                                {% if item.three_for_two %}
+                                    <span class="label primary three-for-two">3 for 2</span>
+                                {% endif %}
+                                {% if item.new %}
+                                    <span class="label secondary new">New</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="small-8 medium-9 column">
+                        <div class="inner">
+                            <h3 class="{{ type }}-box-title">
+                                <a href="{{ item.url }}">{{ title }}</a>
+                            </h3>
+                            {% if with_raiting %}
+                                <span class="item-raiting">
+                                    {% for i in 1..5 %}
+                                        {% set starClass = ( item.rating >= i ? 'on' : 'off' ) %}
+                                        <span class="{{ starClass }}">
+                                            {{ theme.sw_icon('star', 'raiting star') }}
+                                        </span>
+                                    {% endfor %}
+                                </span>
+                            {% endif %}
+                            <div class="list-description">
+                                {{ item.description|striptags|length > 150 ? item.description|striptags|slice(0, 150) ~ '...' : item.description|striptags }}
+                            </div>
+
+                            {% if display_price %}
+                                <div class="product-box-basket">
+                                    <a href="{{ item.url }}">
+                                        <i class="sw-icon-basket" aria-hidden="true"></i>
+                                        <span class="show-for-sr">View product</span>
+                                    </a>
+                                    <span class="price">
+
+                                        {{ item.sale_price ? format_price(item.sale_price) : format_price(item.price) }}
+                                    </span>
+                                </div>
+                            {% else %}
+                                {% include 'partials/hidden_prices.twig' %}
+                            {% endif %}
+                            {% if item.sale_price and display_price %}
+                                <span class="price price--sale">{{ format_price(item.price) }}</span>
+                            {% endif %}
+                            <br>
+                            <a href="{{ item.url }}" class="button primary padded-y small margin-top">
+                                View details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="column">
+        <h2 class="subheader">
+           Ingen produkter blev fundet.
+        </h2>
+    </div>
+{% endfor %}

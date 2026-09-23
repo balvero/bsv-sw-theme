@@ -1,0 +1,65 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = gallery.name %}
+{% set bodyClass = 'gallery-objects' %}
+
+{% block breadcrumbs %}
+
+	{# Add breadcrumb #}
+	<li>
+		<a href="/galleries">
+			Galleries
+		</a>
+	</li>
+
+{% endblock %}
+
+
+{% block page_content %}
+    {% if gallery.photos|length > 3 or true %}
+        <div class="row">
+            <div class="column large-8">
+                {% for item in gallery.photos|slice(0, 1) %}
+                    {{ block('gallery_box') }}
+                {% endfor %}
+            </div>
+            <div class="column large-4 gallery-right-large">
+                {% for item in gallery.photos|slice(1, 2) %}
+                    {{ block('gallery_box') }}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row small-up-1 medium-up-2 large-up-3">
+            {% for item in gallery.photos|slice(3) %}
+                <div class="column">
+                    {{ block('gallery_box') }}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="row small-up-1 medium-up-2 large-up-3">
+            {% for item in gallery.photos %}
+                <div class="column">
+                    {{ block('gallery_box') }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+{% block gallery_box %}
+    <div class="panel-box">
+        <a href="{{ item.url }}" class="image-container" data-fit="1" data-fancybox="gallery" data-src="{{ photo.url }}">
+            <img src="{{ item.url }}" alt="{{ item.photo_description }}">
+        </a>
+        {% if item.name %}
+            <div class="box-info">
+                <h3 class="gallery-caption">
+                    {{ item.name|striptags }}
+                </h3>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

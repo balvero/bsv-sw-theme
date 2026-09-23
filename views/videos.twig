@@ -1,0 +1,29 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Our Videos' %}
+{% set bodyClass = 'videos' %}
+
+{% block page_content %}
+    <div class="row small-up-1 medium-up-2 videos-container">
+        {# Render videos #}
+        {% for video in videos %}
+            <div class="column column-block">
+                <div class="panel-box">
+                    <div class="video-container">
+                        <iframe src="{{ video.embed_code }}" allowfullscreen></iframe>
+                    </div>
+                    <div class="box-info">
+                        <h3 class="video-title text-center">
+                            {{ video.title }}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="column">
+                <h2 class="subheader">No videos found.</h2>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

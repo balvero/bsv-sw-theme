@@ -1,0 +1,18 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Your Order Was Not Successful' %}
+{% set breadcrumb_title = 'Order Confirmation' %}
+
+{% block page_content %}
+
+	<p>
+		Unfortunately your order was unsuccessful, either because you cancelled payment or because your payment was declined by the bank.
+		The items are still in your shopping basket so you can
+		<a href="/checkout/basket">click here to try again</a>.
+	</p>
+	<p>
+		If you continue to experience difficulties, please <a href="/contact-us">contact us</a>.
+	</p>
+
+{% endblock %}

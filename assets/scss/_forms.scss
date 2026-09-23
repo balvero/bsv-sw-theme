@@ -1,0 +1,499 @@
+
+// validation messages
+span.validation-error {
+    color: #ef3d3d;
+    font-style: italic;
+    font-size: .8rem;
+    white-space: nowrap;
+    padding-left: .5rem;
+}
+
+.field-label {
+    //font-weight: 700;
+}
+
+.section-label {
+    @include rem(font-size, 15px);
+    font-weight: 600;
+    margin: 1em 0 .25em 0;
+}
+
+// inputs
+[type=color],
+[type=date],
+[type=datetime-local],
+[type=datetime],
+[type=email],
+[type=month],
+[type=number],
+[type=password],
+[type=search],
+[type=tel],
+[type=text],
+[type=time],
+[type=url],
+[type=week],
+textarea,
+select {
+    background-color: $white;
+    border: 1px solid $colour_gallery;
+    box-shadow: none;
+    border-radius: 0;
+    font-size: .9rem;
+    padding: .85rem .75rem;
+    height: auto;
+
+    @include is-active {
+        box-shadow: none;
+    }
+
+    &.simple {
+        border-width: 0 0 1px;
+        color: $black;
+        font-size: 1rem;
+        padding-right: 0;
+        padding-left: 0;
+
+        @include placeholder {
+            color: $black;
+        }
+    }
+
+    &.validation-error {
+        background-color: #fff5f5;
+    }
+}
+
+// dropdown boxes
+select {
+    appearance: none;
+    background-image: url(../images/select_arrow.svg);
+    background-repeat: no-repeat;
+    background-position: right -1.25rem center;
+    background-size: 1rem;
+    padding-right: 2.5em;
+
+    @media screen and (min-width:0\0) {
+        background-size: 13px 8px;
+    }
+
+    &:focus,
+    &:hover,
+    &:active {
+        border-color: $black;
+    }
+
+    &:-moz-focusring {
+        color: transparent;
+        text-shadow: 0 0 0 #000;
+    }
+
+    // dropdown simple
+    &.simple {
+        padding-left: 0;
+        padding-right: 1.5rem;
+    }
+}
+
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    select {
+        &::-ms-expand {
+            display: none;
+        }
+        &:focus::-ms-value {
+            background: transparent;
+            color: grey;
+        }
+    }
+}
+
+[name="date_of_birth"] {
+    background-color: $white !important;
+
+    &.hasDatepicker {
+        cursor: pointer;
+    }
+}
+
+.ui-datepicker {
+
+    select {
+        height: auto;
+        padding-right: 0;
+        background-position: center right 8px;
+    }
+
+    .ui-datepicker-header {
+        .ui-datepicker-prev,
+        .ui-datepicker-next {
+            top: calc(50% - .9em);
+        }
+    }
+}
+
+// checkbox and radio inputs
+$check-border-colour: #dddddd;
+$check-selected-colour: $colour_main;
+$check-colour: $white;
+$radius_on: 0;
+
+
+input {
+
+    // radio buttons
+    &[type="radio"] {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+
+        &:focus + label:before,
+        &:hover + label:before {
+            border-color: black;
+        }
+
+        &:active + label:before {
+            transition-duration: 0;
+            filter: brightness(0.2);
+        }
+
+        & + label {
+            position: relative;
+            padding: 10px;
+            padding-left: 2em;
+            margin-left: 0;
+            vertical-align: middle;
+            user-select: none;
+
+            &:before {
+                background-color: #eaeaea;
+                box-sizing: content-box;
+                content: '';
+                color: $check-selected-colour;
+                position: absolute;
+                top: 50%;
+                left: -1px;
+                width: 15px;
+                height: 15px;
+                margin-top: -9px;
+                border: 1px solid #eaeaea;
+                text-align: center;
+                border-radius: 100%;
+            }
+
+            &:after {
+                box-sizing: content-box;
+                border-radius: 100%;
+                content: '';
+                //background-color: $check-selected-colour;
+                background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_accent_colour, $color_forms_buttons_selected_radiobutton); //$black;
+                position: absolute;
+                top: 50%;
+                left: 3px;
+                width: 9px;
+                height: 9px;
+                margin-top: -5px;
+                @include transform( scale(0) );
+                transform-origin: 50%;
+                transition: transform 200ms ease-out;
+            }
+        }
+
+        &:checked + label {
+            &:before {
+                animation: borderscale 300ms ease-in;
+            }
+            &:after {
+                @include transform( scale(1) );
+            }
+        }
+
+
+        // primary radio buttons
+        &.primary + label {
+
+            &:before {
+                background-color: $black;
+            }
+
+            &:after {
+                background-color: #eaeaea;
+            }
+        }
+    }
+
+    // checkboxes
+    &[type="checkbox"] {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+
+        &:focus + label:before,
+        &:hover + label:before {
+            border-color: black;
+        }
+
+        &:active + label:before {
+            transition-duration: 0;
+            filter: brightness(0.2);
+        }
+
+        & + label {
+            position: relative;
+            padding: 10px;
+            padding-left: 2em;
+            margin-left: 0;
+            vertical-align: middle;
+            user-select: none;
+
+            &:before {
+                box-sizing: content-box;
+                content: '';
+                color: $check-selected-colour;
+                position: absolute;
+                top: 50%;
+                left: -1px;
+                width: 17px;
+                height: 17px;
+                margin-top: -10px;
+                border: 1px solid $check-border-colour;
+                text-align: center;
+            }
+
+            &:after {
+                box-sizing: content-box;
+                content: '';
+                position: absolute;
+                transform-origin: 50%;
+                background-color: transparent;
+                top: 50%;
+                left: 3px;
+                width: 9px;
+                height: 3px;
+                margin-top: -5px;
+                border-style: solid;
+                border-color: $black;
+                border-width: 0 0 3px 3px;
+                border-image: none;
+                @include transform( rotate(-45deg) scale(0) );
+                transition: none;
+            }
+        }
+
+        &:checked + label {
+            &:before {
+                animation: borderscale 200ms ease-in;
+                background-color: $white;
+            }
+            &:after {
+                @include transform( rotate(-45deg) scale(1) );
+            }
+        }
+
+        &.secondary {
+
+            & + label {
+
+                &:before {
+                    background-color: $transparent;
+                    border: 1px solid #ddd;
+                    text-align: center;
+                    border-radius: 12px;
+                }
+
+                &:after {
+                    display: none;
+                }
+            }
+
+            &:checked + label {
+                &:before {
+                    animation: borderscale 200ms ease-in;
+                    background-color: $black;
+                }
+            }
+        }
+
+        &.mod {
+
+            & + label {
+                padding-left: 2.25em;
+                color: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_main_text);
+
+                &:before {
+                    box-sizing: content-box;
+                    content: "";
+                    color: $black;
+                    position: absolute;
+                    top: 50%;
+                    left: -1px;
+                    width: 20px;
+                    height: 20px;
+                    margin-top: -11px;
+                    border: 1px solid $light-grey;
+                    text-align: center;
+                    border-radius: 20px;
+                }
+
+                &:after {
+                    border-color: $white;
+                    left: 4px;
+                    margin-top: -4px;
+                }
+            }
+
+            &:checked + label {
+                &:before {
+                    animation: borderscale .2s ease-in;
+                    //background-color: $colour_tangerine;
+                    background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_accent_colour, $color_forms_buttons_selected_checkbox); //#f58900; //$color_accent;
+                }
+            }
+        }
+    }
+}
+
+@keyframes borderscale {
+    50% {
+        box-shadow: 0 0 0 2px #900;
+    }
+}
+
+// date field
+.delivery-date-container {
+    position: relative;
+
+    input {
+        padding-left: 3rem;
+        cursor: pointer;
+    }
+
+    &:after {
+        content: '\e902';
+        font-family: $icon;
+        position: absolute;
+        bottom: 0.7rem;
+        left: 1rem;
+        pointer-events: none;
+    }
+}
+
+
+// form fields
+
+.field-label {
+    color: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_main_text);
+    font-weight: 700;
+    font-size: .85rem;
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+
+    &.dark {
+        color: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_main_text);
+    }
+}
+
+.field-block {
+    border: 1px solid $colour_gallery;
+    border-radius: 2px;
+    margin-bottom: 1.25rem;
+    position: relative;
+
+    .field-label {
+        @extend .field-label;
+        color: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_main_text);
+        position: absolute;
+        top: .5rem;
+        left: 0;
+        padding-left: .75rem;
+
+    }
+
+    [type=color],
+    [type=date],
+    [type=datetime-local],
+    [type=datetime],
+    [type=email],
+    [type=month],
+    [type=number],
+    [type=password],
+    [type=search],
+    [type=tel],
+    [type=text],
+    [type=time],
+    [type=url],
+    [type=week],
+    textarea,
+    select {
+        display: block;
+        border: none;
+        margin-bottom: 0;
+        padding: 2.5rem .75rem 1rem;
+        font-size: .95rem;
+        font-weight: 500;
+        background-color: $transparent;
+        box-shadow: none;
+        height: auto;
+
+        &:focus {
+            box-shadow: none;
+            //border: 1px solid $colour_alto;
+        }
+
+        &[readonly] {
+            background-color: inherit;
+        }
+    }
+
+    select {
+        appearance: none;
+        background-image: url(../images/toggle-arrows.svg);
+        background-repeat: no-repeat;
+        background-position: right -1.25rem center;
+        background-size: .8rem;
+        padding-right: 2.5em;
+    }
+
+    &.field-error {
+        background-color: #fff5f5;
+    }
+
+    span.validation-error {
+        position: absolute;
+        top: .25rem;
+        right: .5rem;
+    }
+}
+
+
+// input groups
+
+.input-group-button .button {
+    height: 2.85rem;
+    margin-left: -1px;
+}
+
+
+// gift voucher form
+
+.voucher-form {
+
+    fieldset label {
+        @media #{$m-down} {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+}
+
+

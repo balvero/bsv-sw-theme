@@ -1,0 +1,79 @@
+{% macro stylesheet(url, async) %}
+    <link rel="{{ async ? 'preload' : 'stylesheet' }}" href="{{ url }}"{% if async %} as="style" onload="this.rel='stylesheet'"{% endif %}>
+{% endmacro %}
+
+{% macro script(url, attribute) %}
+    <script src="{{ url }}"{{ attribute ? ' ' ~ attribute : '' }}></script>
+{% endmacro %}
+
+{# Renders an input #}
+{% macro input(name, value, class, placeholder, type, extra) %}
+	<input type="{{ type|default('text') }}"{% if name %} name="{{ name }}"{% endif %}{% if value %} value="{{ value }}"{% endif %}{% if class %} class="{{ class }}"{% endif %}{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}{% if extra %} {{ extra|raw }}{% endif %}>
+{% endmacro %}
+
+{# Renders a textarea #}
+{% macro textarea(name, value, class, placeholder, rows, extra) %}
+    <textarea cols="30" rows="{{ rows|default('3') }}"{% if name %} name="{{ name }}"{% endif %}{% if class %} class="{{ class }}"{% endif %}{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}{% if extra %} {{ extra|raw }}{% endif %}>{{ value }}</textarea>
+{% endmacro %}
+
+{# Renders a button #}
+{% macro button(name, value, text, class, include_honeypot, type, icon, extra, setting) %}
+	{% if include_honeypot %}
+		{{ _self.input(global.honeypot_field_name, '', 'hide', '', 'text', 'autocomplete="off"') }}
+	{% endif %}
+	<button type="{{ type|default('submit') }}"{% if name %} name="{{ name }}"{% endif %}{% if value %} value="{{ value }}"{% endif %}{% if class %} class="{{ class }}"{% endif %}{% if extra %} {{ extra|raw }}{% endif %}>
+		{% if icon %}
+            <i class="sw-icon-{{ icon }}" aria-hidden="true"></i>&nbsp;
+        {% endif %}
+        {% if setting %}<span data-name="{{ setting }}" id="{{ setting }}">{% endif %}{{ text }}{% if setting %}</span>{% endif %}
+	</button>
+{% endmacro %}
+
+{# Renders a select input #}
+{% macro select(name, values, selected, class, first_option, extra) %}
+    <select{% if name %} name="{{ name }}"{% endif %}{% if class %} class="{{ class }}"{% endif %}{% if extra %} {{ extra|raw }}{% endif %}>
+        {% if first_option %}
+            <option value="">{{ first_option }}</option>
+        {% endif %}
+        {% for value in values %}
+            <option value="{{ value.id|default(value) }}"{% if value.id|default(value) == selected %} selected="selected"{% endif %}>{{ value.name|default(value) }}</option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+{# Renders a number toggle field #}
+{% macro number_toggle(name, value, class, placeholder, type, extra, minus_text, plus_text) %}
+    <div class="number-toggle">
+        <button class="toggle-down">{{ minus_text|default('-') }}</button>
+        <input type="{{ type|default('text') }}"{% if name %} name="{{ name }}"{% endif %}{% if value %} value="{{ value }}"{% endif %}{% if class %} class="{{ class }}"{% endif %}{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}{% if extra %} {{ extra|raw }}{% endif %}>
+        <button class="toggle-up">{{ plus_text|default('+') }}</button>
+    </div>
+{% endmacro %}
+
+{# Renders an image #}
+{% macro image(src, alt, class, extra, lazy, no_image) %}
+    {% set image_src = src ? src : no_image ? '//cdn.ecommercedns.uk/no-image.png' : src %}
+    {% set loader = asset_url('images/loading.gif') %}
+    {% if lazy %}
+        <img src="{{ loader }}" data-src="{{ image_src }}" alt="{{ alt }}"{% if class or lazy %} class="{{ class }}{{ lazy ? ' lazy' : '' }}"{% endif %}{% if extra %} {{ extra|raw }}{% endif %}>
+    {% else %}
+        <img src="{{ image_src }}" alt="{{ alt }}"{% if class %} class="{{ class }}"{% endif %}{% if extra %} {{ extra|raw }}{% endif %}>
+    {% endif %}
+{% endmacro %}
+
+{# Renders a multi level caetgory list #}
+{% macro recursive_category(catID, level, limit) %}
+    {% set catparent = category(catID) %}
+    {% if limit == 0 or limit > level %}
+        <li{% if catparent.categories %} class="has-child"{% endif %}>
+            <a href="{{ catparent.url }}">{{ catparent.title }}</a>
+            {% if catparent.categories|length %}
+                <ul class="submenu level-{{ level|default(1) }}">
+                    {% for category in catparent.categories %}
+                        {{ _self.recursiveCategory(category.id, level > 0 ? level + 1 : 2) }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endif %}
+{% endmacro %}

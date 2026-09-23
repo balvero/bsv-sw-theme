@@ -1,0 +1,22 @@
+{% set button_text = global.customer.id ? 'Save' : (is_trade_account ? 'Apply' : 'Create') %}
+
+{# field labels #}
+{% set labels = {
+    'company': 'Company Name',
+    'first_name': 'First Name',
+    'last_name': 'Last Name',
+    'email_address': 'Email Address',
+    'password': 'Password',
+    'phone': 'Telephone Number',
+    'address_line1': '1st Line Address',
+    'address_line2': '2nd Line Address',
+    'address_line3': '3rd Line Address',
+    'city': 'Town/City',
+    'postcode': 'Postcode',
+    'country': 'Country',
+    'source': 'How did you hear about us?',
+    'marketing': 'Do you want to receive our newsletters?'
+} %}
+
+{# Render account form #}
+{{ theme.form(form_fields, errors, labels, button_text, true) }}

@@ -1,0 +1,112 @@
+// generic
+
+html, body {
+    @include rem(font-size, $base-font-size + px);
+    font-family: $font_main;
+    color: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_main_text); //#0a0a0a; //$color_main_font;
+}
+
+* {
+    outline: none;
+}
+
+// headings
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.56rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.125rem; }
+h5 { font-size: 1rem; }
+
+
+// subheaders
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font_heading;
+    font-weight: 700;
+    letter-spacing: -.015rem;
+    color: if(setting-value('website_colours_use_default_website_colors'), $color_global_black_titles, $color_website_colours_page_titles);
+
+    &.subheader {
+        color: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_secondary_titles); //#a3a3a3;
+    }
+}
+
+// page title
+
+h1 {
+    color: if(setting-value('website_colours_use_default_website_colors'), $color_global_black_titles, $color_website_colours_page_titles);
+}
+
+.page-title {
+    color: if(setting-value('website_colours_use_default_website_colors'), $color_global_black_titles, $color_website_colours_page_titles);
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+// home sections
+.section-title {
+    padding: .75rem 0;
+    margin-bottom: .75em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.reveal-heading {
+    font-size: 2.5rem;
+    font-weight: 500;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.unweight {
+    font-weight: 300;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.inline-link {
+    font-size: 1rem;
+
+    i {
+        vertical-align: middle;
+    }
+
+    span {
+        text-decoration: underline;
+    }
+}
+
+
+// elements
+
+address {
+    font-style: normal;
+}
+
+a {
+    color: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_main_text);
+
+    @include is-active {
+        color: if(setting-value('website_colours_use_default_website_colors'), $color_global_dark_text, $color_website_colours_main_text);
+    }
+
+    &.highlight {
+       color: $colour_tangerine;
+    }
+}
+
+// no highlight outline
+
+:focus {
+    outline: none;
+}
+
+hr {
+    max-width: $site-width;
+}

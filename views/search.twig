@@ -1,0 +1,25 @@
+{# Extend collection template #}
+{% extends 'templates/collection.twig' %}
+
+{% set title = 'Søge resultat' %}
+{% set contentClass = 'bg-shade' %}
+
+{% set filter_product_count = 0 %}
+{% for filter_group in filter_groups %}
+    {% for filter in filter_group.filters %}
+        {% set filter_product_count = filter_product_count + filter.product_count %}
+    {% endfor %}
+{% endfor %}
+
+{% set show_sidebar = filter_product_count ? true : false %}
+{% set grid_classes = filter_product_count ? '' : ' large-up-4' %}
+
+{% block sidebar %}
+    {# Render category menu #}
+    {% include 'partials/category_menu.twig' with { hide_side_menu: true } %}
+{% endblock %}
+
+{% block items %}
+	{# Render products #}
+	{% include 'partials/items.twig' with { 'classes': 'small-up-2 medium-up-3' ~  grid_classes } %}
+{% endblock %}

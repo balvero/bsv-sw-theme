@@ -1,0 +1,59 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Checkout' %}
+{% set breadcrumb_title = 'Login' %}
+{% set hideTitle = 0 %}
+{% set hideDesc = 1 %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="large-8 large-push-2 column">
+            <div class="account-login">
+                <div class="row clearblock" data-equalizer data-equalize-on="medium">
+                    <div class="medium-6 column">
+                        <section data-equalizer-watch>
+                            <h1 class="text-center">
+                                Sign In
+                            </h1>
+                            <h6 class="subheader text-center padding-bottom">
+                                For faster checkout.
+                            </h6>
+                            <form action="{{ global.current_url }}" method="post" class="margin-top">
+                                <label class="field-block">
+                                    <span class="field-label">Email address</span>
+                                    {{ html.input('email', '', 'required','', 'email' ) }}
+                                </label>
+                                <label class="field-block">
+                                    <span class="field-label">Password</span>
+                                    {{ html.input('password', '', 'required', '', 'password') }}
+                                </label>
+                                <button type="submit" class="button expanded">Sign in</button>
+                                <div class="text-center">
+                                    <a href="/account/forgotten-password" class="text-upper small-text strong">Forgot password?</a>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                    <div class="medium-6 column">
+                        <section data-equalizer-watch>
+                            <h1 class="text-center">
+                                Create an account
+                            </h1>
+                            <h6 class="subheader text-center padding-bottom">
+                                Get the best deals.
+                            </h6>
+                            <form action="/account/create" method="post" class="margin-top">
+                                <label class="field-block">
+                                    <span class="field-label">Email address</span>
+                                    {{ html.input('email', '', 'required','', 'email' ) }}
+                                </label>
+                                <button type="submit" class="button expanded secondary">Create account</button>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

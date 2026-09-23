@@ -1,0 +1,541 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Din kurv' %}
+{% set description = 'The contents of your shopping basket are shown below. Please select your delivery rate and then click the proceed to checkout button at the bottom of the page.' %}
+{% set hideTitle = 0 %}
+{% set hideDesc = 1 %}
+{% set contentClass = 'bg-shade' %}
+
+
+{% block page_content %}
+    {% if errors %}
+        <div class="row column">
+            {# Render errors #}
+            {{ theme.errors(errors) }}
+        </div>
+    {% endif %}
+    <div class="row">
+        {# Render basket table #}
+        <div class="large-8 column">
+            <form action="{{ global.current_url }}" method="post" class="basket-form">
+                <table class="basket-table unstriped" role="grid">
+                    <caption class="show-for-sr">
+                        {{ title }}
+                    </caption>
+                    {% if basket.items %}
+                        <tr class="basket-headings show-for-sr">
+                            <th colspan="2">Produkt</th>
+                            <th>Pris</th>
+                            <th>Anatal</th>
+                            <th>Total</th>
+                            <th>Fjern</th>
+                        </tr>
+                    {% endif %}
+                    {# basket items #}
+                    {% for item in basket.items %}
+
+                        {% set order_min = not global.features.extensions.min_max_quantity ? 0 : global.minimum_product_quantity > 0 ? global.minimum_product_quantity : item.product.minimum_order_quantity %}
+                        {% set order_max = not global.features.extensions.min_max_quantity ? 0 : global.maximum_product_quantity > 0 ? global.maximum_product_quantity : item.product.maximum_order_quantity %}
+
+                        <tr class="basket-item"
+                            data-min-quantity="{{ global.features.extensions.min_max_quantity ? item.product.minimum_order_quantity : 0 }}"
+                            data-max-quantity="{{ global.features.extensions.min_max_quantity ? item.product.maximum_order_quantity : 0 }}"
+                        >
+                            <td class="basket-item-image">
+                                {% if item.is_gift_voucher %}
+                                    <div class="image-container" data-fit="0">
+                                        <img src="{{ item.product.photo_url }}" alt="">
+                                    </div>
+                                {% else %}
+                                    <a href="{{ item.product.url }}" class="image-container" data-fit="0">
+                                        <img src="{{ item.product.photo_url }}" alt="{{ item.product.photo_description }}">
+                                    </a>
+                                {% endif %}
+                                <div class="hide-for-large">
+                                    {# render labels #}
+                                    {% if item.product.two_for_one %}
+                                        <div class="label primary two-for-one"><span>2</span> For <span>1</span></div>
+                                    {% endif %}
+                                    {% if item.product.three_for_two %}
+                                        <div class="label primary three-for-two"><span>3</span> For <span>2</span></div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="basket-item-info">
+                                {# Render item title #}
+                                <h4 class="basket-item-title">
+                                    {{ item.is_gift_voucher ? item.product.title|raw : item.product.title }}
+                                </h4>
+                                {# Render options and extras #}
+                                {% if item.options or item.choices or item.extras or item.comments %}
+                                    <dl class="basket-item-options clearfix">
+                                        {% for name, value in item.options %}
+                                           <dt>{{ name }}:</dt>
+                                           <dd>{{ theme.filter_hex(value) }}</dd>
+                                        {% endfor %}
+                                        {% for choice in item.choices %}
+                                           <dt>{{ choice.value }}:</dt>
+                                           <dd>{{ format_price(choice.price) }}</dd>
+                                        {% endfor %}
+                                        {% for extra in item.extras %}
+                                           <dt>{{ extra.name }}:</dt>
+                                           <dd>{{ format_price(extra.price) }}</dd>
+                                        {% endfor %}
+                                        {% if item.comments|length %}
+                                           {% set opts = item.comments|split('|') %}
+                                           {% for option in opts %}
+                                               {% set name = option|split(':')[0] %}
+                                               {% set value = option|split(':')[1] %}
+                                               <dt>{{ name }}</dt>
+                                               <dd>{{ value }}</dd>
+                                           {% endfor %}
+                                        {% endif %}
+                                    </dl>
+                                {% endif %}
+                                {# Render min max order values #}
+                                {% if order_min or order_max %}
+                                   {% set order_qty = [] %}
+                                   {% if order_min %}
+                                       {% set order_qty = order_qty|merge(['Min ' ~ order_min]) %}
+                                   {% endif %}
+                                   {% if order_max %}
+                                       {% set order_qty = order_qty|merge(['Max ' ~ order_max]) %}
+                                   {% endif %}
+                                   <p class="basket-item-options">
+                                       ({{ order_qty|join(', ') }})
+                                   </p>
+                                {% endif %}
+                                {# Render item remove button #}
+                                <div class="remove">
+                                    <a href="{{ item.remove_url }}" class="remove-button js-basket-remove">
+                                        <span>Fjern</span>
+                                    </a>
+                                </div>
+                                {% if not item.is_gift_voucher %}
+                                    {# move to wishlist button #}
+                                    <a href="{{ item.remove_url }}&amp;add_to_wishlist=1" class="basket-wishlist-button inline-link">
+                                        {{ theme.sw_icon('heart-o')}}
+                                        <span>Flyt til favoritliste</span>
+                                    </a>
+                                {% endif %}
+                                {# Render product offers #}
+                                {% for offer in item.offers %}
+                                    <div class="product-offer">
+                                        <div class="product-offer-title">
+                                            {{ offer.title }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </td>
+                            <td class="basket-item-quantity">
+                               {# Render item quantity input #}
+                                <div class="input-group{{ item.is_gift_voucher ? ' invisible' : '' }}">
+                                    {{ html.input('quantity[' ~ item.id ~ ']', item.quantity, 'basket-qty') }}
+                                    <div class="input-group-button">
+                                        <button class="basket-update" type="submit">
+                                            {{ theme.sw_icon('update') }}
+                                            <span class="show-for-sr">Opdater</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="basket-item-price">
+                               {# Render item cost #}
+                                {% if item.product.reward_points_enabled %}
+                                    <div class="price">{{ item.total }}</div>
+                                    point
+                                {% else %}
+                                    <div class="price">{{ format_price(item.total) }}</div>
+                                {% endif %}
+                                <div class="show-for-large text-right">
+                                    {# Render labels #}
+                                    {% if item.product.two_for_one %}
+                                        <div class="label primary two-for-one"><span>2</span> For <span>1</span></div>
+                                    {% endif %}
+                                    {% if item.product.three_for_two %}
+                                        <div class="label primary three-for-two"><span>3</span> For <span>2</span></div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>
+                                <h2 class="subheader padding no-margin">
+                                    {{ theme.text_snippet('empty_basket') }}
+                                </h2>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </form>
+            {# reward points #}
+            {% if basket.has_redeemed_points or basket.reward_points > 0 or basket.reward_points_earned > 0 %}
+                <div class="basket-rewards">
+                    <div class="row collapse" data-equalizer>
+                        <div class="column small-2 medium-1 text-center medium-text-left" data-equalizer-watch>
+                            {{ theme.sw_icon('circle-star') }}
+                        </div>
+                        <div class="column small-10 medium-11" data-equalizer-watch>
+                            <h3 class="basket-rewards-heading">
+                                Bonus Point
+                            </h3>
+                            {% if basket.reward_points_earned %}
+                                <p class="basket-rewards-text">
+                                    Du optjener
+                                    <em>{{ basket.reward_points_earned }} bonuspoint</em>
+                                     med dette køb.
+                                </p>
+                            {% endif %}
+                            {% if basket.has_redeemed_points %}
+                                <p class="basket-rewards-text">
+                                    Dine bonuspoint er ombyttet til en rabat på
+                                    <strong>{{ format_price(basket.reward_points_discount) }}</strong>.
+                                    <a href="/checkout/basket/unconvert-reward-points" class="inline-link">
+                                        Fortryd indløsning af dine point
+                                    </a>
+                                </p>
+                            {% elseif basket.reward_points > 0 %}
+                                <p class="basket-rewards-text">
+                                    Du har nu {{ basket.reward_points }} bonus point.
+                                    {% if basket.can_redeem_points %}
+                                            <a href="/checkout/basket/convert-reward-points" class="inline-link text-underline">Indløs dem og få rabat.</a>
+                                    {% endif %}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {# basket voucher form #}
+            <div class="basket-voucher">
+                <a data-toggle="voucherForm" class="basket-voucher-toggle">
+                    Har du en rabat kode?
+                </a>
+                <form class="hide" action="{{ global.current_url }}" id="voucherForm" method="post" data-toggler=".hide">
+                    <div class="row">
+                        <div class="column large-6">
+                            <div class="input-group">
+                                <input class="input-group-field" name="voucher_code" placeholder="Skriv rabatkode..." type="text">
+                                <div class="input-group-button">
+                                    <button type="submit" class="button">INDLØS</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="large-4 column">
+            <div class="basket-controls">
+                <form class="form-with-validation" action="/checkout/address" method="post" id="basket-form" data-radios="{{ gts.rates_as_radios }}">
+                    {% if basket.shipping_countries %}
+                        <div class="basket-info-shipping display-box">
+                            <div class="basket-shipping">
+                                <h3 class="basket-controls-title">
+                                    Leveringsmuligheder
+                                </h3>
+                                {# Render country drop down #}
+                                <label class="field-block">
+                                    <span class="field-label">
+                                        Leveringsland
+                                    </span>
+                                    <select name="countryId">
+                                        <option value="">Vælg venligst...</option>
+                                        {% if basket.shipping_countries|first is iterable %}
+                                            {% for name, states in basket.shipping_countries %}
+                                                <optgroup label="{{ name|default('Other Countries') }}">
+                                                    {% for state in states %}
+                                                        <option value="{{ state.id }}"{% if state.current %} selected="selected"{% endif %}>
+                                                            {{ state.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </optgroup>
+                                            {% endfor %}
+                                        {% else %}
+                                            {% for country in basket.shipping_countries %}
+                                                <option value="{{ country.id }}"{% if country.current %} selected="selected"{% endif %}>
+                                                    {{ country.name }}
+                                                </option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </label>
+                                {% if global.features.extensions.postcode_shipping %}
+                                    {# postcode shipping input #}
+                                    <div class="postcode-container">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Enter your postcode" class="postcode input-group-field required" value="{{ global.basket.postcode }}">
+                                            <div class="input-group-button">
+                                                <button type="button" class="button postcode-validate">
+                                                    Gå
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if gts.rates_as_radios %}
+                                    {# Render rates as radio buttons #}
+                                    <fieldset name="rateId" class="rates rates-container">
+                                        <legend class="field-label dark">Levering</legend>
+                                        <div class="rateId">
+                                            {% for rate in basket.shipping_rates %}
+                                                <div class="row column">
+                                                    <input id="rate-{{ rate.id }}" type="radio" name="rateId" value="{{ rate.id }}" {% if rate.current %} checked="checked"{% endif %}>
+                                                    <label for="rate-{{ rate.id }}">
+                                                        {{ rate.name }}
+                                                        <span>
+                                                            {{ format_price(rate.price) }}
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </fieldset>
+                                {% else %}
+                                    {# Render rate drop down #}
+                                    <div class="rates rates-container">
+                                        <label class="field-block">
+                                            <span class="field-label">
+                                                Vælg levering
+                                            </span>
+                                            <select name="rateId">
+                                                <option value="">Venligst vælg levering...</option>
+                                                {% for rate in basket.shipping_rates %}
+                                                    <option value="{{ rate.id }}"{% if rate.current %} selected="selected"{% endif %}>
+                                                        {{ rate.name }}
+                                                        {{ format_price(rate.price) }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                {# Render delivery date field #}
+                                {% if gts.checkout_delivery_date %}
+                                    <div class="delivery-date-container">
+                                        <label for="delivery_date">Vælg den dato du foretrækker</label>
+                                        <input type="text" name="delivery_date" value="{{ basket.delivery_date }}" readonly>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="basket-info-totals display-box">
+                        <h3 class="basket-controls-title">
+                            Din ordre ({{ global.basket.items }}{{ global.basket.items == 1 ? 'stk' : 'stk.' }})
+                        </h3>
+                        <table class="basket-totals unstriped text-right">
+                            <tr>
+                                <td>Subtotal</td>
+                                <td>
+                                    <span class="basket-sub-total">{{ format_price(basket.original_sub_total_excluding_tax) }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Levering</td>
+                                <td>
+                                    <span class="basket-delivery">{{ format_price(basket.original_shipping) }}</span>
+                                </td>
+                            </tr>
+							<tr>
+                                <td>Moms</td>
+                                <td>
+                                    <span class="basket-delivery">{{ format_price(basket.vat) }}</span>
+                                </td>
+                            </tr>
+							
+                            <tr>
+                                <td>
+                                    Rabatter
+                                    {% if basket.voucher_discount or basket.has_redeemed_points %}
+                                        <a data-voucher="{{ basket.voucher_discount ? 1 : 0 }}" data-rewards="{{ basket.has_redeemed_points ? 1 : 0 }}" class="remove-voucher js-remove-discount text-underline" href="/checkout/basket/clear-vouchers">remove</a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    -<span class="basket-discounts">{{ format_price(basket.discount) }}</span>
+                                </td>
+                            </tr>
+                            {% if basket.partial_payment_total %}
+                                <tr>
+                                    <td>Tilgodebevis</td>
+                                    <td>
+                                        -<span class="basket-partial">{{ format_price(basket.partial_payment_total) }}</span>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td>Total</td>
+                                <td>
+                                    <span class="basket-total">{{ format_price(basket.total) }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                        {% if not gts.checkout_disabled %}
+                            {# Render checkout button #}
+                            {{ html.button('', '', global.theme.settings.button_checkout, 'button large expanded proceed-to-checkout', '', '', '', '', 'button_checkout') }}
+
+                            {% if basket.payment_methods|length %}
+                                <p class="basket-buttons-note text-center">
+                                    Du har mulighed for at gennemgå din ordre før du bekræfter
+                                </p>
+                                {% for payment_method in basket.payment_methods %}
+                                    {% if payment_method.id == 33 or payment_method.id == 34 %}
+                                        <button type="submit" name="{{ payment_method.field_name }}" value="1" class="image-button paypal-button basket-payment-button">
+                                            <span class="show-for-sr">Betal med PayPal</span>
+                                            <img src="{{ asset_url('images/paypal-button.png') }}" alt="Check out with PayPal" width="170">
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" name="{{ payment_method.field_name }}" value="1" class="button large expanded proceed-to-checkout basket-payment-button">
+                                            {{ payment_method.title }}
+                                        </button>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            <p class="text-right">{{ theme.text_snippet('checkout_disable') }}</p>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% if gts.checkout_delivery_date %}
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    {% if basket.shipping_rates %}
+        <script>
+            $('[name="countryId"]').on('change', function() {
+                var rateSelect = $(this),
+                    matchText = 'click & collect',
+                    text = rateSelect.find('option:selected').text(),
+                    btnSelector = '.basket-payment-button';
+
+                if (text.toLowerCase().indexOf(matchText) >= 0) {
+                    // is C&C - hide basket payment methods
+                    $(btnSelector).addClass('hide');
+                }
+                else {
+                    // not C&C - show basket payment methods
+                    $(btnSelector).removeClass('hide');
+                }
+            });
+        </script>
+    {% endif %}
+    {% if gts.checkout_delivery_date %}
+
+        {# convert date input #}
+        {% set holidays_raw = global.theme.settings.checkout_delivery_holidays|replace({' ':''})|split(',') %}
+        {% set hols_parsed = [] %}
+        {% for date in holidays_raw %}
+            {% set parsed = date|date('j-n-Y') %} {# format d-m-yy #}
+            {% set hols_parsed = hols_parsed|merge([parsed]) %}
+        {% endfor %}
+        {% set lead = global.theme.settings.checkout_delivery_lead|default(1) %}
+        {% set cutoff = global.theme.settings.checkout_delivery_cut_off|split(':')[0]|default(15) %}
+
+        {# delivery date field #}
+        {{ html.script('//cdn.jsdelivr.net/npm/jquery-ui-dist@1.12.1/jquery-ui.js') }}
+        <script>
+            function canDeliverOnDate(date) {
+                var now = new Date();
+                var day = date.getDay();
+
+                return [(day != 0) && (!isTomorrow(date) || now.getHours() < 24), ''];
+            }
+            function isTomorrow(date) {
+                var today = new Date();
+                var tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+                return date.toDateString() === tomorrow.toDateString();
+            }
+            $(function() {
+
+                var country_select = $('select[name="countryId"]'),
+                    picker_field = $('input[name="delivery_date"]'),
+                    container = picker_field.closest('.delivery-date-outer');
+
+                if(!picker_field.length){
+                    return;
+                }
+
+                function init_date_picker() {
+
+                    var now = new Date(),
+                        hrs = now.getHours(),
+                        zones = ['222', '241', '242', '243', '244', '254', '255'], // show for zones
+                        field = $('.delivery-date-container'),
+                        country = country_select.val(),
+                        user_lead = {{ lead }},
+                        user_cutoff = {{ cutoff }},
+                        min_date = country == '222' && hrs < user_cutoff ? (1 + user_lead) : (2 + user_lead);     // allow next for UK (before 3pm)
+                        days_array = [{{ global.theme.settings.checkout_delivery_days|raw }}],
+                        holidays = {{ hols_parsed|json_encode()|raw }};
+
+                    //console.log($.inArray(country, zones));
+                    if(theme_config.debug){
+                        console.log('holidays', holidays);
+                    }
+
+                    // toggle field for zones
+                    if($.inArray(country, zones) !== -1) {
+                        container.show();
+                    }
+                    else {
+                        container.hide();
+                    }
+
+                    // call picker
+                    picker_field.datepicker({
+                        beforeShowDay: unavailable,
+                        minDate: min_date, // min_date
+                        dateFormat: 'dd/mm/yy'
+                    });
+                }
+
+                function unavailable(date) {
+                    // date as str
+                    dmy = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+                    // check holidays input
+                    if ($.inArray(dmy, holidays) != -1) {
+                        return [false, '', 'Unavailable'];
+                    } else {
+                        return disabledays(date);
+                    }
+                }
+
+                function disabledays(date) {
+                    var day = date.getDay();
+                    // exclude days of week
+                    if(day == 0 && $.inArray(day, days_array) == -1) { return [true] }
+                    if(day == 1 && $.inArray(day, days_array) == -1) { return [true] }
+                    if(day == 2 && $.inArray(day, days_array) == -1) { return [true] }
+                    if(day == 3 && $.inArray(day, days_array) == -1) { return [true] }
+                    if(day == 4 && $.inArray(day, days_array) == -1) { return [true] }
+                    if(day == 5 && $.inArray(day, days_array) == -1) { return [true] }
+                    if(day == 6 && $.inArray(day, days_array) == -1) { return [true] }
+
+                    return [false]
+                }
+
+                country_select.on('change', function() {
+                    //console.log($(this).val());
+                    picker_field.datepicker('destroy');
+                    init_date_picker();
+                    picker_field.datepicker('setDate', null);
+                    picker_field.datepicker('refresh');
+                });
+
+                init_date_picker();
+            });
+        </script>
+    {% endif %}
+{% endblock %}

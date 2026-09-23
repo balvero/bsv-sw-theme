@@ -1,0 +1,43 @@
+{# Render brand / category menu #}
+<aside class="side-menu">
+    {# Product filters #}
+    {% set filter_product_count = 0 %}
+    {% for filter_group in filter_groups %}
+        {% for filter in filter_group.filters %}
+            {% set filter_product_count = filter_product_count + filter.product_count %}
+        {% endfor %}
+    {% endfor %}
+
+    {% if global.features.extensions.product_filters and filter_product_count > 0 %}
+        {% include 'partials/product_filters.twig' with { 'context': 'desktop' } %}
+    {% endif %}
+    {% if not hide_side_menu %}
+        <nav class="side-nav card">
+            <h3 class="card-divider">
+                {{ nav_title|default('Our Categories') }}
+            </h3>
+            <div class="card-section">
+                <ul class="side-nav-menu vertical menu" data-accordion-menu>
+                    {% for category in categories|default(global.categories) %}
+                        <li>
+                            <a href="{{ category.url }}" class="{{ category.url in global.current_url or category.url in breadcrumbs[0].url ? 'active' : '' }}">
+                                {{ category.title }}
+                            </a>
+                            {% if category.categories %}
+                                <ul class="vertical menu nested{{ category.url in global.current_url or category.url in breadcrumbs[0].url  ? ' is-active' : '' }}">
+                                    {% for subcategory in category.categories %}
+                                        <li>
+                                            <a href="{{ subcategory.url }}" {% if subcategory.current %}class="active" {% endif %}>
+                                                {{ subcategory.title }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </nav>
+    {% endif %}
+</aside>

@@ -1,0 +1,228 @@
+// =============================================================================
+/* #Page-foot */
+// =============================================================================
+
+.footer {
+
+    &-top {
+        //background-color: $colour_mineshaft;
+        background-color: if(setting-value('footer_use_default_website_colors'), $color_global_grey_background, $color_footertop_category_background); //#333333; //$color_footer_top_bg;
+
+        a {
+            //color: #cbcbcb;
+            color: if(setting-value('footer_use_default_website_colors'), $color_global_white_text, $color_footertop_category_items); //#ffffff; //$color_footer_top_text;
+            font-size: 1rem;
+        }
+    }
+
+    &-middle {
+        //background-color: #f6f6f6;
+        background-color: if(setting-value('footer_use_default_website_colors'), #f6f6f6, $color_footermiddle_footer_background); //#f6f6f6; //$color_footer_middle_bg;
+        padding: 2rem 0;
+
+        &-menu {
+            > li > a {
+                //color: #7d7d7d;
+                color: if(setting-value('footer_use_default_website_colors'), $color_global_dark_text, $color_footermiddle_footer_text_links); //#7d7d7d; //$color_footer_middle_text;
+                padding-left: 0;
+                padding-right: 0;
+                font-size: 1rem;
+            }
+        }
+    }
+
+    &-bottom {
+        //background-color: #e8e8e8;
+        background-color: if(setting-value('footer_use_default_website_colors'), #e0e0e0, $color_footerbottom_footer_background); //#e0e0e0; //$color_footer_bottom_bg;
+        //color: #7d7d7d;
+        color: if(setting-value('footer_use_default_website_colors'), $color_global_dark_text, $color_footerbottom_footer_text_links); //#262626; //$color_footer_bottom_text;
+        font-size: 1rem;
+        position: relative;
+        padding: 1rem 0 0;
+
+        a {
+            color: #7d7d7d;
+        }
+    }
+
+    &-subscribe {
+        //background-color: #4b4b4b;
+        background-color: if(setting-value('footer_use_default_website_colors'), #4b4b4b, $color_footernewsletter_background); //#4b4b4b; //$color_footer_newsletter_bg;
+        display: table;
+
+        .inner {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        i {
+            //color: #e8e8e8;
+            color: if(setting-value('footer_use_default_website_colors'), $color_global_white_text, $color_footernewsletter_icon); //#ffffff; //$color_footer_newsletter_icon;
+        }
+
+        .input-group {
+            margin-bottom: 0;
+
+            .input-group-label {
+                background-color: $transparent;
+                color: $white;
+                font-size: 2rem;
+                padding: 0;
+                border: none;
+            }
+
+            .input-group-field {
+                background-color: rgba(255, 255, 255, 0);
+                border: 0;
+                //color: #e8e8e8;
+                color: if(setting-value('footer_use_default_website_colors'), $color_global_white_text, $color_footernewsletter_text_links); //#cacaca; //$color_footer_newsletter_text;
+
+                @include placeholder {
+                    //color: #e8e8e8;
+                    color: if(setting-value('footer_use_default_website_colors'), $color_global_white_text, $color_footernewsletter_text_links); //#cacaca; //$color_footer_newsletter_text;
+                }
+            }
+
+            .button {
+                background-color: rgba(255, 255, 255, 0);
+            }
+        }
+    }
+
+    &-attribution {
+        display: inline-block;
+
+        &, a {
+            color: if(setting-value('footer_use_default_website_colors'), $color_global_dark_text, $color_footerbottom_footer_text_links);
+        }
+    }
+
+    &-copy {
+        color: if(setting-value('footer_use_default_website_colors'), $color_global_dark_text, $color_footerbottom_footer_text_links);
+        height: 3rem;
+
+        .inner {
+           @include vertical-align();
+        }
+
+         p {
+            margin-bottom: .25rem;
+        }
+    }
+
+    &-social {
+        
+        a {
+            font-size: 1.7rem;
+            //color: #ccc;
+            color: if(setting-value('footer_use_default_website_colors'), $color_global_white_icons, $color_footersocial_media_icons); //#ffffff; //$color_footer_social;
+        }
+    }
+
+    &-payment {
+
+        &-heading {
+            color: if(setting-value('footer_use_default_website_colors'), $color_global_dark_text, $color_footermiddle_footer_text_links); //$color_footer_middle_text;
+            font-size: .9rem;
+            font-weight: 400;
+            line-height: 1;
+            @include rem(margin, 0 0 20px);
+            padding-top: .7rem;
+        }
+
+        &-list {
+            @media #{$s-only} {
+                @include rem(margin, 10px 0 0);
+            }
+        }
+    }
+}
+
+
+@media #{$m-down} {
+    .footer {
+
+        &-top {
+            padding: 1.75rem 1rem;
+        }
+
+        &-middle {
+            padding-right: 1rem;
+            padding-left: 1rem;
+        }
+
+        &-copy {
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        &-subscribe {
+            padding: 1.75rem 1rem;
+        }
+
+        &-right {
+            .column:last-child {
+                background-color: $white;
+                padding: 1rem 2rem;
+            }
+        }
+    }
+}
+
+@media #{$m-only} {
+    .footer-attribution {
+        padding-top: .5rem;
+    }
+}
+
+@media #{$l-up} {
+    .footer {
+
+        &-top {
+            padding: 2.5rem 1rem;
+
+            .menu {
+                margin-left: -1rem;
+            }
+
+            li {
+                display: inline-block;
+            }
+        }
+
+        &-social {
+           li:last-child {
+               margin-right: 0;
+           }
+        }
+
+        &-middle {
+                padding: 2rem 1rem;
+        }
+
+        &-bottom {
+            padding: 1.75rem 1rem;
+        }
+
+        &-right {
+            position: absolute;
+            width: 60%;
+            height: 100%;
+            top: 0;
+            right: 0;
+
+            > .row {
+                height: 100%;
+
+                .column {
+                    height: 100%;
+                }
+            }
+        }
+
+        &-attribution {
+            padding-top: 2.5rem;
+        }
+    }
+}

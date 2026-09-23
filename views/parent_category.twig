@@ -1,0 +1,18 @@
+{# Extend collection template #}
+{% extends 'templates/collection.twig' %}
+
+{% set title = category.title %}
+{% set description = category.description %}
+{% set show_sidebar = false %}
+{% set contentClass = 'bg-shade' %}
+
+{% block items %}
+	{% if products is defined %}
+		{# Render products #}
+		{% include 'partials/items.twig' with { 'items': products, 'item_type': 'product', 'classes': 'small-up-2 medium-up-3' } %}
+	{% else %}
+		{# Render categories #}
+		{% include 'partials/items.twig' with { 'items': category.categories, 'item_type': 'category', 'classes': 'small-up-2 medium-up-3' } %}
+	{% endif %}
+
+{% endblock %}

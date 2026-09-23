@@ -1,0 +1,52 @@
+{# Age verification #}
+{% if gts.age_modal %}
+    <div class="reveal verify-age-modal text-center" id="verifyAgeModal" data-reveal data-close-on-click="false" data-close-on-esc="false">
+        <h1 class="verify-age-modal-title reveal-heading">
+            {{ theme.text_snippet('age_modal_title') }}
+        </h1>
+        <div class="verify-age-modal-text margin-bottom">
+            {{ theme.text_snippet('age_modal_text') }}
+        </div>
+        <button class="verify-age-modal-button-confirm button padded-y js-confirm" data-close>
+            Yes, I'm 18 or over
+        </button>
+        <br>
+        <button class="verify-age-modal-button-decline button padded-y" onclick="{{ gts.text_age_modal_url|length ? 'window.location.href = "' ~ gts.text_age_modal_url ~ '";' : 'window.history.back();' }}">
+            No, I'm not 18
+        </button>
+    </div>
+{% endif %}
+
+
+{# Newsletter #}
+{% if gts.newsletter_modal %}
+    <div class="reveal newsletter-modal text-center" id="newsletterModal" data-reveal>
+        <h1 class="newsletter-modal-title reveal-heading">
+            {{ theme.text_snippet('newsletter_modal_title') }}
+        </h1>
+        <div class="newsletter-modal-text margin-bottom">
+            {{ theme.text_snippet('newsletter_modal_text') }}
+        </p>
+        {# Render newsletter form #}
+        {% if global.theme.settings.mailchimp_action %}
+            <form action="{{ global.theme.settings.mailchimp_action }}" method="post" class="newsletter-form" name="mc-embedded-subscribe-form" target="_blank" novalidate="novalidate">
+                <label class="field-block">
+                    <span class="field-label">Email address</span>
+                    {{ html.input('EMAIL', '', 'input-group-field jsv_email required', 'enter your email address...') }}
+                </label>
+                {{ html.button('', '', 'Sign up', 'newsletter-modal-button button padded-y', true) }}
+            </form>
+        {% else %}
+            <form action="/newsletter-subscribe" method="post" class="newsletter-form form-with-validation">
+                <label class="field-block">
+                    <span class="field-label">Email address</span>
+                    {{ html.input('email', '', 'input-group-field jsv_email required', 'enter your email address...') }}
+                </label>
+                {{ html.button('', '', 'Sign up', 'newsletter-modal-button button padded-y', true) }}
+            </form>
+        {% endif %}
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endif %}

@@ -1,0 +1,28 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Galleries' %}
+{% set bodyClass = 'galleries' %}
+
+{% block page_content %}
+    <div class="row small-up-1 medium-up-2 large-up-3">
+        {% for item in galleries %}
+            <div class="column column-block">
+                <div class="panel-box">
+                    <a href="{{ item.url }}" class="image-container" data-fit="1">
+                        <img src="{{ item.photo_url }}" alt="{{ item.photo_description }}">
+                    </a>
+                    <div class="box-info">
+                        <h3 class="gallery-title">
+                            <a class="text-body" href="{{ item.url }}">{{ item.name }}</a>
+                        </h3>
+                        <a href="{{ item.url }}" class="gallery-button button">
+                            View gallery
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

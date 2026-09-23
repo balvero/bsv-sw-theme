@@ -1,0 +1,85 @@
+{# Render blog posts #}
+{% if preview %}
+    <div class="row small-up-1 medium-up-2">
+        {% for post in posts %}
+            <div class="columns">
+                <article class="blog-item">
+                    <a href="{{ post.url }}" class="image-container blog-item__image" data-fit="{{ gts.image_container_blog_thumbnail ? '1' : '0' }}">
+                        {{ html.image(post.thumbnail.image_url, post.title, 'blog-post-image', '', true, true) }}
+                    </a>
+                    <div class="box-data">
+                        <h3>
+                            <a href="{{ post.url }}">{{ post.title }}</a>
+                        </h3>
+                        <div class="blog-post__meta">
+                            <time datetime="{{ post.date|date('Y-m-d') }}">{{ post.date|date('jS F Y') }}</time>
+                            <address class="author">{{ post.author }}</address>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        {% endfor %}
+    </div>
+{% elseif preview_single %}
+    {% if containerClass %}
+        <div class="{{ containerClass }}">
+    {% endif %}
+    <article class="blog-item{{ innerClass ? ' ' ~ innerClass : '' }}">
+        <a href="{{ post.url }}" class="image-container blog-item__image" data-fit="{{ gts.image_container_blog_thumbnail ? '1' : '0' }}">
+            {{ html.image(post.thumbnail.image_url, post.title, 'blog-post-image', '', true, true) }}
+        </a>
+        <div class="box-data">
+            <h3>
+                <a href="{{ post.url }}">{{ post.title }}</a>
+            </h3>
+            <div class="blog-post__meta">
+                <address class="author">{{ post.author }}</address>
+                {% if not omitDate %}
+                    <time datetime="{{ post.date|date('Y-m-d') }}">{{ post.date|date('jS F Y') }}</time>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+    {% if containerClass %}
+        </div>
+    {% endif %}
+{% else %}
+    <article class="blog-post">
+        {% if post.thumbnail.image_url and global.theme.settings.show_blog_post_image %}
+            <div class="image-container show-for-large">
+                {{ html.image(post.thumbnail.image_url, post.title, 'blog-post-image', '', gts.lazyload_images, true) }}
+            </div>
+            <div class="blog-post__meta">
+                <div class="heading--1 show-for-large">
+                    {{ post.title }}
+                </div>
+                <time datetime="{{ post.date|date('Y-m-d') }}" pubdate="pubdate">{{ post.date|date('jS F Y') }}</time>
+                <address class="author">{{ post.author }}</address>
+            </div>
+        {% else %}
+            <div class="blog-post__meta--no-image">
+                <time datetime="{{ post.date|date('Y-m-d') }}" pubdate="pubdate">{{ post.date|date('jS F Y') }}</time>
+            </div>
+        {% endif %}
+        {% if gts.show_blog_social_buttons %}
+            {{ theme.share_buttons(global.current_url, post.title, post.excerpt, post.thumbnail.image_url, true, 'social-menu menu simple margin-bottom') }}
+        {% endif %}
+        <div class="blog-content fr-view">
+            {{ post.content|raw }}
+        </div>
+        {% set dsn = global.theme.settings.disqus_id %}
+        {% if dsn|length and not preview %}
+            <div id="disqus_thread"></div>
+
+            <script>
+            (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://{{ dsn }}.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        {% endif %}
+    </article>
+{% endif %}

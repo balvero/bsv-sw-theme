@@ -1,0 +1,203 @@
+{# Extend master template #}
+{% extends 'templates/master.twig' %}
+
+{% set account_links = [
+    {
+        'text': 'Min konto',
+        'url':  '/account',
+        'icon':  'account-home'
+    },
+    {
+        'text': 'Mine ordre',
+        'url':  '/account/orders',
+        'icon':  'my-orders'
+    },
+    {
+        'text': 'Mine favoritter',
+        'url':  '/account/favourites',
+        'icon':  'my-favourites'
+    },
+    {
+        'text': 'Mine abonnementer',
+        'url':  '/account/subscriptions',
+        'icon':  'my-subscriptions',
+        'condition': global.features.extensions.stripe_subscriptions
+    },
+    {
+        'text': 'Adressebog',
+        'url':  '/account/addresses',
+        'icon':  'address-book',
+        'condition': global.features.extensions.address_book
+    },
+    {
+        'text': 'Mine oplysninger',
+        'url':  '/account/edit',
+        'icon':  'edit'
+    },
+    {
+        'text': 'Mit password',
+        'url':  '/account/password',
+        'icon':  'my-password'
+    },
+    {
+        'text': 'Henviste venner',
+        'url':  '/account/referred-friends',
+        'icon':  'referred-friends',
+        'condition': global.theme.settings.ref_friends_accounts_pages
+    },
+    {
+        'text': 'Bonuspoint',
+        'url':  '/account/reward-points',
+        'icon':  'reward-points',
+        'condition': global.features.apps.reward_points
+    },
+    {
+        'text': 'Log ud',
+        'url':  '/account/logout',
+        'icon':  'log-out'
+    }
+] %}
+
+{% block content %}
+    <div id="content" class="content sw-account">
+        <div class="row">
+            <div class="column medium-4 sw-account-sidebar{{ global.current_path != '/account' ? ' show-for-large' : '' }}">
+                <nav class="sw-account-box">
+                    <div class="sw-account-header">
+                        <span class="sw-account-initial-blob show-for-large">
+                            {{ global.customer.first_name|slice(0, 1) }}{{ global.customer.last_name|slice(0, 1) }}
+                        </span>
+                        <div class="sw-account-name">
+                            Hej, <br>
+                            <strong>{{ global.customer.first_name }} {{ global.customer.last_name }}</strong>
+                        </div>
+                        {% if global.customer.company %}
+                            <div class="sw-account-company">
+                                {{ global.customer.company }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <ul class="sw-account-menu menu vertical">
+                        {% for item in account_links %}
+                            {% if (item.condition is defined and item.condition) or not item.condition is defined %}
+                                <li class="{{ global.current_path == item.url ? 'active' : '' }}" data-cond="{{ item.condition is defined }}">
+                                    <a href="{{ item.url }}">
+                                        <i class="icon-{{ item.icon }}" aria-hidden="true"></i>
+                                        <span>{{ item.text }}</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+            <div class="column {{ global.current_path != '/account' ? 'large' : 'medium' }}-8 sw-account-content">
+                <div class="sw-account-box">
+                    {% if global.current_path != '/account' %}
+                        <div class="row column sw-margin-b hide-for-large">
+                            <a href="/account" class="sw-account-home-button">
+                                <i class="icon-back" aria-hidden="true"></i>
+                                <i class="icon-profile" aria-hidden="true"></i>
+                                <span class="show-for-sr">Min konto</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% block page_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script>
+        $(function() {
+            validateRules('.js-validation-group');
+            passwordToggle('.js-password-toggle');
+
+            if($('input[name="password_confirm"]').length){
+                passwordMatch();
+            }
+
+            $('.js-cancel-sub').linkWithConfirmation({ message: 'Are you sure you want to cancel this subscription?' });
+            $('.js-remove-address').linkWithConfirmation({ message: 'Are you sure you want to delete this address?' });
+
+        });
+        function passwordToggle(selector) {
+            var button = $(selector);
+
+            if(!button.length){
+                return;
+            }
+
+            button.each(function() {
+                var $button = $(this),
+                    group = $button.closest('.js-password-group'),
+                    input = group.find('.js-password-field');
+
+                $button.on('click', function(e){
+                    e.preventDefault();
+                    if (input.attr('type') == 'password') {
+                        input.attr('type', 'text');
+                        $(this).text('Hide')
+                    } else {
+                        input.attr('type', 'password');
+                        $(this).text('Show');
+                    }
+                });
+            });
+        }
+        function validateRules(selector) {
+            var group = $(selector),
+                indicator = group.find('[data-rule]'),
+                form = group.closest('form');
+
+            indicator.each(function() {
+                var $indicator = $(this),
+                    rule = $indicator.data('rule'),
+                    regEx = new RegExp(rule),
+                    inputId = $indicator.attr('data-bind'),
+                    input = $('#' + inputId);
+
+                input.on('keyup', function(e) {
+                    if (regEx.test(this.value)) {
+                        $indicator.addClass('valid');
+                        $(this).closest('.js-password-group').removeClass('error');
+                    }
+                    else {
+                       $indicator.removeClass('valid');
+                       $(this).closest('.js-password-group').addClass('error');
+                    }
+                });
+            });
+        }
+        function passwordMatch() {
+            var password2 = $('input[name="password_confirm"]'),
+                password = password2.closest('form').find('input[name="new_password"]'),
+                error = '<span class="error-text">passwords don\'t match</span>',
+                to_match = password.val();
+
+            password2.on('focusout', function(e) {
+                var field = password2.closest('.sw-account-field'),
+                    to_match = password.val(),
+                    confirm = $(this).val();
+
+                if(confirm != to_match) {
+                    if (!field.find('.error-text').length){
+                        field.append(error);
+                    }
+                }
+                else {
+                    field.find('.error-text').remove();
+                }
+            });
+
+            password2.on('keyup', function(e){
+                if($(this).val() == password.val()){
+                    $(this).closest('form').find('.error-text').remove();
+                }
+            });
+        }
+    </script>
+{% endblock %}

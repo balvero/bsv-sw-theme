@@ -1,0 +1,115 @@
+// off canvas basket
+// soft add to basket component
+.off-canvas-basket {
+    background: $white;
+    border-left: 1px solid $light-grey;
+    padding: 1.5rem 1rem;
+
+    &__heading {
+        color: $text-grey;
+        font-size: 1.125rem;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .items {
+        margin: 1rem -1rem 2rem;
+        border-bottom: 1px solid $light-grey;
+
+        .item {
+            border-top: 1px solid $light-grey;
+            padding: 1rem .5rem;
+            position: relative;
+
+            h4 {
+                font-weight: 700;
+                text-transform: uppercase;
+                font-size: 1rem;
+                line-height: 1.2;
+                padding-right: 2rem;
+            }
+
+            .remove-button {
+                text-decoration: none;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+            }
+        }
+
+        .item__image {
+            border: 1px solid $light-grey;
+            position: relative;
+
+            .badge {
+                position: absolute;
+                top: -.25rem;
+                right: -.25rem;
+                z-index: 2;
+            }
+        }
+
+        .price {
+            font-weight: 700;
+            margin-bottom: .5rem;
+            color: if(setting-value('product_page_use_default_website_colors'), $color_global_dark_red_accent, $color_product_page_product_sale_price);
+        }
+    }
+
+    .summary {
+        margin-bottom: 1.25rem;
+    }
+
+    &__total-label {
+        text-transform: uppercase;
+        color: $colour_third;
+        margin-bottom: 0;
+        font-weight: 700;
+    }
+
+    &__total-value {
+        font-size: 2rem;
+        font-weight: 800;
+    }
+
+    &-close {
+        color: $colour_grey;
+        display: block;
+        @include rem(font-size, 16px);
+        text-align: center;
+        text-decoration: underline;
+        text-transform: uppercase;
+        margin-top: 1rem;
+
+        @include is-active {
+            color: $colour_grey;
+        }
+    }
+
+    &:after {
+        box-shadow: none !important;
+    }
+}
+
+@media #{$m-up} {
+    .off-canvas-basket {
+        width: 400px;
+        @include transform( translateX(400px) );
+
+        &.is-open ~ .off-canvas-content {
+            @include transform( translateX(-400px) );
+        }
+    }
+}
+
+@media #{$s-only} {
+    .off-canvas-basket {
+        width: 350px;
+        @include transform( translateX(350px) );
+
+        &.is-open ~ .off-canvas-content {
+            @include transform( translateX(-350px) );
+        }
+    }
+}
+

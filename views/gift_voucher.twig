@@ -1,0 +1,94 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set bodyClass = 'gift-voucher' %}
+{% set title = 'Gift Cards' %}
+{% set hideTitle = 1 %}
+{% set hideDesc = 0 %}
+
+{# Set labels #}
+{% set labels = {
+'amount': 'Gift Ammount',
+'customer_name': 'Your Name',
+'recipient_name': "Recipient\'s Name",
+'message': 'Message',
+'type': 'Card Style'
+} %}
+
+{% set currSymbol = global.currency.symbol %}
+
+{% block page_content %}
+    <div class="row column">
+        <div class="row">
+            <div class="medium-8 medium-push-2 column">
+                <div class="page-title text-center">Purchase a gift card</div>
+                <p class="subheading text-center">{{ theme.text_snippet('gift_voucher') }}</p>
+                <form action="{{ global.current_url }}" method="post" class="form-with-validation row voucher-form padding-top">
+                    <span class="show-for-sr">
+                        {% set currSymbolDecoded = global.currency.symbol|convert_encoding('UTF-8', 'HTML-ENTITIES')|raw %} 
+                    </span>
+                    {{ theme.errors(errors) }}
+                    <div class="large-6 column">
+                        <label>
+                            <span class="field-label">
+                                Amount
+                                {% if currSymbol %}
+                                    ({{ currSymbol|raw }})
+                                {% else %}
+                                    (&pound;)
+                                {% endif %}
+                            </span>
+                            {% if values %}
+                                <select name="amount" class="custom_select country required">
+                                    <option value="">Select...</option>
+                                    {% for value in values %}
+                                        <option value="{{ value }}">{{ value|number_format(2) }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% elseif value %}
+                                {{ html.input('amount', value|number_format(2), '', '', 'text', 'readonly="readonly"') }}
+                            {% else %}
+                                {{ html.input('amount', '', 'required jsv_number') }}
+                            {% endif %}
+                        </label>
+                        <label>
+                            <span class="field-label">Your Name</span>
+                            {{ html.input('extra_data[customers_name]', '', 'required') }}
+                        </label>
+                        <label>
+                            <span class="field-label">Recipient's Name</span>
+                            {{ html.input('extra_data[recipients_name]', '', 'required') }}
+                        </label>
+                    </div>
+                    <div class="large-6 column">
+                        <fieldset class="margin-bottom">
+                            <legend class="field-label show-for-large invisible">Voucher style</legend>
+                            {% for style in styles %}
+                                <input type="radio"
+                                       name="type"
+                                       value="{{ style.id }}"
+                                       id="{{ 'type-' ~ loop.index }}"
+                                       {% if loop.index == 1 %} checked {% endif %}
+                                >
+                                <label for="{{ 'type-' ~ loop.index }}">
+                                    {{ style.name }}
+                                    {% if style.price %}
+                                        ({{ format_price(style.price) }})
+                                    {% endif %}
+                                </label>
+                            {% endfor %}
+                        </fieldset>
+
+                        <label>
+                            <span class="field-label">Your Message</span>
+                            {{ html.textarea('extra_data[message]', '', '', '', 8) }}
+                        </label>
+                    </div>
+                    <div class="column text-right">
+                        <button type="submit" class="gift-voucher-button button wide" data-name="button_gift_card">{{ gts.button_gift_card }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

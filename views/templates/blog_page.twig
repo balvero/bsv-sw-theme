@@ -1,0 +1,42 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set hideDesc = 1 %}
+{% if post %}
+    {% set title = post.title %}
+{% else %}
+    {% set title = 'Blog' %}
+    {% set description = global.theme.settings.text_blog %}
+{% endif %}
+
+{% block breadcrumbs %}
+    {# Add blog link #}
+    {% if post %}
+        <li>
+            <a href="/blog">
+                Blog
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="blog-container">
+        {% if categories and not post %}
+            <aside class="blog__categories">
+                <ul class="menu simple">
+                    {% for item in categories %}
+                        <li>
+                            <a href="{{ item.url }}">
+                                {{ item.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </aside>
+        {% endif %}
+        <div class="blog__posts">
+            {% block posts %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,382 @@
+/* #-CHECKOUT_BASKET */
+
+.basket-subscription-error {
+    background-color: $color_global_dark_red_accent;
+    color: $white;
+    @include rem(font-size, 13px);
+    font-weight: 400;
+    line-height: 1.2;
+    @include rem(padding, 12px 12px);
+    @include rem(margin-bottom, 15px);
+    position: relative;
+
+    .inner {
+        @include rem(margin-left, 35px);
+    }
+
+    svg {
+        @include rem(margin-right, 10px);
+        @include rem(margin-top, -1px);
+        @include vertical-align(absolute);
+        @include rem(left, 12px);
+    }
+}
+
+.basket-table {
+    border-spacing: 0;
+    //border-collapse: collapse;
+    margin-bottom: 2rem;
+
+    &.unstriped tbody {
+        background-color: $transparent;
+
+        tr {
+            border: 0;
+        }
+    }
+
+    caption {
+        display: none;
+    }
+
+    th {
+        text-transform: uppercase;
+
+        &:first-child {
+            text-align: left;
+            padding-left: 0;
+        }
+    }
+}
+
+.basket-item {
+    //background-color: $colour_porcelain !important;
+    background-color: $transparent !important;
+    overflow: auto;
+
+    &-value {
+        color: $black;
+        font-size: .9rem;
+        font-weight: 600;
+    }
+    input {
+        background-color: $white;
+        text-align: center;
+        margin: 0;
+
+        @media #{$m-up} {
+            width: 3.5rem;
+        }
+    }
+    &-image {
+        width: 25%;
+        padding-left: 0;
+    }
+    &-info {
+        width: 45%;
+
+        @media #{$l-up} {
+            width: 50%;
+        }
+    }
+    &-detail {
+        width: auto;
+    }
+    &-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+    &-price {
+        width: 10%;
+        text-align: right;
+        font-weight: 700;
+        font-size: 1.25rem;
+
+        .price {
+            @include rem(margin-top, 6px);
+            margin-bottom: .5rem;
+        }
+    }
+    &-options {
+        font-size: .85rem;
+        vertical-align: top;
+        color: $colour_third;
+
+        dt {
+            float: left;
+            clear: left;
+            padding-right: .5rem;
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+        dd {
+            float: left;
+        }
+    }
+    &-qty {
+        width: 10%;
+        text-align: center;
+
+        .input-group {
+            margin: 0;
+        }
+    }
+    &-cost {
+        width: 10%;
+        text-align: center;
+    }
+    &-remove {
+        width: 7rem;
+        text-align: center;
+    }
+
+    td {
+
+        @media #{$m-up} {
+            vertical-align: top;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid $light-grey;
+        }
+    }
+
+    @media #{$s-only} {
+        display: block;
+        overflow: auto;
+        position: relative;
+        border-top: none;
+
+        td {
+            display: block;
+            float: left;
+            vertical-align: top;
+            border: 0;
+        }
+
+        .label {
+            margin: 0.5rem 0.5rem 0 0;
+        }
+
+        &-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        &-quantity {
+            width: 100%;
+            padding-left: 0;
+            float: none;
+
+            .input-group {
+                max-width: 5.75rem;
+            }
+
+            .input-group-button {
+                vertical-align: top;
+                padding-left: .25rem;
+            }
+        }
+
+        &-price {
+            width: 100%;
+            padding-left: 0;
+            float: none;
+            text-align: left;
+            padding-top: 0;
+        }
+
+        &-qty-inner {
+            width: 6rem;
+            height: 3rem;
+            margin: auto;
+            display: inline-block;
+            position: relative;
+        }
+
+        &-image {
+            float: left;
+            width: 35%;
+        }
+
+        &-info {
+            width: 65%;
+        }
+
+        &-remove-inner {
+            position: absolute;
+            top: 1.8rem;
+            right: 1rem;
+        }
+
+        &:after {
+            content: '';
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid #eaeaea;
+            clear: both;
+            padding-top: .75rem;
+            margin-bottom: .75rem;
+        }
+    }
+}
+
+.basket-wishlist-button {
+    @include rem(margin-top, 10px);
+    display: block;
+
+    i {
+        margin-left: 0;
+    }
+}
+
+.basket-controls {
+
+    &-title {
+        font-size: 1.25rem;
+        margin-bottom: 1em;
+    }
+
+    .display-box {
+        @media #{$l-up} {
+            padding: 2rem;
+        }
+    }
+
+    @media #{$l-up} {
+        @include rem(margin-left, 30px);
+    }
+}
+
+
+.basket-voucher {
+    margin-bottom: 1.5rem;
+
+    .input-group {
+        margin-bottom: 0;
+    }
+    .input-group-field {
+        border: none;
+        padding: 1.75rem 1rem;
+        font-size: 1.25rem;
+        height: 4.85rem;
+    }
+    .button {
+        height: 4.85rem;
+        background-color: $white;
+        text-transform: uppercase;
+        color: $black;
+        font-size: 1.125rem;
+        padding: 1rem;
+    }
+
+    &-toggle {
+        font-weight: 600;
+        text-decoration: underline;
+        color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_black_titles, $color_forms_buttons_voucher_code); //#0a0a0a; //$color_voucher_text;
+
+        @include is-active {
+            color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_black_titles, $color_forms_buttons_voucher_code);
+        }
+    }
+}
+
+.basket-rewards {
+    color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_black_titles, $color_forms_buttons_reward_points); //$black;
+    border-bottom: 1px solid $light-grey;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+
+    &-heading {
+        text-transform: uppercase;
+        //color: $black;
+        color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_black_titles, $color_forms_buttons_reward_points); //#0a0a0a; //$color_points_text;
+        margin: 0 0 .5rem;
+        font-size: 1.35rem;
+    }
+
+    &-text {
+        color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_black_titles, $color_forms_buttons_reward_points); //#0a0a0a; //$color_points_text;
+    }
+
+    em {
+        font-style: normal;
+        font-weight: 700;
+    }
+
+    i {
+        //color: $black;
+        //color: #0a0a0a; //$color_points_icon;
+        font-size: 3rem;
+        display: block;
+        @include vertical-align();
+    }
+}
+
+.rates-container {
+    margin-bottom: .75rem;
+
+    input[type="radio"] + label {
+        display: block;
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+}
+
+.postcode-container {
+
+    .input-group {
+        &-field,
+        &-button .button {
+            @include rem(height, 56px);
+        }
+    }
+}
+
+.basket-totals {
+    @include rem(font-size, 15px);
+    border-spacing: inherit;
+
+    td {
+        font-weight: 600;
+        padding-left: 0;
+        padding-right: 0;
+
+        &:first-child {
+            text-align: left;
+        }
+    }
+
+    tr {
+
+        &:last-child {
+
+            td {
+                border-top: 1px solid $colour_gallery;
+                color: if(setting-value('website_colours_use_default_website_colors'), $color_global_black_titles, $color_website_colours_page_titles);
+                font-size: 1.25rem;
+                font-weight: 600;
+                padding-top: 1rem;
+            }
+        }
+
+        &:nth-last-child(2) td {
+            padding-bottom: 1rem;
+        }
+    }
+}
+
+.basket-buttons-note {
+    color: #929292;
+    @include rem(font-size, 12px);
+}
+
+.remove-voucher {
+    padding-left: .5em;
+    font-size: .9em;
+    text-decoration: underline;
+    color: $colour_tangerine;
+
+    @include is-active {
+        color: $colour_tangerine;
+    }
+}

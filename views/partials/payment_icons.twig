@@ -1,0 +1,22 @@
+{% set paymentIcons = {
+    'Paypal': {'setting': global.theme.settings.card_paypal, 'image': 'card_paypal.png'},
+    'Bitcoin': {'setting': global.theme.settings.card_bitcoin, 'image': 'card-bitcoin.png'},
+    'Apple Pay': {'setting': global.theme.settings.card_apple_pay, 'image': 'card_apple_pay.png'},
+    'Google Pay': {'setting': global.theme.settings.card_google_pay, 'image': 'card_google_pay.png'},
+    'Mastercard': {'setting': global.theme.settings.card_mastercard, 'image': 'card_mastercard.png'},
+    'Visa': {'setting': global.theme.settings.card_visa, 'image': 'card_visa.png'},
+    'Discover': {'setting': global.theme.settings.card_discover, 'image': 'card_discover.png'},
+    'Americal Express': {'setting': global.theme.settings.card_amex, 'image': 'card_amex.png'},
+    'JCB': {'setting': global.theme.settings.card_jcb, 'image': 'card_jcb.png'},
+    'Maestro': {'setting': global.theme.settings.card_maestro, 'image': 'card_maestro.png'},
+    'Payment gateway': {'setting': global.theme.settings.card_gateway, 'image': global.theme.settings.card_gateway}
+} %}
+{% set assetPath = 'https://s3-eu-west-1.amazonaws.com/theme-card-logos/' %}
+
+<ul class="payment-list{{ classes ? ' ' ~ classes : '' }}">
+    {% for key, icon in paymentIcons if icon.setting %}
+        <li>
+            <img src="{{ assetPath }}{{ key == 'Payment gateway' ? 'gateway_' ~ icon.image ~ '.png' : icon.image }}" alt="{{ key }}">
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,80 @@
+{% extends 'templates/account_pages.twig' %}
+
+{% set title = 'Mine abonnementer' %}
+
+{% block page_content %}
+    <h1 class="sw-account-heading">
+        <i class="icon-my-subscriptions" aria-hidden="true"></i>
+        <span>Mine abonnementer</span>
+    </h1>
+    <div class="sw-account-panel">
+        <p>Viser <strong>{{ subscriptions|length }} abonnementer{{ subscriptions|length == 1 ? '' : '' }}</strong></p>
+    </div>
+    {% for subscription in subscriptions %}
+        <div class="sw-account-container-box">
+            <div class="sw-account-container-box-header">
+                <div class="row collapse">
+                    <div class="column medium-3">
+                        <div> Start dato</div>
+                        <strong>{{ subscription.created|date('jS F Y') }}</strong>
+                    </div>
+                    <div class="column medium-3">
+                        <div class="sw-upper">I alt</div>
+                        <strong>{{ format_price(subscription.total_amount) }}</strong>
+                    </div>
+                    <div class="column medium-3">
+                        <div class="sw-upper">Abonnement</div>
+                        <strong>#{{ subscription.id }}</strong>
+                    </div>
+                    <div class="column medium-3">
+                        <div class="sw-upper">Status</div>
+                        <strong>{{ subscription.status|capitalize }}</strong>
+                    </div>
+                </div>
+            </div>
+            <ul class="sw-account-container-box-list no-bullet">
+                {% for order in subscription.order %}
+                    {% for product in order.products %}
+                        <li class="sw-account-container-box-item">
+                            <div class="row" data-equalizer>
+                                <div class="small-2 column" data-equalizer-watch>
+                                    <div class="image-container" data-fit="0">
+                                        <img src="{{ product.photo_url }}" alt="{{ product.photo_description }}">
+                                    </div>
+                                </div>
+                                <div class="small-10 column" data-equalizer-watch>
+                                    <div class="row">
+                                        <div class="large-5 column">
+                                            <strong class="sw-account-container-box-item-title">{{ product.name|raw }}</strong>
+                                            <div class="sw-margin-b-xs">{{ format_price(product.original_price_including_vat) }}</div>
+                                            <a href="{{ product.url }}" class="sw-account-button small" target="_blank">
+                                                Se produkt
+                                            </a>
+                                        </div>
+                                        <div class="large-4 column">
+                                            <dl class="sw-account-def-list">
+                                                {% for option in product.options %}
+                                                    <dt>{{ option.name }}</dt>
+                                                    <dd>{{ option.value }}</dd>
+                                                {% endfor %}
+                                            </dl>
+                                        </div>
+                                        <div class="large-3 column sw-upper">
+                                            <span>Antal: </span>
+                                            <span>{{ product.quantity }}</span>
+                                            <br>
+                                            <span class="price">{{ format_price(product.original_price_including_vat * product.quantity) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            <div class="sw-account-container-box-footer text-right">
+                <a class="sw-account-icon-link" href="/account/subscription/{{ subscription.id }}"><span>Se detaljer</span></a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

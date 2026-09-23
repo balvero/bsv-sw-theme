@@ -1,0 +1,142 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = '' %}
+{% set hideTitle = 1 %}
+{% set hideDesc = 1 %}
+{% set full_width = 1 %}
+{% set bodyClass = 'contact' %}
+
+{# Set labels #}
+{% set labels = {
+    'name': 'Name',
+    'email_address': 'Email Address',
+    'phone': 'Telephone Number',
+    'message': 'Enquiry'
+} %}
+
+{% block page_content %}
+   {# <div class="contact-container row" data-equalizer>
+        <div class="large-7 column">
+          {}  <div class="row">
+                <div class="large-6 column" data-equalizer-watch>
+                    <section class="inner">
+                        <h2>
+                            {{ theme.sw_icon('monitor') }}
+                            Online
+                        </h2>
+                        {% if gts.text_twitter_url or global.theme.is_preview_mode_enabled %}
+                            <h4{{ gts.text_twitter_url ? '' : ' style="display:none; "'  }}>
+                                <a href="{{ gts.text_twitter_url }}" data-name="text_twitter_url" id="text_twitter_url">
+                                    Twitter {{ theme.sw_icon('full-screen') }}
+                                </a>
+                            </h4>
+                            {% if gts.text_twitter_instructions or global.theme.is_preview_mode_enabled %}
+                                <p{{ gts.text_twitter_instructions and gts.text_twitter_url  ? '' : ' style="display:none;"'  }}>
+                                    {{ theme.text_snippet('twitter_instructions') }}
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                        {% if gts.text_facebook_url or global.theme.is_preview_mode_enabled %}
+                            <h4{{ gts.text_facebook_url ? '' : ' style="display:none;"'  }}>
+                                <a href="{{ gts.text_facebook_url }}" data-name="text_facebook_url" id="text_facebook_url">
+                                    Facebook Messenger {{ theme.sw_icon('full-screen') }}
+                                </a>
+                            </h4>
+                            {% if gts.text_facebook_instructions or global.theme.is_preview_mode_enabled %}
+                                <p{{ gts.text_facebook_instructions and gts.text_facebook_url ? '' : ' style="display:none;"'  }}>
+                                    {{ theme.text_snippet('facebook_instructions') }}
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                        {% if gts.text_live_url or global.theme.is_preview_mode_enabled %}
+                            <h4{{ gts.text_live_url ? '' : ' style="display:none;"'  }}>
+                                <a href="{{ gts.text_live_url }}" data-name="text_live_url" id="text_live_url">
+                                    Live Chat {{ theme.sw_icon('full-screen') }}
+                                </a>
+                            </h4>
+                            {% if gts.text_live_instructions or global.theme.is_preview_mode_enabled %}
+                                <p{{ gts.text_live_instructions and gts.text_live_url ? '' : ' style="display:none;"'  }}>
+                                    {{ theme.text_snippet('live_instructions') }}
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                        {% if global.business.email or global.theme.is_preview_mode_enabled %}
+                            <h4{{ global.business.email ? '' : ' style="display:none;"'  }}>
+                                <a href="mailto:{{ global.business.email }}">
+                                    Email {{ theme.sw_icon('full-screen') }}
+                                </a>
+                            </h4>
+                            <p>
+                                {{ theme.text_snippet('email_instructions') }}
+                                <br>
+                                <a href="mailto:{{ global.business.email }}" class="inline-link">{{ global.business.email }}</a>
+                            </p>
+                        {% endif %}
+                    </section>
+                </div>
+                <div class="large-6 column" data-equalizer-watch>
+                    <section class="inner center">
+                        {% if global.business.phone %}
+                            <h2>
+                                {{ theme.sw_icon('phone') }}
+                                Call
+                            </h2>
+                            <h4>
+                                {{ global.business.phone }}
+                                <br>
+                                General Support
+                            </h4>
+                            {% if gts.text_telephone_instructions or global.theme.is_preview_mode_enabled %}
+                                <p>
+                                    {{ theme.text_snippet('telephone_instructions') }}
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                        {% if global.business.address %}
+                            <h2>
+                                {{ theme.sw_icon('mail') }}
+                                By post
+                            </h2>
+                            <address>
+                                {{ global.business.address|nl2br }}
+                            </address>
+                        {% endif %}
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div class="large-5 column" data-equalizer-watch>
+            <section class="inner">
+                <h2>
+                    {{ theme.sw_icon('speech--alt') }}
+                    Enquiry Form
+                </h2>
+                <form action="{{ global.current_url|replace(global.current_path, '/contact-us') }}" method="post" class="form-with-validation">
+                    {{ theme.errors(errors) }}
+                    <label class="field-block">
+                        <span class="field-label">Full Name</span>
+                        {{ html.input('name', form_field_value('name'), 'form-control required') }}
+                    </label>
+                    <label class="field-block">
+                        <span class="field-label">Email Address</span>
+                        {{ html.input('email', form_field_value('email'), 'form-control required') }}
+                    </label>
+                    <label class="field-block">
+                        <span class="field-label">Telephone</span>
+                        {{ html.input('phone', form_field_value('phone'), 'form-control') }}
+                    </label>
+                    <label class="field-block">
+                        <span class="field-label">Message</span>
+                        {{ html.textarea('message', form_field_value('message'), 'form-control required', '') }}
+                    </label>
+                    {{ shopwired.honeypot() }}
+                    {% if recaptcha %}
+                        <div class="g-recaptcha margin-bottom"></div>
+                    {% endif %}
+                    <button type="submit" class="button">SEND YOUR ENQUIRY</button>
+                </form>
+            </section>
+        </div>
+    </div> #}
+{% endblock %}

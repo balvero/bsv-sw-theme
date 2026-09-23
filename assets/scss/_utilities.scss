@@ -1,0 +1,103 @@
+// layout trumps
+
+// Class  |  Property
+
+// border |   border: 1px solid $light-grey;
+// border-left    border-left: 1px solid $light-grey;
+// border-right    border-right: 1px solid $light-grey;
+// border-top    border-top: 1px solid $light-grey;
+// border-bottom    border-bottom: 1px solid $light-grey;
+// Margin
+
+// margin    margin: 1em;
+// margin-left    margin-left: 1em;
+// margin-right    margin-right: 1em;
+// margin-top    margin-top: 1em;
+// margin-bottom    margin-bottom: 1em;
+
+// padding    padding: 1em;
+// padding-left    padding-left: 1em;
+// padding-right    padding-right: 1em;
+// padding-top    padding-top: 1em;
+// padding-bottom    padding-bottom: 1em;
+
+@each $property in (border, margin, padding) {
+    @each $direction in ('', -left, -right, -top, -bottom, -none) {
+        .#{$property}#{$direction} {
+            @if $direction == -none {
+               #{$property}: 0;
+            }
+            @else {
+                @if $property == border {
+                    #{$property}#{$direction}: 1px solid $light-grey;
+                }
+                @else {
+                    #{$property}#{$direction}: 1em;
+                }
+                @if $direction == -top {
+                    &:not(.no-first):first-of-type {
+                        //#{$property}#{$direction}: 0;
+                    }
+                }
+                @else if $direction == -bottom {
+                    &:not(.no-last):last-of-type {
+                        //#{$property}#{$direction}: 0;
+                    }
+                }
+            }
+        }
+        .no-#{$property}#{$direction} {
+            #{$property}#{$direction}: 0;
+            &.important {
+                #{$property}#{$direction}: 0 !important;
+            }
+        }
+    }
+}
+
+.full-width {
+    width: 100%;
+}
+
+.flex-container {
+    display: flex;
+}
+
+// hide for touchscreen
+.hide-for-ts {
+    @media (pointer: coarse) and (hover: none) {
+        display: none !important;
+    }
+    .js-is-touch & {
+        display: none !important;
+    }
+
+    .touch & {
+        display: none !important;
+    }
+}
+
+.show-for-ts {
+    @media (hover: hover) and (pointer: fine) {
+        display: none !important;
+    }
+    .js-no-touch & {
+        display: none !important;
+    }
+}
+
+.small-text {
+    font-size: 0.85em;
+}
+
+.text-upper {
+    text-transform: uppercase;
+}
+
+.text-underline {
+    text-decoration: underline;
+}
+
+.strong {
+    font-weight: 600;
+}

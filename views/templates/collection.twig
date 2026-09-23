@@ -1,0 +1,116 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+{% set full_width = 1 %}
+{% set bodyClass = 'collection-container' %}
+
+{# Product filters #}
+{% set filter_product_count = 0 %}
+{% for filter_group in filter_groups %}
+    {% for filter in filter_group.filters %}
+        {% set filter_product_count = filter_product_count + filter.product_count %}
+    {% endfor %}
+{% endfor %}
+
+{% block off_canvas %}
+    {{ parent() }}
+
+    {% if global.features.extensions.product_filters and filter_product_count > 0 %}
+        <div class="off-canvas position-left medium off-canvas-filters" id="offCanvasFilters" data-off-canvas>
+            <a class="off-canvas-header" data-toggle="offCanvasFilters">
+                {{ theme.sw_icon('cancel') }}
+                <span class="show-for-sr">Luk filtre</span>
+            </a>
+            {% include 'partials/product_filters.twig' with { 'context': 'mobile' } %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+	{# Add category / product breadcrumbs #}
+	{% for breadcrumb in breadcrumbs %}
+		<li>
+			<a href="{{ breadcrumb.url }}">
+				{{ breadcrumb.name }}
+			</a>
+		</li>
+	{% endfor %}
+
+{% endblock %}
+
+{% block page_content %}
+	<div class="collection">
+        <div class="row" data-equalizer data-equalize-on="medium">
+            {% if products|length %}
+<!--                 <div class="column large-3 small-6" data-equalizer-watch>
+                    {{ block('sort_dropdown') }}
+                </div>
+                <div class="column small-6 hide-for-large">
+                    {% if filter_product_count %}
+                        <button type="button" class="button filter-toggle expanded hide-for-large" data-toggle="offCanvasFilters">
+                            <span>Filtrer</span>
+                        </button>
+                    {% endif %}
+                </div> -->
+                <div class="column large-12 medium-12 " data-equalizer-watch>
+                    {# block('grid_buttons') #}
+					{% include 'partials/product_filters.twig' %}
+                  {#  <div class="item-count hide-for-medium">
+                        <span class="item-count-value">{{ total_products }}</span>
+                        <span class="item-count-context">{{ total_products == 1 ? 'Produkt' : 'Produkter' }}</span>
+                    </div> #}
+                </div>
+            {% endif %}
+            <div class="column large-{{ products|length ? '6' : '12' }} show-for-large">
+                {% include 'partials/paginator.twig' with {'align': 'right', 'class': 'contrast'} %}
+            </div>
+        </div>
+        <div class="row">
+           {# if show_sidebar #}
+               {# <aside class="column large-3 show-for-large">
+                    {% block sidebar %}{% endblock %}
+                </aside> #}
+            {# endif #} 
+           {# <div class="column{{ show_sidebar ? ' large-9 show-sidebar' : '' }}"> #}
+			<div class="column">
+                {% block items %}{% endblock %}
+                {# Render page links #}
+                {% include 'partials/paginator.twig' with {'align': 'right', 'class': 'contrast'} %}
+            </div>
+        </div>
+	</div>
+{% endblock %}
+
+
+{% block grid_buttons %}
+    <div class="collection-controls button-group">
+        <button class="collection-button collection-button js-grid_view active">
+            {{ theme.sw_icon('grid') }}
+            <span class="show-for-sr">Grid</span>
+        </button>
+       {# <button class="collection-button collection-button js-list_view">
+            {{ theme.sw_icon('list') }}
+            <span class="show-for-sr">list</span>
+        </button>
+		#}
+    </div>
+{% endblock %}
+
+
+{% block sort_dropdown %}
+    <form action="{{ global.current_url }}" method="get" class="xsort-form">
+        <label>
+            <span class="field-label show-for-large">Sorter efter:</span>
+            <select name="sort" class="sort-drop-down">
+                <option value="sort_order_asc"{{ sort_option == 'sort_order_asc' ? ' selected="selected"' : '' }}>Relevans</option>
+                <option value="price_asc"{{ sort_option == 'price_asc' ? ' selected="selected"' : '' }}>Pris (Lav-Høj)</option>
+                <option value="price_desc"{{ sort_option == 'price_desc' ? ' selected="selected"' : '' }}>Pris (Høj-Lav)</option>
+                <option value="title_asc"{{ sort_option == 'title_asc' ? ' selected="selected"' : '' }}>Titel (A - Z)</option>
+                <option value="title_desc"{{ sort_option == 'title_desc' ? ' selected="selected"' : '' }}>Titel (Z - A)</option>
+            </select>
+            {{ html.input('page', '1', '', '', 'hidden') }}
+            {% if keywords %}
+                {{ html.input('keywords', keywords, '', '', 'hidden') }}
+            {% endif %}
+        </label>
+    </form>
+{% endblock %}

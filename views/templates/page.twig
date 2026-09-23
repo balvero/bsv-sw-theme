@@ -1,0 +1,56 @@
+{# Extend master template #}
+{% extends 'templates/master.twig' %}
+
+{% block content %}
+
+    <div id="content" class="content{{ contentClass ? ' ' ~ contentClass : '' }}">
+        <div class="{{ full_width ? 'expanded' : 'row column' }}">
+
+            {% if full_width %}
+                {{'<div class="row"><div class="small-12 column">'}}
+            {% endif %}
+
+            {% if title and not hide_title %}
+                <h1 class="page-title{{ hideTitle ? ' show-for-sr' : '' }}"{% if title_setting %} data-name="{{ title_setting }}" id="{{ title_setting }}"{% endif %}>
+                    {{ title }}
+                </h1>
+            {% endif %}
+
+            {% if not_hide_bct or true %}
+                <ul class="breadcrumbs main-breadcrumbs show-for-medium">
+                    {# Render breadcrumbs #}
+                    <li>
+                        <a href="/">
+                            Home
+                        </a>
+                    </li>
+                    {% block breadcrumbs %}{% endblock %}
+                    <li>
+                        {{ breadcrumb_title|default(title) }}
+                    </li>
+                </ul>
+            {% endif %}
+
+            {% if full_width %}
+                {{'</div></div>'}}
+            {% endif %}
+
+            <section class="main-content">
+                {% if full_width %}
+                    {{'<div class="row"><div class="small-12 column">'}}
+                {% endif %}
+
+                    {% if description and not hideDesc %}
+                        <div class="page-description html-snippet"{% if description_setting %} data-name="{{ description_setting }}" id="{{ description_setting }}"{% endif %}>
+                            {{ description|raw }}
+                        </div>
+                    {% endif %}
+                {% if full_width %}
+                    {{'</div></div>'}}
+                {% endif %}
+                {% block page_content %}{% endblock %}
+            </section>
+        </div>
+    </div>
+
+{% endblock %}

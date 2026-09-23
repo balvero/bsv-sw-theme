@@ -1,0 +1,84 @@
+{# Extend blog template #}
+{% extends 'templates/blog_page.twig' %}
+
+{% block posts %}
+
+    {% if current_page == 1 and not global.visitor.is_mobile %}
+        {# Single featured post #}
+        <div class="row small-up-1">
+            {% for post in posts|slice(0, 1) %}
+                {% include 'partials/blog_posts.twig' with {
+                    'preview_single': true,
+                    'containerClass': 'column',
+                    'innerClass' : 'post--feature'
+                } %}
+            {% endfor %}
+        </div>
+        {# Double featured post #}
+        <div class="row small-up-1 large-up-2">
+            {% for post in posts|slice(1, 2) %}
+                {% include 'partials/blog_posts.twig' with {
+                    'preview_single': true,
+                    'containerClass': 'column',
+                    'innerClass' : 'post--secondary'
+                } %}
+            {% endfor %}
+        </div>
+        {# Three column #}
+        <div class="row">
+            {% for post in posts|slice(3, 2) %}
+                {% include 'partials/blog_posts.twig' with {
+                    'preview_single': true, 'containerClass':
+                    'column large-4',
+                    'innerClass' : 'post--secondary post--small'
+                } %}
+            {% endfor %}
+            <div class="column large-4">
+                {% for post in posts|slice(5, 3) %}
+                    <article class="blog-item post--small">
+                        <a href="{{ post.url }}">
+                            <h3>
+                                {{ post.title }}
+                            </h3>
+                            <address class="author">{{ post.author }}</address>
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        {# Render blog posts #}
+        {% include 'partials/blog_posts.twig' with { 'preview': true } %}
+    {% endif %}
+
+
+    {# Render page links #}
+    {% if total_pages > 1 %}
+
+        {% set adjacent_links = 4 %}
+        {% set low_show = total_pages < (current_page + adjacent_links) ? total_pages - 8 : current_page > adjacent_links ? (current_page - adjacent_links) : 1 %}
+        {% set high_show = current_page < (adjacent_links + 1) ? 9 : (current_page + adjacent_links) %}
+
+        <div class="text-right">
+            <ul class="pagination contrast">
+                <li class="pagination-previous">
+                    <a href="{{ blog_page_url(current_page - 1) }}" class="page-link{{ current_page == 1 ? ' not-allowed' }}">
+                        Previous
+                    </a>
+                </li>
+                {% for page in 1..total_pages %}
+                    <li class="{{ (page < low_show) or (page > high_show) ? ' hide' : '' }}">
+                        <a href="{{ blog_page_url(page) }}" class="page-link{{ page == current_page ? ' current' : '' }}">
+                            {{ page }}
+                        </a>
+                    </li>
+                {% endfor %}
+                <li class="pagination-next">
+                    <a href="{{ blog_page_url(current_page + 1) }}" class="page-link{{ current_page == total_pages ? ' not-allowed' }}">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

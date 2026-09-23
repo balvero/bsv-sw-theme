@@ -1,0 +1,99 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = page.title %}
+{% set hide_title = 1 %}
+{% set hide_bct = 1 %}
+{% set side_list = global.theme.settings['list_sidebar'] %}
+{% set bodyClass = 'page' %}
+
+{% block page_content %}
+
+
+    <div class="row collapse">
+        <div class="column{{ side_list and side_list.links ? ' large-9' : '' }}">
+            <h1 class="page-title">
+                {{ title }}
+            </h1>
+            <ul class="breadcrumbs main-breadcrumbs show-for-medium hide">
+                {# Render breadcrumbs #}
+                <li>
+                    <a href="/">
+                        Home
+                    </a>
+                </li>
+                {% block breadcrumbs %}{% endblock %}
+                <li>
+                    {{ breadcrumb_title|default(title) }}
+                </li>
+            </ul>
+        </div>
+        {% if side_list and side_list.links %}
+           {# <div class="column large-3 side-nav-container">
+                <nav class="side-nav text-right show-for-large">
+                    <button data-toggle="sideMenu" class="more-pages">
+                        {{ theme.sw_icon('filter') }}
+                        <span>More pages</span>
+                    </button>
+                </nav>
+            </div> #}
+        {% endif %}
+    </div>
+    {% if side_list and side_list.links %}
+        {#<div class="side-nav-container text-right">
+            <ul class="menu simple hide margin-bottom padding-bottom" id="sideMenu" data-toggler=".hide">
+                {% for link in side_list.links %}
+                    <li>
+                        <a href="{{ link.url }}" class="{{ link.url in global.current_url ? 'active' : '' }}">
+                            {{ link.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div> #}
+    {% endif %}
+
+
+    <div class="page-container">
+        {# Render page content #}
+        <div class="fr-view">
+            {{ page.content|raw }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block __page_content %}
+    <div class="row page-container" data-equalizer data-equalize-on="medium">
+        <div class="{{ side_list and side_list.links ? 'large-9 large-push-3' : 'small-12' }} column page-content" data-equalizer-watch>
+            {# Render page content #}
+            <div class="fr-view">
+                {{ page.content|raw }}
+            </div>
+        </div>
+        {% if side_list and side_list.links %}
+            <div class="large-3 large-pull-9 column" data-equalizer-watch>
+                <aside>
+                    <nav class="card">
+                        {% if side_list.title %}
+                            <h3 class="card-divider">
+                                {{ side_list.title }}
+                            </h3>
+                        {% endif %}
+                        <div class="card-section">
+                            <ul class="menu vertical">
+                                {% for link in side_list.links %}
+                                    <li>
+                                        <a href="{{ link.url }}" class="{{ link.url in global.current_url ? 'active' : '' }}">
+                                            {{ link.title }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </nav>
+                </aside>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

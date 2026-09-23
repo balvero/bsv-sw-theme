@@ -1,0 +1,369 @@
+{% extends 'templates/blocks.twig' %}
+
+{% block content %}
+    <noscript>
+        <div class="callout primary">
+            <p>
+               JavaScript appears to be disabled in your browser. JavaScript must be enabled in order to utilise the full functionalilty of this website.
+            </p>
+        </div>
+    </noscript>
+    {% if gts.text_announce|length %}
+        <div id="announcement-bar" class="announcement-bar hide callout no-margin" >
+            <div class="row column">
+                <div class="inner text-center">
+                    <span>{{ theme.text_snippet('announce') }}</span>
+                </div>
+            </div>
+           {# <button class="close-button announcement-bar-close" aria-label="Dismiss alert" type="button" data-close>
+                <span aria-hidden="true">&times;</span>
+            </button> #}
+        </div> 
+    {% endif %}
+    <header>
+        <div class="show-for-sr">
+            <a href="#content">Gå til hovedside</a>
+        </div>
+        <div class="reveal reveal--full-screen header-search" id="globalSearch" data-reveal>
+            <div class="inner row column">
+                {{ block('header_search') }}
+            </div>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+                <span class="show-for-sr">luk</span>
+            </button>
+        </div>
+		<div id="header-top">
+			
+		
+        <div class="header-top">
+            <div class="row" data-equalizer="inner">
+                <div class="column small-2 medium-3 hide-for-large">
+                    <div class="inner">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="column small-8 medium-6 large-5 text-center large-text-left" data-equalizer-watch="inner">
+                    {# company logo #}
+                    {{ block('header_logo') }}
+                </div>
+                <div class="column small-2 medium-3 large-7" data-equalizer-watch="inner">
+                    <div class="header-right inner text-right">
+                        {# header menu #}
+                        <ul class="header-menu" data-dropdown-menu>
+                       
+                            <li class="show-for-large">
+                                <a class="header-wishlist" href="/wishlist">
+                                    {{ theme.sw_icon('star') }}
+                                    <span>({{ global.wishlist.items }})</span>
+                                </a>
+                            </li>
+                            {# basket link #}
+                            <li>
+                                <a class="header-basket" {% if gts.offcanvas_basket and global.current_path != '/checkout/basket' %} data-toggle="offCanvasBasket"{% else %} href="/checkout/basket"{% endif %}>
+                                    {{ theme.sw_icon('commerce') }}
+									<span class="basket-count">
+										{% if global.basket.items %}
+											({{global.basket.items}}) 
+										{% endif %}
+										
+										{# global.basket.items ? global.basket.items : '' #}
+									</span>
+                                    <span class="show-for-sr">Kurv</span>
+                                </a>
+                            </li>
+                            {% if global.features.apps.currencies %}
+                                <li>
+                                    {# header currency desktop #}
+                                    {% include 'partials/currency_dropdown.twig' with { 'size': 'large' } %}
+                                    {# header currency mobile trigger #}
+                                    {% include 'partials/currency_dropdown.twig' with { 'size': 'small', 'button': true } %}
+                                </li>
+                            {% endif %}
+							     <li class="show-for-large header-account">
+                                <a data-toggle="account-dropdown"> {{ theme.sw_icon('user') }} {{ theme.sw_icon('caret-down') }}</a>
+                                {{ block('header_account_dropdown') }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'partials/currency_dropdown.twig' with { 'size': 'small', 'menu': true } %}
+        {{ block('header_navigation') }}
+        <div class="sub-nav-container show-for-large">
+            <div class="row column">
+                {% for category in global.categories if category.categories %}
+                    <ul class="no-bullet simple menu" data-id="{{ category.id }}" id="sub-{{ category.id }}" style="display:none;">
+                        {% for subcategory in category.categories %}
+                            <li>
+                                <a href="{{ subcategory.url }}" {% if global.current_url == subcategory.url %}class="active" {% endif %}>
+                                    {{ subcategory.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li>
+                            <a href="{{ category.url }}?all=1">
+                                Se alle
+                            </a>
+                        </li>
+                    </ul>
+                {% endfor %}
+                {% if global.brands %}
+                    <ul class="no-bullet simple menu" data-id="brands" style="display:none;">
+                        {% for brand in global.brands|slice(0, brand_limit|default(15)) %}
+                            <li>
+                                <a href="{{ brand.url }}" {% if brand.url in global.current_path %}class="active" {% endif %}>
+                                    {{ brand.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        {% if global.brands|length > brand_limit|default(20) %}
+                            <li>
+                                <a href="/brands">
+                                    Se alle
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div id="mobileSearch" class="mobile-search hide-for-large hide" data-toggler=".hide">
+            <div class="row column">
+                {{ block('header_search') }}
+            </div>
+        </div>
+			</div>
+    </header>
+{% endblock %}
+
+
+{% block header_account_dropdown %}
+    <div class="account-dropdown dropdown-pane bottom" id="account-dropdown" data-dropdown data-v-offset="15" data-close-on-click="true">
+        <div class="account-dropdown-header">
+            {#<a href="/contact-us">Har du brug for hjælp? Kontakt os</a>#}
+            <button class="close-button" aria-label="Dismiss alert" type="button" data-toggle="account-dropdown">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <ul class="account-dropdown-menu no-bullet">
+            {% if global.customer.id %}
+                <li>
+                    <a href="/account">
+                        {{ theme.sw_icon('account-home') }}
+                        Min konto
+                    </a>
+                </li>
+                <li>
+                    <a href="/account/orders">
+                        {{ theme.sw_icon('box') }}
+                        Mine ordre
+                    </a>
+                </li>
+                <li>
+                    <a href="/account/logout">
+                        {{ theme.sw_icon('log-out') }}
+                        Log ud
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="/account/login">
+                        {{ theme.sw_icon('account-home') }}
+                        Log ind
+                    </a>
+                </li>
+               {# <li>
+                    <a href="/account/create">
+                        {{ theme.sw_icon('user') }}
+                        Opret
+                    </a>
+                </li> #}
+                {% if global.features.apps.trade_accounts %}
+                    <li>
+                        <a href="/account/trade-application">
+                           {{ theme.sw_icon('warehouse') }}
+                            Opret en forhandlerkonto
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}
+
+
+{% block header_search %}
+    <form class="input-group" action="/search/products" method="get">
+        <input type="search" name="keywords" placeholder="Skriv for at søge" class="input-group-field">
+        <div class="input-group-button">
+            <button type="submit" value="Submit" class="button">
+                {{ theme.sw_icon('glass-2') }}
+                <span class="show-for-sr">Søg</span>
+            </button>
+        </div>
+    </form>
+{% endblock %}
+
+
+{% block header_logo %}
+    <a href="/" class="header-logo">
+        {% if global.business.logo_url %}
+            <img src="{{ global.business.logo_url }}" alt="{{ global.business.name }}" class="logo-image">
+        {% else %}
+            <span class="logo-text">
+                {{ global.business.name }}
+            </span>
+        {% endif %}
+    </a>
+{% endblock %}
+
+
+{% block header_navigation %}
+    <div class="header-nav-outer">
+        <nav class="row column">
+            <div class="header-nav">
+                <button class="show-for-large header-search-toggle" data-open="globalSearch">
+                    <span>Søg</span>
+                    {{ theme.sw_icon('glass-2') }}
+                </button>
+                <div class="row collapse hide-for-large">
+                    <div class="column small-6">
+                        <button class="header-mobile-button mobile-menu-toggle" data-toggle="main-nav-wrapper">
+                            {{ theme.sw_icon('fa-bars') }}
+                            <span>Menu</span>
+                        </button>
+                    </div>
+                    <div class="column small-6 text-right">
+                        <button id="mobileSearchBtn" class="header-mobile-button search-toggle" data-toggle="mobileSearch mobileSearchBtn" data-toggler=".active">
+                            <span class="show-for-sr">Search</span>
+                            {{ theme.sw_icon('glass-2') }}
+                        </button>
+                    </div>
+                </div>
+                {# Render main navigation #}
+                <div id="main-nav-wrapper" class="main-nav-wrapper show-for-large" data-toggler=".show-for-large">
+                    <ul class="main-nav vertical large-horizontal menu align-center"
+                        data-responsive-menu="accordion large-dropdown"
+                    >
+                        {# mobile account menu #}
+                        <li>
+                            <div class="mobile-account hide-for-large">
+                                <ul class="menu expanded">
+                                    <li>
+                                        <a href="/account">Konto</a>
+                                    </li>
+                                    {% if global.customer.id %}
+                                        <li>
+                                            <a href="/account/logout">Log ud</a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a href="/account/create">Opret</a>
+                                        </li>
+                                    {% endif %}
+                                    <li>
+                                        <a href="/wishlist">Favoritliste</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        {# Render home link #}
+                       {# <li class="main-nav-home-link">
+                            <a href="/"{% if global.current_path == '/' %} class="active"{% endif %}>
+                                Hjem
+                            </a>
+                        </li> #}
+                        {# Render category links #}
+                        {% for category in global.categories|slice(0, category_limit|default(15)) %}
+                            <li data-id="{{ category.id }}" class="{{ category.categories ? 'parent-with-sub' }}">
+                                <a href="{{ category.url }}" {% if category.url in global.current_url %}class="active" {% endif %}>
+                                    {{ category.title }}
+                                </a>
+                                {% if category.categories %}
+                                    <ul class="menu vertical">
+                                        {% for subcategory in category.categories %}
+                                            <li>
+                                                <a href="{{ subcategory.url }}" {% if global.current_url == subcategory.url %}class="active" {% endif %}>
+                                                    {{ subcategory.title }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                        {% if global.categories|length > category_limit|default(15) %}
+                            <li>
+                                <a href="/categories">
+                                    Se alle
+                                </a>
+                            </li>
+                        {% endif %}
+                        {# Render custom links #}
+                        {% set add_list = global.theme.settings.list_category_add %}
+                        {% if add_list and add_list.links %}
+                            {% for link in add_list.links %}
+                                <li class="show-for-large"{% if loop.first %} id="list_category_add"{% endif %}>
+                                    <a href="{{ link.url }}">
+                                        {{ link.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                        {# Render brand links #}
+                        {% if global.brands %}
+                            <li data-id="brands" class="parent-with-sub">
+                                <a href="/brands" {% if global.current_path == '/brands' %}class="active" {% endif %}>
+                                    Brands
+                                </a>
+                                <ul class="vertical menu">
+                                    {% for brand in global.brands|slice(0, brand_limit|default(15)) %}
+                                        <li>
+                                            <a href="{{ brand.url }}" {% if brand.url in global.current_path %}class="active" {% endif %}>
+                                                {{ brand.title }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    {% if global.brands|length > brand_limit|default(15) %}
+                                        <li>
+                                            <a href="/brands">
+                                                Se alle
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {# Render blog link #}
+                        {% if global.features.apps.blog %}
+                            <li>
+                                <a href="/blog"{% if global.current_path == '/blog' %} class="active"{% endif %}>
+                                    Blog
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if global.features.apps.trade_accounts and not global.customer.id %}
+                            <li class="hide-for-large">
+                                <a href="/account/trade-application">
+                                    Opret en forhandlerkonto
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% set sub_list = global.theme.settings['list_responsive'] %}
+                        {% if sub_list and sub_list.links %}
+                            {% for link in sub_list.links %}
+                                <li class="sub-list hide-for-large"{% if loop.first %} id="list_responsive"{% endif %}>
+                                    <a href="{{ link.url }}">
+                                        {{ link.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+{% endblock %}

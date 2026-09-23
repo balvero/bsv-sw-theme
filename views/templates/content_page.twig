@@ -1,0 +1,14 @@
+{% extends 'templates/master.twig' %}
+
+{% block page_content %}
+    <div class="row"{% if show_sidebar %} data-equalizer data-equalize-on="medium"{% endif %}>
+        {% if show_sidebar %}
+            <aside class="side-menu column large-3 show-for-large" data-equalizer-watch>
+                {% block sidebar %}{% endblock %}
+            </aside>
+        {% endif %}
+        <div class="column{{ show_sidebar ? ' large-9 show-sidebar' : '' }}" data-equalizer-watch>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

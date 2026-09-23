@@ -1,0 +1,168 @@
+.button {
+    //background-color: $colour_tangerine;
+    background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_colour, $color_forms_buttons_button_background); //#f58900; //$color_main_button_bg;
+    color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_text_colour, $color_forms_buttons_button_text); //#ffffff; //$color_main_button_text;
+    padding: 1rem;
+    border-radius: 0;
+    font-size: .95rem;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+    font-family: $font_main;
+    font-weight: 700;
+
+    @include is-active {
+        //background-color: $colour_tangerine;
+        background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_colour, $color_forms_buttons_button_background); //$color_main_button_bg;
+        color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_text_colour, $color_forms_buttons_button_text); //#ffffff; //$color_main_button_text;
+    }
+
+    &.primary {
+        //background-color: $colour_tangerine;
+        background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_colour, $color_forms_buttons_button_background); //$color_main_button_bg;
+        color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_text_colour, $color_forms_buttons_button_text); //$color_main_button_text;
+
+        @include is-active {
+            //background-color: $colour_tangerine;
+            background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_colour, $color_forms_buttons_button_background); //$color_main_button_bg;
+            color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_text_colour, $color_forms_buttons_button_text); //$color_main_button_text;
+        }
+    }
+
+    &.secondary {
+        background-color: $black;
+
+        @include is-active {
+            background-color: $black;
+        }
+    }
+
+    &.tertiary {
+        background-color: #4b4b4b;
+
+        @include is-active {
+            background-color: #4b4b4b;
+        }
+    }
+
+    &.gift-voucher-button {
+        background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_colour, $color_forms_buttons_gift_voucher_background);
+        color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_text_colour, $color_forms_buttons_gift_voucher_text);
+
+        @include is-active {
+            background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_colour, $color_forms_buttons_gift_voucher_background);
+            color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_text_colour, $color_forms_buttons_gift_voucher_text);
+        }
+    }
+
+    &.button_add-basket {
+        background-color: if(setting-value('product_page_use_default_website_colors'), $color_global_orange_button_colour, $color_product_page_add_to_basket_background); //#f58900; //$color_product_button_add_to_bag_bg;
+        color: if(setting-value('product_page_use_default_website_colors'), $color_global_orange_button_text_colour, $color_product_page_add_to_basket_text); //#ffffff; //$color_product_button_add_to_bag_text;
+    }
+
+
+    &.proceed-to-checkout {
+        background-color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_colour, $color_forms_buttons_shopping_basket_button_background); //#f58900; //$color_button_proceed_bg;
+        color: if(setting-value('forms_buttons_use_default_website_colors'), $color_global_orange_button_text_colour, $color_forms_buttons_shopping_basket_button_text); //#ffffff; //$color_button_proceed_text;
+        padding: 1.25rem 1rem;
+    }
+
+    &.button-secure-payment {
+        background-color: $colour_tangerine;
+        color: $white;
+    }
+
+    &.offline-button {
+        background-color: $colour_grey;
+        color: $white;
+    }
+
+    // weight modifiers
+    &.light {
+        font-weight: 300;
+    }
+    &.heavy {
+        font-weight: 900;
+    }
+
+    // modal buttons
+    &.padded-x {
+        padding-top: 1.1rem;
+        padding-bottom: 1.1rem;
+    }
+
+    &.padded-y {
+        padding-left: 2.75rem;
+        padding-right: 2.75rem;
+    }
+
+    & + .button {
+        margin-left: .5rem;
+    }
+
+    &--simple {
+        font-size: 1rem;
+        font-weight: 600;
+
+        i {
+            vertical-align: middle;
+            font-size: .85em;
+
+            &:first-child {
+                margin-right: .3rem;
+            }
+
+            &:last-child {
+                margin-left: .3rem;
+            }
+        }
+    }
+
+    &.filter-toggle {
+        @media #{$m-only} {
+            //margin-top: 1.25rem;
+        }
+    }
+
+    &.disabled {
+        pointer-events: none;
+    }
+}
+
+.remove-button {
+    color: $colour_danger;
+    font-weight: 600;
+    text-decoration: underline;
+
+    @include is-active {
+        color: $colour_danger;
+    }
+}
+
+.paypal-button {
+    background: #ffc520;
+    border: 1px solid #ffaf2e;
+    width: 100%;
+    padding: 1rem 0;
+}
+
+button {
+    cursor: pointer;
+    font-family: $font_main;
+}
+
+.more-pages {
+    text-transform: uppercase;
+    font-size: 1.25rem;
+
+    i {
+        margin: 0 .5rem 0 0;
+        vertical-align: top;
+        color: if(setting-value('website_colours_use_default_website_colors'), $color_global_black_titles, $color_website_colours_page_titles);
+    }
+
+    span {
+        vertical-align: top;
+        color: if(setting-value('website_colours_use_default_website_colors'), $color_global_black_titles, $color_website_colours_page_titles);
+    }
+}
+

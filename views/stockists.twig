@@ -1,0 +1,67 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Our Stockists' %}
+
+{% block page_content %}
+
+    <div class="row column no-page">
+        <form action="{{ global.current_url }}" method="get" class="search-form new-search">
+            <div class="input-group">
+                {{ html.input('location_query', query, 'input-group-field', 'Search by town/city or postcode') }}
+                <div class="input-group-button">
+                    <button type="submit" class="button" value="Submit">
+                        {{ theme.sw_icon('glass1', 'Search stockist') }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    {% if stockists is defined %}
+        <div class="row small-up-1 medium-up-2 large-up-3">
+            {% for stockist in stockists %}
+                <div class="column">
+                    <article class="card stockist-box">
+                        <h4 class="card-divider">
+                            {{ stockist.name }}
+                        </h4>
+                        <div class="card-section">
+                            <dl>
+                                {% if stockist.address %}
+                                    <dt>Address</dt>
+                                    <dd>{{ stockist.address }}</dd>
+                                {% endif %}
+                                {% if stockist.phone %}
+                                    <dt>Phone</dt>
+                                    <dd>{{ stockist.phone }}</dd>
+                                {% endif %}
+                                {% if stockist.website %}
+                                    <dt>Website</dt>
+                                    <dd>
+                                        <a href="{{ stockist.website }}">{{ stockist.website }}</a>
+                                    </dd>
+                                {% endif %}
+                                {% if stockist.country %}
+                                    <dt>Country</dt>
+                                    <dd>{{ stockist.country }}</dd>
+                                {% endif %}
+                                {% if stockist.map_url %}
+                                    <dt>Map</dt>
+                                    <dd>
+                                        <a href="{{ stockist.map_url }}" target="_blank">Open Map</a>
+                                    </dd>
+                                {% endif %}
+                            </dl>
+                        </div>
+                    </article>
+                </div>
+            {% else %}
+                <p>
+                    {{ default_message|default('No stockists found.') }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+{% endblock %}

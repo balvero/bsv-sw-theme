@@ -1,0 +1,67 @@
+{% set context = size|default('large') %}
+
+{% macro region_flag(path, high_res) %}
+    {% set country_code =  path|split('.net/')[1]|split('.')[0]|lower %}
+    {# regex = \[A-Z]{2}(?=\.png)\ #}
+    <span class="currency-flag{{ high_res ? ' hres' : '' }}">
+        {% if high_res %}
+            <span class="flag-hres" aria-hidden="true" style="background-image:url({{ global.currency_country.flag_url }});"></span>
+        {% else %}
+            <span class="flag {{ country_code }}" aria-hidden="true"></span>
+        {% endif %}
+    </span>
+{% endmacro %}
+
+{% set global_currencies = [] %}
+
+{% for item in global.currencies %}
+    {% set global_currencies = global_currencies|merge([item.id]) %}
+{% endfor %}
+
+<div class="header-currency{{ context == 'small' and menu ? '-container' : '' }}{{ context == 'large' ? ' show-for-large' : ' hide-for-large' }}">
+    {% if context == 'large' or button %}
+        <a class="header-currency-select{{ context == 'large' ? ' float-right' : '' }}" data-toggle="currency-dropdown-{{ context }}">
+            {% if global.currency_country.flag_url %}
+                {# flag #}
+                {{ _self.region_flag(global.currency_country.flag_url, true) }}
+            {% endif %}
+            {# name #}
+            <span class="show-for-sr">{{ global.currency_country.name }}</span>
+        </a>
+    {% endif %}
+    {% if context == 'large' or menu %}
+        <div class="currency-dropdown currency-dropdown-{{ context }}{{ context == 'large' ? ' dropdown-pane bottom left float-left' : ' hide hide-for-large' }}" id="currency-dropdown-{{ context }}"{% if context == 'large' %} data-dropdown data-v-offset="25" data-close-on-click="true"{% else %} data-toggler=".hide"{% endif %}>
+            <h3 class="currency-dropdown-heading text-center">
+                Delivery Country &amp; Currency
+            </h3>
+            <p class="currency-dropdown-selected text-center small">
+                You're currently viewing prices in <strong>{{ global.currency.name }} {{ global.currency.symbol|raw }}</strong>.<br>
+                Select a new currency below.
+            </p>
+            <ul class="currency-dropdown-list no-bullet text-left">
+                {% for country in global.currency_countries if country.current %}
+                    <li>
+                        <a href="{{ currency_url(country.currency_id, country.id) }}" class="active">
+                            {% if country.flag_url %}
+                                {{ _self.region_flag(country.flag_url) }}
+                            {% endif %}
+                            <span class="currency-region">{{ country.name }}</span>
+                            <span class="currency-symbol">{{ country.currency_name }} {{ country.currency_symbol|raw }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+                {% for country in global.currency_countries if country.name != global.currency_country.name and country.currency_id in global_currencies %}
+                    <li>
+                        <a href="{{ currency_url(country.currency_id, country.id) }}">
+                            {% if country.flag_url %}
+                                {{ _self.region_flag(country.flag_url) }}
+                            {% endif %}
+                            <span class="currency-region">{{ country.name }}</span>
+                            <span class="currency-symbol">{{ country.currency_name }} {{ country.currency_symbol|raw }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>

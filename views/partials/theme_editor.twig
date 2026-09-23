@@ -1,0 +1,232 @@
+{% if global.theme.is_preview_mode_enabled %}
+    {% set short_codes = {
+        year : 'now'|date('Y'),
+        email: global.business.email,
+        phone:  global.business.phone,
+        address: global.business.one_line_address
+    } %}
+
+    <script>
+        $(window).on('message', function(event) {
+            if(event) {
+                try {
+                    JSON.parse(event.originalEvent.data);
+                } catch (event) {
+                    return false;
+                }
+
+                var result = JSON.parse(event.originalEvent.data),
+                    action = result.action,
+                    name = result.data.name,
+                    typed = result.data.value;
+
+                if(action) {
+                    $(window).trigger('resize');
+                }
+
+                if(action == 'SW.ThemeSettingEditor.scrollToElement') {
+                    highlightElm(result.data);
+                }
+
+                if(action == 'SW.ThemeSettingEditor.init') {
+
+                    if(result.data.previewElementId == 'button_remove_from_wishlist') {
+                        var elm = $('.js-wishlist-button'),
+                            btnText = elm.data('remove');
+
+                        elm.find('i').toggleClass('sw-icon-heart sw-icon-heart-o');
+                        elm.find('span').text(btnText).data('name', 'button_remove_from_wishlist').attr('data-name', 'button_remove_from_wishlist');
+                        highlightElm('button_remove_from_wishlist');
+
+                    }
+                    if(result.data.previewElementId == 'button_add_to_wishlist') {
+
+                        var elm = $('.js-wishlist-button'),
+                            btnText = elm.data('add');
+
+                        elm.find('i').toggleClass('sw-icon-heart sw-icon-heart-o');
+                        elm.find('span').text(btnText).data('name', 'button_add_to_wishlist').attr('data-name', 'button_add_to_wishlist');
+                        highlightElm('button_add_to_wishlist');
+
+
+                    }
+                    else if(result.data.previewElementId == 'product_add_button_oos') {
+                        // out of stock action
+                        var addButton = $('button[name="cart_button"]'),
+                            quantityContainer = addButton.closest('form').find('.product-qty'),
+                            productContainer = addButton.closest('.product-container');
+
+                        // disable button
+                        addButton.prop('disabled', true).addClass('disabled').attr('data-name', 'button_out_of_stock').text(addButton.data('nostock'));
+                        quantityContainer.addClass('invisible');
+                        productContainer.removeClass('in-stock');
+                        highlightElm('button_out_of_stock');
+
+                    }
+                    else if(result.data.previewElementId == 'product_add_button') {
+                        // in stock action
+                        var addButton = $('button[name="cart_button"]'),
+                            quantityContainer = addButton.closest('form').find('.product-qty'),
+                            productContainer = addButton.closest('.product-container');
+
+                        // enable button
+                        addButton.prop('disabled', false).removeClass('disabled').attr('data-name', 'button_add_to_basket').text(addButton.data('text'));
+                        quantityContainer.removeClass('invisible');
+                        productContainer.addClass('in-stock');
+                        highlightElm('button_add_to_basket');
+
+                    }
+                    else {
+
+                        highlightElm(result.data.previewElementId);
+                    }
+
+
+                }
+
+                if(action == 'SW.ThemeSettingEditor.updateSetting') {
+
+                    var val = replaceAll(typed, map),
+                        container = $('[data-name="'+name+'"]');
+
+                    if($.inArray(name, hrefs) > -1) {
+                        container.attr('href', val);
+                        var instruction = $('[data-name="text_'+ name.split('_')[1] +'_instructions"]').parent();
+
+                        if(val){
+                            container.parent().show();
+                            instruction.show();
+
+                        } else {
+                           container.parent().hide();
+                           instruction.hide();
+                        }
+
+                        return;
+                    }
+
+                    if(container.hasClass('html-snippet')) {
+                        container.html(val);
+                    }
+                    else {
+                        container.text(val);
+                    }
+
+                    switch (name) {
+                        case 'button_add_to_basket':
+                            container.data('text', val);
+                            $('[data-name="button_out_of_stock"]').data('text', val);
+                            break;
+                        case 'button_out_of_stock':
+                            container.data('nostock', val);
+                            $('[data-name="button_add_to_basket"]').data('nostock', val);
+                            break;
+                        case 'button_add_to_wishlist':
+                            container.parent().data('add', val);
+                            $('[data-name="button_remove_from_wishlist"]').parent().data('add', val);
+                            break;
+                        case 'button_remove_from_wishlist':
+                            container.parent().data('remove', val);
+                            $('[data-name="button_add_to_wishlist"]').parent().data('remove', val);
+                            break;
+                        case 'text_announce':
+                            var bar = container.closest('.announcement-bar');
+                            if(val) {
+                                bar.removeClass('hide');
+                            } else {
+                                bar.addClass('hide');
+                            }
+                            break;
+                        case 'text_twitter_instructions':
+                            if(val && container.parent().prev('h4').is(':visible')) {
+                                container.parent().show();
+                            }
+                            else {
+                               container.parent().hide();
+                            }
+                            break;
+                        case 'text_facebook_instructions':
+                            if(val && container.parent().prev('h4').is(':visible')){
+                                container.parent().show();
+                            }
+                            else {
+                               container.parent().hide();
+                            }
+                            break;
+                        case 'text_live_instructions':
+                            if(val && container.parent().prev('h4').is(':visible')){
+                                container.parent().show();
+                            }
+                            else {
+                               container.parent().hide();
+                            }
+                            break;
+                        case 'text_email_instructions':
+                            if(val){
+                                container.parent().show();
+                            }
+                            else {
+                               container.parent().hide();
+                            }
+                            break;
+                        case 'text_telephone_instructions':
+                            if(val){
+                                container.parent().show();
+                            }
+                            else {
+                               container.parent().hide();
+                            }
+                            break;
+                    }
+                }
+
+                String.prototype.replaceAll = function(search, replacement) {
+                    var target = this;
+                    return target.replace(new RegExp('\\[\\[' + search + '\\]\\]', 'g'), replacement);
+                };
+
+                function replaceAll(str, map) {
+                    for(key in map){
+                        str = str.replaceAll(key, map[key]);
+                    }
+                    return str;
+                }
+
+                var map = {
+                    'YEAR' : '{{ short_codes.year }}',
+                    'EMAIL' : '{{ short_codes.email }}',
+                    'PHONE' : '{{ short_codes.phone }}',
+                    'ADDRESS' : '{{ short_codes.address }}'
+                };
+
+                var hrefs = [
+                    'text_twitter_url',
+                    'text_facebook_url',
+                    'text_live_url'
+                ];
+
+                function highlightElm(name) {
+
+                    var elm = $('[data-name="'+name+'"]'),
+                        className = 'sw-theme-highlight';
+
+                    elm.addClass(className);
+
+                    $('html, body').animate({
+                        scrollTop: elm.offset().top - 10
+                    }, 500);
+
+                    setTimeout(function () {
+                        elm.removeClass(className);
+                    }, 3000);
+                }
+            }
+        });
+    </script>
+    <style>
+        .sw-theme-highlight,
+        .sw-theme-highlight * {
+            background-color: #fecbcb !important;
+        }
+    </style>
+{% endif %}

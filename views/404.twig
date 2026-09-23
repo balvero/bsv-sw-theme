@@ -1,0 +1,45 @@
+{# Extend page template #}
+{% extends 'templates/page.twig' %}
+
+{% set title = 'Not Found' %}
+{% set bodyClass = 'no-page' %}
+{% set hideTitle = 0 %}
+
+{% block page_content %}
+    <div class="row column message">
+        <strong class="text-xxl">
+            Whoops!
+        </strong>
+        <p class="sub">
+            We're sorry but this page doesn't exist.
+        </p>
+        <p>
+            Looking for something in particular? Try searching below.
+        </p>
+        <p>Search tips:</p>
+        <ul>
+            <li>Make sure all words are spelt correctly</li>
+            <li>Try different keywords</li>
+            <li>Try fewer keywords</li>
+        </ul>
+    </div>
+    <section class="new-search">
+        <form class="input-group" action="/search/products" method="get">
+            <input type="search" name="keywords" placeholder="Type to search" class="input-group-field js-newSearch">
+            <div class="input-group-button">
+                <button type="submit" value="Submit" class="button">
+                    {{ theme.sw_icon('glass1', 'Search') }}
+                </button>
+            </div>
+        </form>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('.js-newSearch').focus();
+        });
+    </script>
+{% endblock %}

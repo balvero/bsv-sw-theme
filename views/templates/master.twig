@@ -1,0 +1,87 @@
+{# Import macros #}
+{% import 'macros/html.twig' as html %}
+{% import 'macros/theme.twig' as theme %}
+{% set gts = global.theme.settings %}
+{# prices #}
+{% set display_price = not global.customer.trade and gts.hide_prices ? 0 : 1 %}
+
+{# Theme configurations #}
+{% set theme_config = {
+    name: 'technologik',
+    version: '2.3.0',
+    debug: false,
+    nav_style: 1,
+    price_slider: 1
+} %}
+
+<!doctype html>
+{% spaceless %}
+<html lang="en" class="no-js">
+<head data-theme="{{ theme_config|json_encode }}">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    {% if gts.color_theme %}
+        <meta name="theme-color" content="{{ gts.color_theme }}">
+    {% endif %}
+    <style>{% block critical_css %}{% include 'partials/critical_path.twig' %}{% endblock %}</style>
+    <script>
+        var d = document.getElementsByTagName('html')[0];
+        d.className += " loading";
+    </script>
+	
+	{# Render header content #}
+	{{ global.header|raw }}
+    {% block stylesheets %}
+        {{ html.stylesheet('//cdn.jsdelivr.net/npm/foundation-sites@6.3.0/dist/css/foundation.min.css') }}
+        {{ html.stylesheet('//cdn.jsdelivr.net/npm/slick-carousel@1.6.0/slick/slick.css') }}
+        {{ html.stylesheet('//cdn.jsdelivr.net/npm/slick-carousel@1.6.0/slick/slick-theme.min.css') }}
+        {{ html.stylesheet('//cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.1/jquery.fancybox.min.css') }}
+        {{ html.stylesheet('//cdn.jsdelivr.net/npm/froala-editor@2.8.5/css/froala_style.css') }}
+        {{ html.stylesheet('//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800') }}
+        {{ html.stylesheet(asset_url('scss/theme.css')) }}
+        {{ html.stylesheet('//cdn.jsdelivr.net/combine/npm/jquery-ui-1-11-4@1.11.4/jquery-ui.min.css') }}
+    {% endblock %}
+</head>
+<body class="{{ bodyClass ? bodyClass : '' }} {{ global.current_path == '/' ? 'home' : '' }}" data-pages="{{ total_pages|default(1) }}">
+    {% block off_canvas %}
+        {% if global.features.ajax_basket or gts.offcanvas_basket %}
+            {% include 'partials/basket_modal.twig' with { type: 'canvas' } %}
+        {% endif %}
+    {% endblock %}
+    <div class="off-canvas-content" data-off-canvas-content>
+    	{% block header %}
+    		{% include 'partials/header.twig' %}
+    	{% endblock %}
+        {% block content %}{% endblock %}
+    	{% block footer %}
+    		{% include 'partials/footer.twig' %}
+            {{ theme.info_message() }}
+    	{% endblock %}
+        {% block below_content %}
+            {% include 'partials/global_modals.twig' %}
+        {% endblock %}
+    	{% block scripts %}
+            {{ html.script('//cdn.jsdelivr.net/combine/npm/urijs@1.18.3/src/URI.min.js,npm/jquery@3.4.0,npm/foundation-sites@6.3.0,npm/slick-carousel@1.6.0,npm/jquery-validation@1.15.1,npm/jquery-migrate@3.0.1,npm/jquery.cookie@1.4.1') }}
+            {{ html.script('//cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.1/jquery.fancybox.min.js') }}
+            {{ html.script('//cdnjs.cloudflare.com/ajax/libs/unveil/1.3.0/jquery.unveil.min.js') }}
+            {{ html.script('//s3-eu-west-1.amazonaws.com/shopwired-theme-assets/v3/js/plugins.min.js') }}
+            {{ html.script(asset_url('js/application.js')) }}
+    	{% endblock %}
+        {% include 'partials/theme_editor.twig' %}
+    	{# Render footer content #}
+    	{{ global.footer|raw }}
+        {% if theme_config.debug %}
+            <script>
+                console.info( {{ _context|json_encode|raw }} );
+            </script>
+        {% endif %}
+     </div>
+	<script type="text/javascript" src="https://embeds.iubenda.com/widgets/59b51289-697c-4204-b05f-04c8ccaae441.js"></script>
+</body>
+</html>
+{% endspaceless %}
+
+
+
+
+
