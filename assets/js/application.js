@@ -353,6 +353,12 @@ $(function() {
     // initialize features
     initFeatures();
 
+    // initialize Algolia header autocomplete
+    algoliaHeaderSearch();
+
+    // initialize Algolia-powered search results page
+    algoliaSearchPage();
+
 });
 
 function productPhotos(container) {
@@ -1709,6 +1715,226 @@ function is_touch_device() {
     return 'ontouchstart' in window
     || navigator.maxTouchPoints;
 };
+
+function algoliaCreditsPresent() {
+    return typeof algoliasearch !== 'undefined' && typeof gts !== 'undefined' && gts.text_algolia_app_id && gts.text_algolia_api_key;
+}
+
+function algoliaFormatPrice(price) {
+    return new Intl.NumberFormat('da-DK', {
+        style: 'currency',
+        currency: 'DKK'
+    }).format(price || 0).replace('kr.', 'DKK');
+}
+
+function algoliaHitTemplate(item) {
+    var image = (item.images && item.images[0] && item.images[0].url) || '/fallback.jpg';
+    var description = (item.description || '').replace(/<[^>]+>/g, '').slice(0, 150);
+
+    return '' +
+        '<article class="card item-box product-box">' +
+            '<div class="item-image">' +
+                '<a href="' + item.url + '" class="image-container" data-fit="1">' +
+                    '<img src="' + image + '" alt="' + item.title + '" class="item-img">' +
+                '</a>' +
+            '</div>' +
+            '<div class="card-section box-data product-box-data">' +
+                '<h2 class="product-box-title">' +
+                    '<a href="' + item.url + '">' + item.title + '</a>' +
+                '</h2>' +
+                '<div class="item-description">' + description + '</div>' +
+                '<div class="product-box-basket">' +
+                    '<a href="' + item.url + '" class="quick-view">' +
+                        '<i class="sw-icon-basket" aria-hidden="true"></i>' +
+                        '<span class="show-for-sr">View product</span>' +
+                    '</a>' +
+                    '<span class="price">' + algoliaFormatPrice(item.price) + '</span>' +
+                '</div>' +
+            '</div>' +
+        '</article>';
+}
+
+// Debounced autocomplete dropdown attached to every header search box (desktop reveal + mobile search bar)
+function algoliaHeaderSearch() {
+    if (!algoliaCreditsPresent()) {
+        return;
+    }
+
+    var searchClient = algoliasearch(gts.text_algolia_app_id, gts.text_algolia_api_key);
+    var index = searchClient.initIndex(gts.text_algolia_index_name);
+
+    $('.js-algolia-search').each(function() {
+        var $wrapper = $(this);
+        var $input = $wrapper.find('.js-algolia-search-input');
+        var $results = $wrapper.find('.js-algolia-search-results');
+        var debounceTimeout;
+
+        if (!$input.length || !$results.length) {
+            return;
+        }
+
+        $input.on('input', function() {
+            var query = $(this).val().trim();
+            clearTimeout(debounceTimeout);
+
+            if (!query) {
+                $results.empty().removeClass('active');
+                return;
+            }
+
+            debounceTimeout = setTimeout(function() {
+                index.search(query, {
+                    hitsPerPage: 5,
+                    attributesToRetrieve: ['title', 'url', 'images', 'description', 'price'],
+                    filters: gts.text_algolia_filters || ''
+                }).then(function(res) {
+                    renderHeaderResults(res.hits);
+                }).catch(function(err) {
+                    console.error('Algolia search error:', err);
+                });
+            }, 150);
+        });
+
+        function renderHeaderResults(hits) {
+            $results.empty();
+
+            if (!hits.length) {
+                $results.addClass('active').html('<div class="algolia-no-results">Ingen resultater fundet</div>');
+                return;
+            }
+
+            $results.addClass('active');
+            hits.forEach(function(item) {
+                $results.append(algoliaHitTemplate(item));
+            });
+        }
+    });
+}
+
+// Algolia InstantSearch powered results on the /search/products page
+function algoliaSearchPage() {
+    if (!algoliaCreditsPresent() || $('#hits').length === 0) {
+        return;
+    }
+
+    var indexName = gts.text_algolia_index_name;
+    var searchClient = algoliasearch(gts.text_algolia_app_id, gts.text_algolia_api_key);
+    var router = instantsearch.routers.history();
+    var filters = gts.text_algolia_filters || '';
+    var initialQuery = $('.algolia-search-page').data('initial-query') || '';
+
+    var search = instantsearch({
+        indexName: indexName,
+        searchClient: searchClient,
+        routing: {
+            router: router
+        }
+    });
+
+    var virtualSearchBox = instantsearch.connectors.connectSearchBox(function() {});
+
+    search.addWidgets([
+        virtualSearchBox({}),
+        instantsearch.widgets.hits({
+            container: '#hits',
+            templates: {
+                item: function(hit) {
+                    return algoliaHitTemplate(hit);
+                }
+            }
+        }),
+        instantsearch.widgets.pagination({
+            container: '#pagination'
+        }),
+        instantsearch.widgets.configure({
+            filters: filters,
+            hitsPerPage: parseInt(gts.items_per_search_page, 10) || 12
+        })
+    ]);
+
+    search.start();
+
+    function setInstantSearchUiState(params) {
+        search.setUiState(function(uiState) {
+            var currentState = uiState[indexName] || {};
+            return Object.assign({}, uiState, {
+                [indexName]: Object.assign({}, currentState, { page: 1 }, params)
+            });
+        });
+    }
+
+    // Seed the initial query from the classic ShopWired ?keywords= search when arriving fresh
+    var urlState = router.read();
+    var routerQuery = (urlState && urlState[indexName] && urlState[indexName].query) || '';
+    var startingQuery = routerQuery || initialQuery;
+    if (!routerQuery && initialQuery) {
+        setInstantSearchUiState({ query: initialQuery });
+    }
+
+    if (typeof autocomplete === 'undefined' || $('#autocomplete-input').length === 0) {
+        return;
+    }
+
+    var skipRouterUpdate = false;
+    var autocompleteInstance = autocomplete({
+        container: '#autocomplete-input',
+        placeholder: 'Søg efter produkter',
+        initialState: { query: startingQuery },
+        onSubmit: function(params) {
+            setInstantSearchUiState({ query: params.state.query });
+        },
+        onReset: function() {
+            setInstantSearchUiState({ query: '' });
+        },
+        onStateChange: function(params) {
+            if (!skipRouterUpdate && params.prevState.query !== params.state.query) {
+                setInstantSearchUiState({ query: params.state.query });
+            }
+            skipRouterUpdate = false;
+        },
+        getSources: function(params) {
+            var query = params.query;
+            if (!query) {
+                return [];
+            }
+            return [
+                {
+                    sourceId: 'instant_search',
+                    getItems: function() {
+                        return getAlgoliaResults({
+                            searchClient: searchClient,
+                            queries: [
+                                { indexName: indexName, query: query, params: { hitsPerPage: 5, filters: filters } }
+                            ]
+                        });
+                    },
+                    templates: {
+                        item: function(params) {
+                            return params.html`<div>${params.components.Highlight({ attribute: 'title', hit: params.item })}</div>`;
+                        }
+                    },
+                    onSelect: function(params) {
+                        params.event.preventDefault();
+                        params.setQuery(params.item.title);
+                        setInstantSearchUiState({ query: params.item.title });
+                        params.setIsOpen(false);
+                    }
+                }
+            ];
+        }
+    });
+
+    window.addEventListener('popstate', function() {
+        skipRouterUpdate = true;
+        var currentQuery = search.helper ? search.helper.state.query : '';
+        autocompleteInstance.setQuery(currentQuery);
+    });
+
+    // Keep every header search box in sync with InstantSearch once the results page is active
+    $('.js-algolia-search-input').on('change', function() {
+        setInstantSearchUiState({ query: $(this).val().trim() });
+    });
+}
 
 if ( is_touch_device() ) {
     $('html').addClass('touch');

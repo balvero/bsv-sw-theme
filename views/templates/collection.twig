@@ -39,6 +39,7 @@
 
 {% block page_content %}
 	<div class="collection">
+        {% if not algoliaSearch %}
         <div class="row" data-equalizer data-equalize-on="medium">
             {% if products|length %}
 <!--                 <div class="column large-3 small-6" data-equalizer-watch>
@@ -64,17 +65,20 @@
                 {% include 'partials/paginator.twig' with {'align': 'right', 'class': 'contrast'} %}
             </div>
         </div>
+        {% endif %}
         <div class="row">
            {# if show_sidebar #}
                {# <aside class="column large-3 show-for-large">
                     {% block sidebar %}{% endblock %}
                 </aside> #}
-            {# endif #} 
+            {# endif #}
            {# <div class="column{{ show_sidebar ? ' large-9 show-sidebar' : '' }}"> #}
 			<div class="column">
                 {% block items %}{% endblock %}
                 {# Render page links #}
+                {% if not algoliaSearch %}
                 {% include 'partials/paginator.twig' with {'align': 'right', 'class': 'contrast'} %}
+                {% endif %}
             </div>
         </div>
 	</div>
