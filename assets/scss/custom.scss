@@ -3,8 +3,13 @@ html {
 	scroll-padding: 20px;
 }
 
-//Header Test
-#sw-theme-preview-bar {display: none !important;}
+//Header Testing
+#sw-theme-preview-bar {
+	display: block !important;
+	position: fixed;
+    bottom: 0;
+    z-index: 99;
+}
 header {
 	background-color: #000 !important;
 	
@@ -240,11 +245,11 @@ body.home {
 }
 
 
-//Popup search 
+//Popup search
 #globalSearch {
-	height: 300px;
-	top: 230px !important;
-	
+	overflow-y: auto;
+	padding: 4rem 1rem 3rem;
+
 	.header-search {
 		.input-group-field {
 			font-size: 1.5rem !important;

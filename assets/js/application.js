@@ -1283,6 +1283,14 @@ $(function(){
     $('#header-search').on('off.zf.toggler', function() {
         // place cursor in search input on show
         $(this).find('.header-search-input').focus();
+        $('body').addClass('search-open');
+    }).on('on.zf.toggler', function() {
+        $('body').removeClass('search-open');
+        // reset search state on close
+        $(this).find('.header-search-input').val('');
+        $('#algolia-search-results').removeClass('active').empty();
+        $('#no-results').removeClass('active').empty();
+        $('.algolia-pagination').empty();
     });
 
     // toggle module
@@ -1359,10 +1367,6 @@ $(document).on('opened.zf.offcanvas', function() {
 
 $(document).on('open.zf.reveal', function() {
    $('.image-container').imageContainer();
-});
-
-$('.header-search').on('open.zf.reveal', function() {
-    $(this).find('.input-group-field').focus();
 });
 
 
@@ -1704,11 +1708,10 @@ $('#currency-dropdown-small').on('off.zf.toggler', function() {
     $('.header-nav-outer').add('#content').add('footer').removeClass('show-for-large');
 });
 
-$('#mobileSearch').on('off.zf.toggler', function() {
+$('#header-search').on('off.zf.toggler', function() {
     if(!$('#main-nav-wrapper').hasClass('show-for-large')){
         $('#main-nav-wrapper').foundation('toggle');
     }
-    $('.mobile-search input[name="keywords"]').focus();
 });
 
 function is_touch_device() {
@@ -1754,61 +1757,223 @@ function algoliaHitTemplate(item) {
         '</article>';
 }
 
+function algoliaHeaderHitTemplate(item) {
+    var image = (item.images && item.images[0] && item.images[0].url) || '/fallback.jpg';
+    var description = (item.description || '').replace(/<[^>]+>/g, '').slice(0, 150);
+
+    return '' +
+        '<article class="item-box search-item-box">' +
+            '<div class="item-image">' +
+                '<a href="' + item.url + '" class="image-container">' +
+                    '<img src="' + image + '" alt="' + item.title + '" class="item-img">' +
+                '</a>' +
+            '</div>' +
+            '<h3 class="item-title">' +
+                '<a href="' + item.url + '">' + item.title + '</a>' +
+            '</h3>' +
+            '<div class="item-description">' + description + '</div>' +
+        '</article>';
+}
+
 // Debounced autocomplete dropdown attached to every header search box (desktop reveal + mobile search bar)
 function algoliaHeaderSearch() {
     if (!algoliaCreditsPresent()) {
         return;
     }
 
+    var $input = $('#header-search-input');
+    var $results = $('#algolia-search-results');
+    var $noResults = $('#no-results');
+    var $pagination = $('.algolia-pagination');
+    var debounceTimeout;
+    var currentQuery = '';
+    var currentPage = 0;
+    var totalPages = 0;
+    var HITS_PER_PAGE = 6;
+    var MIN_CHARS = 2;
+    var MAX_PAGE_BUTTONS = 5;
+    var mobileMq = window.matchMedia('(max-width: 1023px)');
+    var isMobile = function() {
+        return mobileMq.matches;
+    };
+
+    if (!$input.length || !$results.length) {
+        return;
+    }
+
     var searchClient = algoliasearch(gts.text_algolia_app_id, gts.text_algolia_api_key);
     var index = searchClient.initIndex(gts.text_algolia_index_name);
 
-    $('.js-algolia-search').each(function() {
-        var $wrapper = $(this);
-        var $input = $wrapper.find('.js-algolia-search-input');
-        var $results = $wrapper.find('.js-algolia-search-results');
-        var debounceTimeout;
+    if (mobileMq.addEventListener) {
+        mobileMq.addEventListener('change', function() {
+            renderPagination();
+        });
+    }
 
-        if (!$input.length || !$results.length) {
+    $input.on('keydown', function(e) {
+        if (e.key === 'Escape') {
+            $(this).val('');
+            clearResults();
+        }
+    });
+
+    $input.on('input', function() {
+        var query = $(this).val().trim();
+        clearTimeout(debounceTimeout);
+
+        currentQuery = query;
+        currentPage = 0;
+        totalPages = 0;
+
+        if (!query || query.length < MIN_CHARS) {
+            clearResults();
             return;
         }
 
-        $input.on('input', function() {
-            var query = $(this).val().trim();
-            clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(function() {
+            performSearch(0, false);
+        }, 150);
+    });
 
-            if (!query) {
-                $results.empty().removeClass('active');
-                return;
+    $pagination.on('click', 'button[data-page]', function(e) {
+        e.preventDefault();
+
+        if (isMobile() || $(this).is('[disabled]')) {
+            return;
+        }
+
+        var page = parseInt($(this).attr('data-page'), 10);
+        if (isNaN(page) || page === currentPage) {
+            return;
+        }
+
+        performSearch(page, false);
+    });
+
+    $results.on('click', '[data-load-more]', function(e) {
+        e.preventDefault();
+
+        if (!isMobile() || !currentQuery || currentPage >= totalPages - 1) {
+            return;
+        }
+
+        performSearch(currentPage + 1, true);
+    });
+
+    function clearResults() {
+        $results.removeClass('active').empty();
+        $noResults.removeClass('active').empty();
+        $pagination.empty();
+    }
+
+    function performSearch(page, append) {
+        index.search(currentQuery, {
+            page: page,
+            hitsPerPage: HITS_PER_PAGE,
+            attributesToRetrieve: ['title', 'url', 'images', 'description', 'price'],
+            filters: gts.text_algolia_filters || ''
+        }).then(function(res) {
+            currentPage = page;
+            totalPages = res.nbPages || 0;
+            renderHeaderResults(res.hits || [], append);
+        }).catch(function(err) {
+            console.error('Algolia search error:', err);
+        });
+    }
+
+    function renderHeaderResults(hits, append) {
+        if (append) {
+            removeLoadMoreRow();
+        } else {
+            $results.empty();
+        }
+
+        if (!hits.length) {
+            if (!append) {
+                $results.removeClass('active');
+                $noResults.addClass('active').html('<p>Ingen resultater fundet</p>');
             }
+            renderPagination();
+            $(window).trigger('resize');
+            return;
+        }
 
-            debounceTimeout = setTimeout(function() {
-                index.search(query, {
-                    hitsPerPage: 5,
-                    attributesToRetrieve: ['title', 'url', 'images', 'description', 'price'],
-                    filters: gts.text_algolia_filters || ''
-                }).then(function(res) {
-                    renderHeaderResults(res.hits);
-                }).catch(function(err) {
-                    console.error('Algolia search error:', err);
-                });
-            }, 150);
+        $noResults.removeClass('active').empty();
+        $results.addClass('active');
+        hits.forEach(function(item) {
+            $results.append(algoliaHeaderHitTemplate(item));
         });
 
-        function renderHeaderResults(hits) {
-            $results.empty();
+        renderPagination();
+        $(window).trigger('resize');
+    }
 
-            if (!hits.length) {
-                $results.addClass('active').html('<div class="algolia-no-results">Ingen resultater fundet</div>');
-                return;
-            }
+    function removeLoadMoreRow() {
+        $results.find('.algolia-load-more-row').remove();
+    }
 
-            $results.addClass('active');
-            hits.forEach(function(item) {
-                $results.append(algoliaHitTemplate(item));
-            });
+    function renderLoadMoreRow() {
+        removeLoadMoreRow();
+
+        if (currentPage >= totalPages - 1) {
+            return;
         }
-    });
+
+        $results.append('<div class="algolia-load-more-row"><button type="button" class="algolia-load-more" data-load-more="1">Vis flere</button></div>');
+    }
+
+    function renderPagination() {
+        if (!totalPages || totalPages <= 1) {
+            $pagination.empty();
+            removeLoadMoreRow();
+            return;
+        }
+
+        if (isMobile()) {
+            $pagination.empty();
+            renderLoadMoreRow();
+            return;
+        }
+
+        removeLoadMoreRow();
+
+        var maxButtons = MAX_PAGE_BUTTONS;
+        var start = Math.max(0, currentPage - Math.floor(maxButtons / 2));
+        var end = start + maxButtons - 1;
+
+        if (end > totalPages - 1) {
+            end = totalPages - 1;
+            start = Math.max(0, end - (maxButtons - 1));
+        }
+
+        var html = '<button type="button" class="algolia-page-btn" data-page="' + (currentPage - 1) + '"' + (currentPage === 0 ? ' disabled' : '') + '>&lsaquo;</button>';
+
+        if (start > 0) {
+            html += pageButton(0);
+            if (start > 1) {
+                html += '<span class="algolia-ellipsis">&hellip;</span>';
+            }
+        }
+
+        for (var i = start; i <= end; i++) {
+            html += pageButton(i);
+        }
+
+        if (end < totalPages - 1) {
+            if (end < totalPages - 2) {
+                html += '<span class="algolia-ellipsis">&hellip;</span>';
+            }
+            html += pageButton(totalPages - 1);
+        }
+
+        html += '<button type="button" class="algolia-page-btn" data-page="' + (currentPage + 1) + '"' + (currentPage === totalPages - 1 ? ' disabled' : '') + '>&rsaquo;</button>';
+
+        $pagination.html(html);
+    }
+
+    function pageButton(page) {
+        return '<button type="button" class="algolia-page-btn' + (page === currentPage ? ' current' : '') + '" data-page="' + page + '">' + (page + 1) + '</button>';
+    }
 }
 
 // Algolia InstantSearch powered results on the /search/products page

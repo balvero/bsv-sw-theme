@@ -24,15 +24,7 @@
         <div class="show-for-sr">
             <a href="#content">Gå til hovedside</a>
         </div>
-        <div class="reveal reveal--full-screen header-search" id="globalSearch" data-reveal>
-            <div class="inner row column">
-                {{ block('header_search') }}
-            </div>
-            <button class="close-button" data-close aria-label="Close modal" type="button">
-                <span aria-hidden="true">&times;</span>
-                <span class="show-for-sr">luk</span>
-            </button>
-        </div>
+        {{ block('header_search') }}
 		<div id="header-top">
 			
 		
@@ -129,11 +121,6 @@
                 {% endif %}
             </div>
         </div>
-        <div id="mobileSearch" class="mobile-search hide-for-large hide" data-toggler=".hide">
-            <div class="row column">
-                {{ block('header_search') }}
-            </div>
-        </div>
 			</div>
     </header>
 {% endblock %}
@@ -195,19 +182,26 @@
 
 
 {% block header_search %}
-    <div class="js-algolia-search">
-        <form class="input-group" action="/search/products" method="get">
-            <input type="search" name="keywords" placeholder="Skriv for at søge" class="input-group-field js-algolia-search-input" autocomplete="off">
-            <div class="input-group-button">
-                <button type="submit" value="Submit" class="button">
-                    {{ theme.sw_icon('glass-2') }}
-                    <span class="show-for-sr">Søg</span>
-                </button>
+    <div class="header-search algolia hide" id="header-search" data-toggler=".hide" aria-expanded="false">
+        <div class="search-container">
+            <button class="close-button absolute" data-toggle="header-search" aria-controls="header-search" aria-label="Close modal" type="button">
+                <span aria-hidden="true" class="text-black text-4xl">&times;</span>
+            </button>
+            <div class="input-container">
+                <form class="input-group mod-search" action="/search/products" method="get">
+                    <input type="search" name="keywords" placeholder="Skriv for at søge" id="header-search-input" class="header-search-input input-group-field js-algolia-search-input" autocomplete="off">
+                    <button type="submit" class="search-icon">
+                        {{ theme.sw_icon('glass-2') }}
+                        <span class="show-for-sr">Søg</span>
+                    </button>
+                </form>
             </div>
-        </form>
-        {% if gts.text_algolia_app_id and gts.text_algolia_api_key %}
-            <div class="js-algolia-search-results algolia-search-results"></div>
-        {% endif %}
+            {% if gts.text_algolia_app_id and gts.text_algolia_api_key %}
+                <div class="algolia-pagination"></div>
+                <div id="algolia-search-results" class="js-algolia-search-results" data-equalizer="algolia-results-equalizer" data-equalize-by-row="true"></div>
+                <div id="no-results" class="js-algolia-no-results"></div>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
 
@@ -229,7 +223,7 @@
     <div class="header-nav-outer">
         <nav class="row column">
             <div class="header-nav">
-                <button class="show-for-large header-search-toggle" data-open="globalSearch">
+                <button class="show-for-large header-search-toggle" data-toggle="header-search">
                     <span>Søg</span>
                     {{ theme.sw_icon('glass-2') }}
                 </button>
@@ -241,7 +235,7 @@
                         </button>
                     </div>
                     <div class="column small-6 text-right">
-                        <button id="mobileSearchBtn" class="header-mobile-button search-toggle" data-toggle="mobileSearch mobileSearchBtn" data-toggler=".active">
+                        <button id="mobileSearchBtn" class="header-mobile-button search-toggle" data-toggle="header-search">
                             <span class="show-for-sr">Search</span>
                             {{ theme.sw_icon('glass-2') }}
                         </button>
