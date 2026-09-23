@@ -1,13 +1,13 @@
 {# Extend page template #}
 {% extends 'templates/account_pages.twig' %}
 
-{% set title = 'Edit Your Account' %}
+{% set title = 'Tilret din konto' %}
 {% set breadcrumb_title = 'Edit Account' %}
 
 {% block breadcrumbs %}
     {# Add account link #}
     <li>
-        <a href="/account">Account</a>
+        <a href="/account">Konto</a>
     </li>
 
 {% endblock %}
@@ -15,22 +15,22 @@
 {% block page_content %}
     <h1 class="sw-account-heading">
         <i class="icon-edit" aria-hidden="true"></i>
-        <span>My details</span>
+        <span>Mine oplysninger</span>
     </h1>
     <p>
-        Edit your account details below
+        Tilret dine kontooplysninger nedenfor
     </p>
     <form action="{{ global.current_url }}" method="post" class="form-with-validation">
         <div class="row">
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">First Name</label>
+                    <label class="sw-account-label">Fornavn</label>
                     <input class="sw-account-input" type="text" name="firstname" value="{{ form_fields.first_name.value }}">
                 </div>
             </div>
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Last Name</label>
+                    <label class="sw-account-label">Efternavn</label>
                     <input class="sw-account-input" type="text" name="lastname" value="{{ form_fields.last_name.value }}">
                 </div>
             </div>
@@ -38,13 +38,13 @@
         <div class="row">
             {% if (global.theme.settings.date_of_birth_field and not is_trade_account) or (global.theme.settings.trade_date_of_birth_field and is_trade_account) %}
                 <div class="column medium-6">
-                    <label class="sw-account-label">Date Of Birth</label>
+                    <label class="sw-account-label">Fødselsdag</label>
                     <input class="sw-account-input" type="text" name="date_of_birth" value="{{ form_fields.date_of_birth.value }}" readonly>
                 </div>
             {% endif %}
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Email Address</label>
+                    <label class="sw-account-label">Email adresse</label>
                     <input class="sw-account-input" type="text" name="email" value="{{ form_fields.email_address.value }}">
                 </div>
             </div>
@@ -52,38 +52,38 @@
         <div class="row">
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Telephone Number</label>
+                    <label class="sw-account-label">Telefonnummer</label>
                     <input class="sw-account-input" type="text" name="phone" value="{{ form_fields.phone.value }}">
                 </div>
             </div>
             {% if global.theme.settings.trade_mobile_number_field and is_trade_account %}
                 <div class="column medium-6">
                     <div class="sw-account-field">
-                        <label class="sw-account-label">Mobile</label>
+                        <label class="sw-account-label">Mobilnummer</label>
                         <input class="sw-account-input" type="text" name="mobile" value="{{ global.customer.mobile_number }}">
                     </div>
                 </div>
             {% endif %}
         </div>
         <div class="sw-account-line-heading">
-            <span>Account address</span>
+            <span>Adresse</span>
         </div>
         <div class="sw-account-field">
-            <label class="sw-account-label">1st Line Address</label>
+            <label class="sw-account-label">Adresselinje 1</label>
             <input class="sw-account-input" type="text" name="address_line1" value="{{ form_fields.address_line1.value }}">
         </div>
         <div class="sw-account-field">
-            <label class="sw-account-label">2nd Line Address</label>
+            <label class="sw-account-label">Adresselinje 2</label>
             <input class="sw-account-input" type="text" name="address_line2" value="{{ form_fields.address_line2.value }}">
         </div>
         <div class="sw-account-field">
-            <label class="sw-account-label">3rd Line Address</label>
+            <label class="sw-account-label">Adresselinje 3</label>
             <input class="sw-account-input" type="text" name="address_line3" value="{{ form_fields.address_line3.value }}">
         </div>
         <div class="row">
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Town/City</label>
+                    <label class="sw-account-label">By</label>
                     <input class="sw-account-input" type="text" name="city" value="{{ form_fields.city.value }}">
                 </div>
             </div>
@@ -92,7 +92,7 @@
                     <label class="sw-account-label">County/State</label>
                     <input class="sw-account-input{{ form_fields.country.value != 223 ? '' : ' hide' }}" type="text"  name="province" value="{{ global.customer.province }}">
                     <select class="sw-account-input{{ form_fields.country.value == 223 ? '' : ' hide' }}" name="state_id" data-state="{{ global.customer.state_id }}">
-                        <option value="">Please select...</option>
+                        <option value="">Vælg...</option>
                     </select>
                 </div>
             </div>
@@ -100,15 +100,15 @@
         <div class="row">
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Postcode</label>
+                    <label class="sw-account-label">Postnummer</label>
                     <input class="sw-account-input" type="text" name="zip" value="{{ form_fields.postcode.value }}">
                 </div>
             </div>
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Country</label>
+                    <label class="sw-account-label">Lanbd</label>
                     <select class="sw-account-input" name="country_id" value="{{ form_fields.country.value }}">
-                        <option value="">Please select...</option>
+                        <option value="">Vælg...</option>
                         {% for key, value in form_fields.country.values %}
                             <option value="{{ key }}"{% if key == form_fields.country.value %} selected="selected"{% endif %}>
                                 {{ value }}
@@ -120,7 +120,7 @@
         </div>
         {% if (global.theme.settings.company_name_field and not is_trade_account) or (global.theme.settings.trade_company_website_field and is_trade_account) %}
             <div class="sw-account-field">
-                <label class="sw-account-label">Company</label>
+                <label class="sw-account-label">Virksomhed</label>
                 <input class="sw-account-input" type="text" name="company" value="{{ form_fields.company.value }}">
             </div>
         {% endif %}
@@ -132,19 +132,12 @@
         {% endif %}
         {% if global.theme.settings.trade_vat_number_field and is_trade_account %}
             <div class="sw-account-field">
-                <label class="sw-account-label">VAT Number</label>
+                <label class="sw-account-label">CVR nummer</label>
                 <input class="sw-account-input" type="text" name="vat_number" value="{{ global.customer.vat_number }}">
             </div>
         {% endif %}
-        <button class="button sw-account-button" type="submit">Save these details</button>
+        <button class="button sw-account-button" type="submit">Gem</button>
     </form>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {% if global.theme.settings.date_of_birth_field %}
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    {% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -193,8 +186,7 @@
                 dateFormat: 'dd/mm/yy',
                 changeMonth: true,
                 changeYear: true,
-                maxDate: '0',
-				yearRange: "1900:+0"
+                maxDate: '0'
             }).autocomplete({
                 disabled: true
             });

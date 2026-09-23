@@ -11,13 +11,13 @@
         <div class="row">
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">First Name</label>
+                    <label class="sw-account-label">Fornavn</label>
                     <input class="sw-account-input" type="text" name="first_name" value="{{ address.first_name }}">
                 </div>
             </div>
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Last Name</label>
+                    <label class="sw-account-label">Efternavn</label>
                     <input class="sw-account-input" type="text" name="last_name" value="{{ address.last_name }}">
                 </div>
             </div>
@@ -26,21 +26,21 @@
             <span>Account address</span>
         </div>
         <div class="sw-account-field">
-            <label class="sw-account-label">1st Line Address</label>
+            <label class="sw-account-label">Adresselinje 1</label>
             <input class="sw-account-input" type="text" name="line1" value="{{ address.line1 }}">
         </div>
         <div class="sw-account-field">
-            <label class="sw-account-label">2nd Line Address</label>
+            <label class="sw-account-label">Adresselinje 2</label>
             <input class="sw-account-input" type="text" name="line2" value="{{ address.line2 }}">
         </div>
         <div class="sw-account-field">
-            <label class="sw-account-label">3rd Line Address</label>
+            <label class="sw-account-label">Adresselinje 3</label>
             <input class="sw-account-input" type="text" name="line3" value="{{ address.line3 }}">
         </div>
         <div class="row">
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Town/City</label>
+                    <label class="sw-account-label">By</label>
                     <input class="sw-account-input" type="text" name="city" value="{{ address.city }}">
                 </div>
             </div>
@@ -54,15 +54,15 @@
         <div class="row">
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Postcode</label>
+                    <label class="sw-account-label">Postnummer</label>
                     <input class="sw-account-input" type="text" name="postcode" value="{{ address.postcode }}">
                 </div>
             </div>
             <div class="column medium-6">
                 <div class="sw-account-field">
-                    <label class="sw-account-label">Country</label>
+                    <label class="sw-account-label">Land</label>
                     <select class="sw-account-input" name="country_id" value="{{ address.country_id }}">
-                        <option value="">Please select...</option>
+                        <option value="">Vælg venligst...</option>
                         {% for country in countries %}
                             <option value="{{ country.id }}"{% if country.id == address.country_id %} selected="selected"{% endif %}>
                                 {{ country.name }}
@@ -73,7 +73,7 @@
             </div>
         </div>
         {{ theme.honeypot('hide') }}
-        <button class="button sw-account-button" type="submit" name="save" value="1">Save these details</button>
+        <button class="button sw-account-button" type="submit" name="save" value="1">Gem</button>
     </form>
 {% endblock %}
 

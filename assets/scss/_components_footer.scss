@@ -11,7 +11,7 @@
         a {
             //color: #cbcbcb;
             color: if(setting-value('footer_use_default_website_colors'), $color_global_white_text, $color_footertop_category_items); //#ffffff; //$color_footer_top_text;
-            font-size: .95rem;
+            font-size: 1rem;
         }
     }
 
@@ -26,7 +26,7 @@
                 color: if(setting-value('footer_use_default_website_colors'), $color_global_dark_text, $color_footermiddle_footer_text_links); //#7d7d7d; //$color_footer_middle_text;
                 padding-left: 0;
                 padding-right: 0;
-                font-size: .9rem;
+                font-size: 1rem;
             }
         }
     }
@@ -36,7 +36,7 @@
         background-color: if(setting-value('footer_use_default_website_colors'), #e0e0e0, $color_footerbottom_footer_background); //#e0e0e0; //$color_footer_bottom_bg;
         //color: #7d7d7d;
         color: if(setting-value('footer_use_default_website_colors'), $color_global_dark_text, $color_footerbottom_footer_text_links); //#262626; //$color_footer_bottom_text;
-        font-size: .9rem;
+        font-size: 1rem;
         position: relative;
         padding: 1rem 0 0;
 

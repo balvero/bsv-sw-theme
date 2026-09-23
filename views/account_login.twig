@@ -1,24 +1,24 @@
 {# Extend page template #}
 {% extends 'templates/page.twig' %}
 
-{% set title = 'Login' %}
+{% set title = 'Log ind' %}
 {% set breadcrumb_title = 'Login' %}
 {% set hideTitle = 1 %}
 {% set hideDesc = 1 %}
 
 {# Set labels #}
 {% set labels = {
-'email_address': 'Email Address',
+'email_address': 'Email adresse',
 'password': 'Password'
 } %}
 
 {% block page_content %}
     <div class="text-center">
         <h1>
-            Sign in
+            Log ind
         </h1>
         <h4 class="subheader">
-            Manage your account.
+            Administrer din konto.
         </h4>
     </div>
     <div class="row">
@@ -26,20 +26,20 @@
             {{ theme.errors(errors) }}
             <form action="{{ global.current_url }}" method="post" class="form-with-validation clearblock account-login">
                 <label class="field-block">
-                    <span class="field-label">Email address</span>
+                    <span class="field-label">Email adresse</span>
                     {{ html.input('email', '', 'required','', 'email' ) }}
                 </label>
                 <label class="field-block">
                     <span class="field-label">Password</span>
                     {{ html.input('password', '', 'required', '', 'password') }}
                 </label>
-                <button type="submit" class="button expanded">Sign in</button>
+                <button type="submit" class="button expanded">Log ind</button>
                 <div class="text-center">
                     <p>
-                        <a href="/account/forgotten-password" class="underline">Forgotten password?</a>
+                        <a href="/account/forgotten-password" class="underline">Har du glemt dit password??</a>
                     </p>
                     <p>
-                        Don't have an account with us? <a class="highlight underline" href="/account/create">Create one now</a>
+                        Har du endnu ikke en konto? <a class="highlight underline" href="/account/trade-application">Opret en nu</a>
                     </p>
                 </div>
             </form>

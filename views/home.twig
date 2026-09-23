@@ -3,23 +3,75 @@
 
 {% set featured_categories = featured_categories(99) %}
 {% set featured_products = featured_products(99) %}
+{% set blog_posts = blog_posts(99) %}
 
 {% block content %}
-    <div id="content" class="content homepage">
-        {{ block('imagesCarousel') }}
+    <div id="content" class="content homepage v2">
+        {# block('bannerCarousel') #} 
+		{{ block('mainBanner') }}
         {{ block('featuredCategories') }}
-        {{ block('customSection') }}
-        {{ block('featuredProducts') }}
+
+		{% if gts.campaign_section_enable %}
+        {{ block('campaignSection') }}
+		{% endif %}
+		 {{ block('companySection') }}
+		{# block('videoSection') #}
+		{{ block('imagesCarousel') }}
+		
+        {# block('featuredProducts') #}
     </div>
 {% endblock %}
 
+{% block mainBanner %} 
+{#<section id="main-banner" >
+<div class="overlay"></div>
+	<div class="banner-container row column">
+		<div class="intro">
+			<h1 class="title">
+				Løftegrej og specialudstyr til industri og byggeri
+			</h1>
+			<p>
+				Danskproduceret kvalitet med fokus på sikkerhed, holdbarhed og effektivitet
+			</p>
+			<p>
+				<div class="cta margin-top"><a href="#" class="button">Se vores løsninger</a></div>
+			</p>
+		</div>	
+	</div>
+	
+</section> #}
+<section class="text-section yellow-bg margin-bottom padding-bottom">
+	<div class="row display-flex align-items-center">
+		<div class="large-12 column">
+			<h2 class="margin-bottom column">
+				Vi udvikler løfteudstyr, der gør arbejdet lettere og mere sikkert
 
-{% block imagesCarousel %}
+			</h2>
+		</div>
+		{#<div class="large-7 column display-flex justify-content-right">
+			<div class="narrow margin-right">
+				<p>
+				Hos BSV producerer vi løftegrej og specialløsninger til kraner og industri.
+				Med egen produktion i Danmark og mange års erfaring sikrer vi udstyr, der er til at stole på – i dag og i mange år frem.
+				</p>
+				<p>
+					Vores løsninger bruges af entreprenører, industrivirksomheder og affaldssektoren i hele Danmark.
+				</p>
+			</div>
+			
+		</div> #}
+	</div>
+</section>
+
+
+{% endblock %}
+
+{% block bannerCarousel %}
 
     {% set fullWidth = 1 %}
     {% set home_galleries = {
-        'large': gts.gallery_home,
-        'small': gts.gallery_home_mobile
+        'large': gts.gallery_home_banner,
+        'small': gts.gallery_home_banner_mobile
     } %}
 
     {# Render carousel #}
@@ -50,10 +102,16 @@
                                                     {{ formatted[0] }}
                                                 </h2>
                                             {% endif %}
-                                            {% if formatted[1]|length and image.target_url %}
+									 		{% if formatted[2]|length %}
+                                                <div class="banner-text">
+                                                    {{ formatted[1] }}
+                                                </div>
+                                            {% endif %}
+                                            {% if formatted[2]|length and image.target_url %}
                                                 <a href="{{ image.target_url }}" class="button">
-                                                   {{ formatted[1] }}
+                                                   {{ formatted[2] }}
                                                 </a>
+												<div class="spacer"></div>
                                             {% endif %}
                                         {% else %}
                                             {{ image.name|raw }}
@@ -70,23 +128,88 @@
 {% endblock %}
 
 
+{% block imagesCarousel %}
+
+    {% set fullWidth = 0 %}
+    {% set home_galleries = {
+        'large': gts.gallery_home,
+        'small': gts.gallery_home_mobile
+    } %}
+
+    {# Render carousel #}
+    {% for size, gallery in home_galleries %}
+        {% if gallery %}
+	<section  class="testimonials {{loop.index == 2 ? 'second'}}">
+			
+
+				<div class="home-carousel-outer no-padding home-carousel{{ size == 'small' ? '-mobile hide-for-banner-large' : '-desktop show-for-banner-large' }}">
+					<div id="js-home-carousel{{ size == 'small' ? '-mobile' : '' }}"
+						 class="testimonials-slider {{ fullWidth ? '' : 'row fullWidth' }}"
+
+					>
+						{% for image in gallery %}
+							<div class="home-carousel-slide">
+								{% if image.target_url %}
+									<a href="{{ image.target_url }}">
+										<img src="{{ image.url }}" alt="{{ image.name }}" class="full-width">
+									</a>
+								{% else %}
+									<img src="{{ image.url }}" alt="{{ image.name }}" class="full-width">
+								{% endif %}
+								{% if image.name %}
+									{% set formatted = image.name|split('|') %}
+									<div class="testimonial-overlay">
+									   <div class="inner">
+											{% if formatted|length %}
+												{% if formatted[0]|length %}
+													<p>"
+														{{ formatted[0] }}
+														"
+													</p>
+												{% endif %}
+												{% if formatted[1]|length %}
+
+													 <p class="name">
+														- {{ formatted[1] }}
+													</p>
+
+												{% endif %}
+											{% else %}
+												{{ image.name|raw }}
+											{% endif %}
+										</div>
+									</div>
+								{% endif %}
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+		
+	</section>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+
 {% block featuredCategories %}
     {# Render featured categories #}
     {% if featured_categories|length %}
-        <section class="featured-categories bg-shade">
-            <div class="display-box inner">
+        <section class="featured-categories-home">
+            <div class="display-box inner ">
                 {% if gts.text_featured_categories_title %}
-                    <h2 class="featured-categories-title section-title">
-                        {{ theme.text_snippet('featured_categories_title', true) }}
-                    </h2>
+               		<div class="row column">
+				        <h2 class="featured-categories-title section-heading ">
+                       Find den rette løsning til din opgave	
+                    	</h2>
+					</div>
                 {% endif %}
-                <div class="category-slider">
+                <div class="category-slider row ">
                     {% for category in featured_categories %}
-                        <div class="cat-box{{ loop.index == 1 ? ' first' : '' }}">
-                            <a href="{{ category.url }}" class="image-container">
+                        <div class="cat-box-slide column large-2{{ loop.index == 1 ? ' first' : '' }}">
+                            <a href="{{ category.url }}?all" class="image-container">
                                 <img src="{{ category.photo_url }}" alt="{{ category.photo_description }}">
                             </a>
-                            <a class="box-data" href="{{ category.url }}">
+                            <a class="box-data" href="{{ category.url }}?all">
                                 <h3>
                                     {{ category.title }}
                                 </h3>
@@ -105,34 +228,147 @@
 {% endblock %}
 
 
-{% block customSection %}
-    <section class="home-section">
+{% block campaignSection %}
+    <section class="promo-section margin-bottom padding-bottom padding-top margin-top">
         <div class="row column">
-            <div class="row">
-                <div class="column large-4 show-for-large">
-                    <div class="image-container">
-                        {% for image in gts.gallery_home_snippet %}
-                            {% if loop.index == 1 %}
-                                <img src="{{ image.url }}" alt="{{ image.name }}">
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+            <div class="row display-flex align-items-center column" >
+                <div class="column large-6 campaign-image" >
+                    <div class="image-container-home"> 
+							<img src="{{gts.gallery_home_snippet[0].url}}" 
+							 alt="Maskiner Under Broen 2026 Campaign" 
+							 style="width: 100%; height: auto; display: block;">
+					</div>
                 </div>
-                <div class="column large-8">
-                    <div class="home-section-subheading">
-                        {{ theme.text_snippet('welcome_h3') }}
+                <div class="column large-6" data-equalizer-watch>
+					{% if gts.text_welcome_h3 %}
+                    <div class="section-subheading">
+                        {{ gts.text_welcome_h3 }}
                     </div>
-                    <h1 class="home-section-heading">
-                        {{ theme.text_snippet('welcome_h1') }}
-                    </h1>
-                    <div class="home-section-text">
-                        {{ theme.text_snippet('welcome_p', false) }}
+					{% endif %}
+					{% if gts.text_welcome_h1 %}
+					 <h2 class="section-heading">
+                       {{ gts.text_welcome_h1 }}
+                    </h2>
+					{% else %}
+                    <h2 class="section-heading">
+                       60 år med danskproduceret løfteudstyr
+                    </h2>
+					{% endif %}
+                    <div class="section-text">
+						{% if gts.text_welcome_p %}
+							{{ gts.text_welcome_p|raw }}
+						{% else %}
+                       <p>
+						   BSV har siden 1960 produceret løfteudstyr og krantilbehør til industri, byggeri og energisektoren.
+						</p>
+						<p>
+							Vores produktion foregår i Danmark, og vi har kontrol over hele processen – fra udvikling til test og levering. Det sikrer høj kvalitet og korte leveringstider.
+							Vi tilbyder et bredt udvalg af udstyr til kraner, lastbiler, minigravere og tårnkraner.
+							Blandt vores kerneprodukter finder du hydrauliske grabbe, mekaniske tænger, pallegafler og originale reservedele.
+							
+						</p>
+						<p>BSV samarbejder nu med den tyske løftegrejs producent <img src="https://files.ecommercedns.uk/266351/ab63c412decc8d8f5ffda0f4b679aaf7.jpg" style="max-width: 100px;"></p>
+					{% endif %}
                     </div>
+					<div class="cta margin-bottom">
+						<a href="{{ gts.campaign_section_link }}" class="button">{{ gts.campaign_section_link_text }}</a>
+					</div>
                 </div>
             </div>
         </div>
     </section>
 {% endblock %}
+
+
+{% block companySection%}
+    <section class="company-section padding-bottom bg-shade padding-top margin-top">
+        <div class="row column">
+            <div class="row display-flex align-items-center column">
+				  <div class="column large-6">
+					  {% if gts.company_section_subtitle %}
+           			   <div class="section-subheading">
+                        	{{ gts.company_section_subtitle }}
+                    	</div>
+					  {% endif %}
+					  {% if gts.company_section_title %}
+					  
+					   <h2 class="section-heading">{{gts.company_section_title }}</h2>
+					  
+					  {% else %}
+					  	<h2 class="section-heading">
+                        Løftegrej der fungerer – også i praksis
+
+						</h2>
+                   
+					  {% endif %}
+                    <div class="section-text">
+						{% if gts.company_section_text %}
+							{{ gts.company_section_text|raw }}
+						{% else %}
+                        <p>
+							Hos BSV får du mere end bare standardudstyr – du får gennemprøvede løsninger, udviklet til virkelige behov og krav i industrien:
+						</p>
+						<p>
+							<ul>
+								<li><strong>Høj driftssikkerhed:</strong> Vores produkter er bygget til lang levetid og lavt vedligehold</li>
+
+								<li><strong>Certificeret kvalitet</strong> Alt udstyr testes og leveres med dokumentation</li>
+
+								<li><strong>Fokus på sikkerhed:</strong> Beskytter medarbejderne og minimerer skader</li>
+
+								<li><strong>Dansk produktion:</strong> Hurtig levering og fleksible tilpasninger</li>
+
+								<li><strong>Erfaring og sparring:</strong> Over 60 års branchekendskab giver dig en stærk samarbejdspartner</li>
+							</ul>
+						</p>
+					  {% endif %}
+                    </div>
+                </div>
+                <div class="column large-6">
+					
+					{% if gts.company_section_video_url %}
+					<div class="video-block"><video width="" height="" playsinline="" muted="" autoplay="" loop="" >
+						<source src="{{ gts.company_section_video_url }}" type="video/mp4">
+						  Your browser does not support the video tag.
+						</video>
+					</div>
+					{% else %}
+                    <div class="image-container-home">
+                        {% for image in gts.gallery_company_snippet %}
+                            {% if loop.index == 1 %}
+                                <img src="{{ image.url }}" alt="{{ image.name }}">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+					{% endif %}
+                </div>
+              
+            </div>
+        </div>
+    </section>
+
+{% endblock%}
+
+{% block videoSection %}
+
+    <section class="sw-section sw-section-video bg-shade" >
+            <div class="row column narrow" style="max-width: 720px;">
+                <div class="inner">
+                    <div class="responsive-embed">
+						{{ gts.video_section_embed_code |raw}}
+                    </div>
+                </div>
+				<div class="row column text-center margin-top padding-top margin-bottom">
+					 <h2 class="section-heading">
+						{{ gts.video_section_title }}
+					</h2>
+					<div class="section-text">
+						{{ gts.video_section_text }}
+					</div>
+				</div>
+            </div>
+		</section>
+{% endblock%}
 
 
 {% block featuredProducts %}

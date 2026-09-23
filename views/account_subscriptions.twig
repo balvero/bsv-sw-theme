@@ -1,29 +1,29 @@
 {% extends 'templates/account_pages.twig' %}
 
-{% set title = 'My Subscriptions' %}
+{% set title = 'Mine abonnementer' %}
 
 {% block page_content %}
     <h1 class="sw-account-heading">
         <i class="icon-my-subscriptions" aria-hidden="true"></i>
-        <span>My Subscriptions</span>
+        <span>Mine abonnementer</span>
     </h1>
     <div class="sw-account-panel">
-        <p>Displaying <strong>{{ subscriptions|length }} subscription{{ subscriptions|length == 1 ? '' : 's' }}</strong></p>
+        <p>Viser <strong>{{ subscriptions|length }} abonnementer{{ subscriptions|length == 1 ? '' : '' }}</strong></p>
     </div>
     {% for subscription in subscriptions %}
         <div class="sw-account-container-box">
             <div class="sw-account-container-box-header">
                 <div class="row collapse">
                     <div class="column medium-3">
-                        <div> Start date</div>
+                        <div> Start dato</div>
                         <strong>{{ subscription.created|date('jS F Y') }}</strong>
                     </div>
                     <div class="column medium-3">
-                        <div class="sw-upper">Total</div>
+                        <div class="sw-upper">I alt</div>
                         <strong>{{ format_price(subscription.total_amount) }}</strong>
                     </div>
                     <div class="column medium-3">
-                        <div class="sw-upper">Subscription</div>
+                        <div class="sw-upper">Abonnement</div>
                         <strong>#{{ subscription.id }}</strong>
                     </div>
                     <div class="column medium-3">
@@ -48,7 +48,7 @@
                                             <strong class="sw-account-container-box-item-title">{{ product.name|raw }}</strong>
                                             <div class="sw-margin-b-xs">{{ format_price(product.original_price_including_vat) }}</div>
                                             <a href="{{ product.url }}" class="sw-account-button small" target="_blank">
-                                                View product
+                                                Se produkt
                                             </a>
                                         </div>
                                         <div class="large-4 column">
@@ -60,7 +60,7 @@
                                             </dl>
                                         </div>
                                         <div class="large-3 column sw-upper">
-                                            <span>Quantity: </span>
+                                            <span>Antal: </span>
                                             <span>{{ product.quantity }}</span>
                                             <br>
                                             <span class="price">{{ format_price(product.original_price_including_vat * product.quantity) }}</span>
@@ -73,7 +73,7 @@
                 {% endfor %}
             </ul>
             <div class="sw-account-container-box-footer text-right">
-                <a class="sw-account-icon-link" href="/account/subscription/{{ subscription.id }}"><span>View details</span></a>
+                <a class="sw-account-icon-link" href="/account/subscription/{{ subscription.id }}"><span>Se detaljer</span></a>
             </div>
         </div>
     {% endfor %}

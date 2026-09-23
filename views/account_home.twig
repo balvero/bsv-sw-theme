@@ -1,26 +1,26 @@
 {# Extend page template #}
 {% extends 'templates/account_pages.twig' %}
 
-{% set title = 'Your Account' %}
-{% set breadcrumb_title = 'Account Home' %}
+{% set title = 'Din konto' %}
+{% set breadcrumb_title = 'Min konto' %}
 {% set description = 'Welcome to your account.' %}
 
 {% block page_content %}
     <h1 class="sw-account-heading">
         <i class="icon-account-home" aria-hidden="true"></i>
-        <span>Account Home</span>
+        <span>Min konto</span>
     </h1>
-    <p>Welcome to your account.</p>
+    <p>Velkommen til dit konto overblik.</p>
     <div class="row small-up-1 medium-up-1 large-up-2" data-equalizer>
         {# account edit #}
         <div class="column">
             <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
                 <p class="sw-account-heading">
-                    <span>My details</span>
+                    <span>Mine oplysninger</span>
                     <i class="icon-edit float-right" aria-hidden="true"></i>
                 </p>
                 <p>
-                    To edit your account details <a href="/account/edit" class="sw-account-link">click here</a>.
+                    For at redigere dine oplysninger <a href="/account/edit" class="sw-account-link">klik her</a>.
                 </p>
             </div>
         </div>
@@ -28,11 +28,11 @@
         <div class="column">
             <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
                 <p class="sw-account-heading">
-                    <span>My password</span>
+                    <span>Mit password</span>
                     <i class="icon-my-password float-right" aria-hidden="true"></i>
                 </p>
                 <p>
-                    To change your account password <a href="/account/password" class="sw-account-link">click here</a>.
+                    For at ændre dit password <a href="/account/password" class="sw-account-link">klik her</a>.
                 </p>
             </div>
         </div>
@@ -41,11 +41,11 @@
             <div class="column">
                 <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
                     <p class="sw-account-heading">
-                        <span>My address book</span>
+                        <span>Min adressebog</span>
                         <i class="icon-address-book float-right" aria-hidden="true"></i>
                     </p>
                     <p>
-                        To edit your account details <a href="/account/addresses" class="sw-account-link">click here</a>.
+                        For at redigere dine oplysninger <a href="/account/addresses" class="sw-account-link">klik her</a>.
                     </p>
                 </div>
             </div>
@@ -54,11 +54,11 @@
         <div class="column">
             <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
                 <p class="sw-account-heading">
-                    <span>{{ global.customer.orders|length }} Order{{ global.customer.orders|length == 1 ? '' : 's' }}</span>
+                    <span>{{ global.customer.orders|length }} Ordre{{ global.customer.orders|length == 1 ? '' : '' }}</span>
                     <i class="icon-my-orders float-right" aria-hidden="true"></i>
                 </p>
                 <p>
-                    <a href="/account/orders" class="sw-account-link">Click here</a> to view your orders.
+                    <a href="/account/orders" class="sw-account-link">Klik her</a> for at se dine ordre.
                 </p>
             </div>
         </div>
@@ -67,11 +67,11 @@
             <div class="column">
                 <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
                     <p class="sw-account-heading">
-                        <span>Subscriptions</span>
+                        <span>Abonnementer</span>
                         <i class="icon-my-subscriptions float-right" aria-hidden="true"></i>
                     </p>
                     <p>
-                        <a href="/account/subscriptions" class="sw-account-link">Click here</a> to view your subscriptions.
+                        <a href="/account/subscriptions" class="sw-account-link">Klik her</a> for at se dine abonnementer.
                     </p>
                 </div>
             </div>
@@ -81,11 +81,11 @@
             <div class="column">
                 <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
                     <p class="sw-account-heading">
-                        <span>{{ global.customer.reward_points }} Reward point{{ global.customer.reward_points == 1 ? '' : 's' }}</span>
+                        <span>{{ global.customer.reward_points }} Bonus point{{ global.customer.reward_points == 1 ? '' : '' }}</span>
                         <i class="icon-reward-points float-right" aria-hidden="true"></i>
                     </p>
                     <p>
-                        <a href="/account/reward-points" class="sw-account-link">Click here</a> to view a statement of your reward points.
+                        <a href="/account/reward-points" class="sw-account-link">Klik her</a> for at se en oversigt over dine bonus point.
                     </p>
                 </div>
             </div>
@@ -95,11 +95,11 @@
             <div class="column">
                 <div class="sw-account-panel sw-account-container-box" data-equalizer-watch>
                     <p class="sw-account-heading">
-                        <span>{{ global.customer.referred_customers|length }} Referred friend{{ global.customer.referred_customers|length == 1 ? '' : 's' }}</span>
+                        <span>{{ global.customer.referred_customers|length }} Henvist ven{{ global.customer.referred_customers|length == 1 ? '' : 's' }}</span>
                         <i class="icon-referred-friends float-right" aria-hidden="true"></i>
                     </p>
                     <p>
-                        <a href="/account/referred-friends" class="sw-account-link">Click here</a> to view friends you’ve referred.
+                        <a href="/account/referred-friends" class="sw-account-link">Klik her</a> for at se de venner du har henvist.
                     </p>
                 </div>
             </div>

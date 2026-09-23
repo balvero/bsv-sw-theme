@@ -1,21 +1,21 @@
 {% extends 'templates/account_pages.twig' %}
 
-{% set title = 'My Orders' %}
+{% set title = 'Mine ordre' %}
 
 {% block page_content %}
     <h1 class="sw-account-heading">
         <i class="icon-my-orders" aria-hidden="true"></i>
-        <span>My Orders</span>
+        <span>Mine ordre</span>
     </h1>
     <div class="sw-account-panel">
-        <p>Displaying <strong>{{ global.customer.orders|length }} order{{ global.customer.orders|length == 1 ? '' : 's' }}</strong></p>
+        <p>Viser <strong>{{ global.customer.orders|length }} ordre {{ global.customer.orders|length == 1 ? '' : 'ordrer' }}</strong></p>
     </div>
     {% for order in global.customer.orders %}
         <div class="sw-account-container-box">
             <div class="sw-account-container-box-header">
                 <div class="row collapse">
                     <div class="column medium-3">
-                        <div>Order placed</div>
+                        <div>Ordre afgivet</div>
                         <strong>{{ order.date|date('jS F Y') }}</strong>
                     </div>
                     <div class="column medium-3">
@@ -23,7 +23,7 @@
                         <strong>{{ format_price(order.total) }}</strong>
                     </div>
                     <div class="column medium-3">
-                        <div class="text-upper">Order</div>
+                        <div class="text-upper">Ordre</div>
                         <strong>#{{ order.reference }}</strong>
                     </div>
                     <div class="column medium-2">
@@ -55,7 +55,7 @@
                                         <div class="sw-margin-b-xs">{{ format_price(product.original_price_including_vat) }}</div>
                                         {% if not product.is_gift_voucher %}
                                             <a href="{{ product.url }}" class="sw-account-button small" target="_blank">
-                                                View product
+                                                Se produkt
                                             </a>
                                         {% else %}
                                             {% set voucher_count = voucher_count + 1 %}
@@ -70,7 +70,7 @@
                                         </dl>
                                     </div>
                                     <div class="large-3 column sw-upper">
-                                        <span>Quantity: </span>
+                                        <span>Antal: </span>
                                         <span>{{ product.quantity }}</span>
                                         <br>
                                         <span class="price">{{ format_price(product.original_price_including_vat * product.quantity) }}</span>
@@ -89,14 +89,14 @@
                                 <input type="hidden" name="add_to_basket" value="1">
                                 <button type="submit" class="sw-account-icon-link">
                                     <i class="icon-re-order" aria-hidden="true"></i>
-                                    <span>re-order</span>
+                                    <span>genbestil</span>
                                 </button>
                             </form>
                         </div>
                     {% endif %}
                     <div class="column small-{{ voucher_count ? 12 : 6 }} text-right">
                        <a class="sw-account-icon-link" href="{{ order.url }}">
-                           <span>View details</span>
+                           <span>Se detaljer</span>
                        </a>
                     </div>
                 </div>
@@ -109,12 +109,12 @@
                 {% if current_page > 1 %}
                     <li class="pagination-previous">
                         <a href="/account?page={{ current_page - 1 }}">
-                            Previous
+                            Tidligere
                         </a>
                     </li>
                 {% else %}
                     <li class="pagination-previous disabled">
-                        Previous
+                        Tidligere
                     </li>
                 {% endif %}
                 {% for page in 1..total_pages %}
@@ -133,12 +133,12 @@
                 {% if current_page < total_pages %}
                     <li class="pagination-next">
                         <a href="/account?page={{ current_page + 1 }}">
-                            Next
+                            Næste
                         </a>
                     </li>
                 {% else %}
                     <li class="pagination-next disabled">
-                        Next
+                        Næste
                     </li>
                 {% endif %}
             </ul>

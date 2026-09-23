@@ -1,38 +1,38 @@
 {% if type == 'canvas' %}
     <div class="off-canvas off-canvas-basket position-right" id="offCanvasBasket" data-off-canvas>
-        <h3 class='off-canvas-basket__heading'>Shopping basket</h3>
+        <h3 class='off-canvas-basket__heading'>Din kurv</h3>
         <div class="items">
             {% include 'partials/basket_items.twig' with { 'items' : basket_items() } %}
         </div>
         <div class="summary text-center">
-            <p class="off-canvas-basket__total-label">Sub total</p>
+            <p class="off-canvas-basket__total-label">Varebeløb</p>
             <div class="off-canvas-basket__total-value total">
                 {{ format_price(global.basket.value) }}
             </div>
         </div>
         <a href="/checkout/basket" class="button expanded">
-            Continue to checkout
+            Fortsæt til checkout
         </a>
-        <p class="subheader text-center">You'll choose your delivery rate at checkout</p>
-        <a data-toggle="offCanvasBasket" class="off-canvas-basket-close">Continue shopping</a>
+        <p class="subheader text-center">Du vælger levering i checkout</p>
+        <a data-toggle="offCanvasBasket" class="off-canvas-basket-close">Fortsæt med at shoppe</a>
     </div>
 {% else %}
     <div class="shopwired-basket-modal">
         <div class="inner">
             <h2>
-                The item has been added to your basket
+                Varen er blevet tilføjet din kurv
             </h2>
             <div class="items"></div>
             <div class="buttons">
                 <div class="row">
                     <div class="medium-6 column">
                         <button class="close-button button secondary expanded">
-                            Continue Shopping
+                            Fortsæt med at shoppe
                         </button>
                     </div>
                     <div class="medium-6 column">
                         <a href="/checkout/basket" class="button expanded">
-                            Proceed To Checkout
+                            Fortsæt til betaling
                         </a>
                     </div>
                 </div>

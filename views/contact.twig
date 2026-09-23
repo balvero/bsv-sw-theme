@@ -1,7 +1,7 @@
 {# Extend page template #}
 {% extends 'templates/page.twig' %}
 
-{% set title = 'Get in touch with us' %}
+{% set title = '' %}
 {% set hideTitle = 1 %}
 {% set hideDesc = 1 %}
 {% set full_width = 1 %}
@@ -16,9 +16,9 @@
 } %}
 
 {% block page_content %}
-    <div class="contact-container row" data-equalizer>
+   {# <div class="contact-container row" data-equalizer>
         <div class="large-7 column">
-            <div class="row">
+          {}  <div class="row">
                 <div class="large-6 column" data-equalizer-watch>
                     <section class="inner">
                         <h2>
@@ -138,5 +138,5 @@
                 </form>
             </section>
         </div>
-    </div>
+    </div> #}
 {% endblock %}

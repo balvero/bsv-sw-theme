@@ -69,7 +69,7 @@
                     </div>
                 {% endif %}
             </div>
-            {% if product.photos|length > 1 %}
+            {% if product.photos|length  %}
                 <div class="column hide">
                     {# Render photos #}
                     <div id="product-carousel" class="product-thumbs carousel">
@@ -639,8 +639,8 @@
     {% if product.related_products|length %}
         <section class="recent-products section-block inner-section bg-shade">
             <div class="row column">
-                <h2 class="recent-products-title section-title">
-                    You may also like
+                <h2 id="related-products" class="recent-products-title section-title">
+                    Relaterede produkter
                 </h2>
             </div>
             <div class="products items-container row product-slider" data-slick='{"slidesToShow": 4}'>
@@ -653,8 +653,9 @@
                             {# render wishlist button #}
                             <a href="/wishlist?action={{ product.in_wishlist ? 'remove' : 'add' }}&amp;product_id={{ product.id }}" class="button no-margin secondary wishlist-button js-wishlist-button {{ product.in_wishlist ? ' on' : '' }}" data-remove="{{ gts.button_remove_from_wishlist }}" data-add="{{ gts.button_add_to_wishlist }}">
                                 {% set heart_icon = product.in_wishlist ? 'heart' : 'heart-o' %}
+								{% set star_icon = product.in_wishlist ? 'star-on' : 'star' %}
                                 <span class="show-for-sr">{{ product.in_wishlist ? gts.button_remove_from_wishlist : gts.button_add_to_wishlist }}</span>
-                                {{ theme.sw_icon(heart_icon) }}
+                                {{ theme.sw_icon(star_icon) }}
                             </a>
                         </div>
                     </div>

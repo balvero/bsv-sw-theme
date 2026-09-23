@@ -71,13 +71,18 @@
                             </div>
                         {% endif %}
                         {# Render product prices #}
+				
+						{% if 11000 > item.price or global.customer.trade  %} 
+						{# previously `global.customer.trade` change to if price is lower than 9.5 #}
                         <div class="product-box-prices">
                             {% if item.sale_price and display_price %}
-                                <div class="flex-item">
-                                    <span class="price price--sale">
-                                        {{ format_price(item.price) }}
-                                    </span>
-                                </div>
+								{% if item.sale_price != item.price %}
+									<div class="flex-item">
+										<span class="price price--sale">
+											{{ format_price(item.price) }}
+										</span>
+									</div>
+								 {% endif %}
                             {% endif %}
                             <div class="flex-item{{ not item.sale_price ? ' full-width' : '' }}">
                                 {% if display_price %}
@@ -91,11 +96,19 @@
                                             {{ item.sale_price ? format_price(item.sale_price) : format_price(item.price) }}
                                         </span>
                                     </div>
+									<div class="vat-notice">
+										<small>Excl. moms</small>
+									</div>
                                 {% else %}
                                     {% include 'partials/hidden_prices.twig' %}
                                 {% endif %}
+								
                             </div>
                         </div>
+						{% else %}
+				
+							<a data-test="{{item.price ~ ' ' ~ format_price(item.price) }}" href="/account/login?login_redirect={{ global.current_url }}" class="login-price">Log ind for priser</a>
+						{% endif %}
                     {% endif %}
                 {% endif %}
             </div>
@@ -172,7 +185,7 @@
 {% else %}
     <div class="column">
         <h2 class="subheader">
-            No items found.
+           Ingen produkter blev fundet.
         </h2>
     </div>
 {% endfor %}
