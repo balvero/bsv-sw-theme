@@ -1,11 +1,11 @@
 {% extends 'templates/account_pages.twig' %}
 
-{% set title = 'Mine favoritter' %}
+{% set title = 'My Favourites' %}
 
 {% block page_content %}
     <h2 class="sw-account-heading">
         <i class="icon-my-favourites" aria-hidden="true"></i>
-        <span>Mine favoritter</span>
+        <span>My Favorites</span>
     </h2>
     <br>
     {% set favorite_products = global.customer.favorite_products(9) %}

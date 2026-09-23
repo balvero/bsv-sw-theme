@@ -15,7 +15,7 @@
             <h1 class="page-title">
                 {{ title }}
             </h1>
-            <ul class="breadcrumbs main-breadcrumbs show-for-medium hide">
+            <ul class="breadcrumbs main-breadcrumbs show-for-medium">
                 {# Render breadcrumbs #}
                 <li>
                     <a href="/">
@@ -29,18 +29,18 @@
             </ul>
         </div>
         {% if side_list and side_list.links %}
-           {# <div class="column large-3 side-nav-container">
+            <div class="column large-3 side-nav-container">
                 <nav class="side-nav text-right show-for-large">
                     <button data-toggle="sideMenu" class="more-pages">
                         {{ theme.sw_icon('filter') }}
                         <span>More pages</span>
                     </button>
                 </nav>
-            </div> #}
+            </div>
         {% endif %}
     </div>
     {% if side_list and side_list.links %}
-        {#<div class="side-nav-container text-right">
+        <div class="side-nav-container text-right">
             <ul class="menu simple hide margin-bottom padding-bottom" id="sideMenu" data-toggler=".hide">
                 {% for link in side_list.links %}
                     <li>
@@ -50,7 +50,7 @@
                     </li>
                 {% endfor %}
             </ul>
-        </div> #}
+        </div>
     {% endif %}
 
 

@@ -1,19 +1,19 @@
 {% extends 'templates/account_pages.twig' %}
 
-{% set title = 'Mine abonnementer' %}
+{% set title = 'My Subscriptions' %}
 
 {% block page_content %}
     <h1 class="sw-account-heading">
         <i class="icon-my-subscriptions" aria-hidden="true"></i>
-        <span>Abonnement #{{ subscription.id }}</span>
+        <span>Subscription #{{ subscription.id }}</span>
     </h1>
     <p class="sw-account-panel">
-        Du kan se detaljerne i dit abonnement nedenfor
+        You can review the details about this subscription below
     </p>
     <div class="sw-account-panel">
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                <strong class="sw-upper">Abonnement reference</strong>
+                <strong class="sw-upper">Subscription reference</strong>
             </div>
             <div class="column medium-6 large-7">
                 <span>{{ subscription.id }}</span>
@@ -21,7 +21,7 @@
         </div>
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                <strong class="sw-upper">Start dato</strong>
+                <strong class="sw-upper">Start date</strong>
             </div>
             <div class="column medium-6 large-7">
                 <span>{{ subscription.created|date('jS F Y') }}</span>
@@ -37,7 +37,7 @@
                     /
                     <form action="/account/subscription/{{ subscription.id }}" method="post" class="sw-inline-block">
                         <button type="submit" name="cancel" value="1" class="sw-account-link sw-text-danger js-cancel-sub">
-                            Klik her for at afmelde
+                            Click here to cancel
                         </button>
                     </form>
                 {% endif %}
@@ -47,7 +47,7 @@
     {# subs items list #}
     <div class="sw-account-container-box">
         <div class="sw-account-container-box-header">
-            <strong class="sw-upper">{{ order.products|length }} {{ order.products|length == 1 ? 'stk' : 'skt.' }}</strong>
+            <strong class="sw-upper">{{ order.products|length }} Item{{ order.products|length == 1 ? '' : 's' }}</strong>
         </div>
         <ul class="sw-account-container-box-list no-bullet">
             {% for product in order.products %}
@@ -64,7 +64,7 @@
                                     <strong class="sw-account-container-box-item-title">{{ product.name|raw }}</strong>
                                     <div class="sw-margin-b-xs">{{ format_price(product.original_price_including_vat) }}</div>
                                     <a href="{{ product.url }}" class="sw-account-button small" target="_blank">
-                                        Se produkt
+                                        View product
                                     </a>
                                 </div>
                                 <div class="large-4 column">
@@ -76,7 +76,7 @@
                                     </dl>
                                 </div>
                                 <div class="large-3 column sw-upper">
-                                    <span>Antal: </span>
+                                    <span>Quantity: </span>
                                     <span>{{ product.quantity }}</span>
                                     <br>
                                     <span class="price">{{ format_price(product.original_price_including_vat * product.quantity) }}</span>
@@ -91,7 +91,7 @@
     <div class="sw-account-panel">
         <div class="row">
             <div class="column medium-6">
-                <strong class="sw-account-subheading">Fakturerings adresse</strong>
+                <strong class="sw-account-subheading">Billing address</strong>
 
                 {{ order.billing_name }} <br>
                 {{ order.billing_address|nl2br }} <br>
@@ -99,7 +99,7 @@
                 {{ order.billing_email }} <br>
             </div>
             <div class="column medium-6">
-                <strong class="sw-account-subheading">Leverings adresse</strong>
+                <strong class="sw-account-subheading">Delivery address</strong>
 
                 {{ order.shipping_name }} <br>
                 {{ order.shipping_address|nl2br }} <br>
@@ -109,10 +109,10 @@
         </div>
     </div>
     <div class="sw-account-panel">
-        <strong class="sw-account-subheading">Ordre i alt</strong>
+        <strong class="sw-account-subheading">Order total</strong>
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                Produkter i alt
+                Product Total
             </div>
             <div class="column medium-6 large-7">
                 <strong>{{ format_price( order.original_sub_total_including_vat ) }}</strong>
@@ -120,7 +120,7 @@
         </div>
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                Levering i alt
+                Shipping Total
             </div>
             <div class="column medium-6 large-7">
                 <strong>{{ format_price( order.original_shipping_total_including_vat ) }}</strong>
@@ -128,7 +128,7 @@
         </div>
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                Rabat i alt
+                Discount Total
             </div>
             <div class="column medium-6 large-7">
                 <strong>{{ format_price( discount.price ) }}</strong>
@@ -137,7 +137,7 @@
         {% if order.vat %}
             <div class="row sw-margin-b-xs">
                 <div class="column medium-6 large-5">
-                    Inklusiv moms
+                    Including VAT
                 </div>
                 <div class="column medium-6 large-7">
                     <strong>{{ format_price( order.vat ) }}</strong>
@@ -146,7 +146,7 @@
         {% endif %}
         <div class="row">
             <div class="column medium-6 large-5">
-                I alt
+                Grand Total
             </div>
             <div class="column medium-6 large-7">
                 <div class="row collapse">
@@ -155,7 +155,7 @@
                     </div>
                     <div class="column medium-8">
                         {% for partial_payment in order.partial_payments %}
-                            Delbetaling på <strong>{{ format_price( partial_payment.amount ) }}</strong> blev tilføjet
+                            A partial payment of <strong>{{ format_price( partial_payment.amount ) }}</strong> was applied
                         {% endfor %}
                     </div>
                 </div>
@@ -165,7 +165,7 @@
     {% if product.reward_points_enabled %}
         <p>
             <i class="icon-reward-points" aria-hidden="true"></i>
-            Du har optjent <strong>{{ product.reward_points }} point{{ product.reward_points|length == 1 ? '' : '' }}</strong> on this order
+            You earned <strong>{{ product.reward_points }} reward point{{ product.reward_points|length == 1 ? '' : 's' }}</strong> on this order
         </p>
     {% endif %}
 {% endblock %}

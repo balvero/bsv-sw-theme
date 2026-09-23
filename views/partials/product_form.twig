@@ -31,16 +31,6 @@
                     {{ block('product_bulk_pricing') }}
                 </div>
             </div>
-		{% if product.custom_fields.product_video_embed %}
-			<hr class="padding-top">
-			<div class="row margin-top padding-top">
-				<div class="large-8 large-offset-2 margin-top">
-					<div class="responsive-embed widescreen">
-						{{ product.custom_fields.product_video_embed |raw }}
-					</div>	
-				</div>
-			</div>
-		{% endif %}
         </div>
     {% else %}
         <h1>
@@ -62,19 +52,12 @@
         <h1 class="product-title unweight hide-for-large">
             {{ product.title }}
         </h1>
-			<div class="in-stock hide">
-			{% if product.in_stock %}
-				<span class="indicator green"></span>På lager
-			{% else %}
-				<span class="indicator"></span>Leveringstid op til 1 uge 
-			{% endif %}
-		</div>
         <div class="row">
             <div class="column">
                 <div role="region" aria-label="Product Images" class="product-main-image">
                     {# Render photo box #}
                     {% if product.photo_url %}
-                        <a class="image-container product-gallery-main-photo{{ product.photos|length > 1 ? ' show-for-medium' }} hide"
+                        <a class="image-container product-gallery-main-photo{{ product.photos|length > 1 ? ' show-for-medium' }}"
                            data-fit="0"
                            {% if not modal and product.photos|length %}
                            data-zoom="{{ gts.product_zoom }}"
@@ -87,8 +70,8 @@
                             <img src="{{ product.photo_url }}" class="product-gallery-photo" alt="{{ product.photo_description }}">
                         </a>
                         {# render mobile slider #}
-                        {% if product.photos|length %}
-                            <div class="modal-carousel carousel margin-bottom " data-slick='{"arrows": true}'>
+                        {% if product.photos|length > 1 %}
+                            <div class="modal-carousel carousel margin-bottom hide-for-medium" data-slick='{"arrows": false}'>
                                 {% for photo in product.photos %}
                                     <div class="modal-carousel-slide slide">
                                         <a class="image-container"
@@ -132,12 +115,11 @@
         </div>
         {% if product.photos|length > 1 and not modal %}
             <div class="text-center">
-                <button class="gallery-toggle js-show-gallery hide" data-fancybox-trigger="gallery">
+                <button class="gallery-toggle js-show-gallery" data-fancybox-trigger="gallery">
                     View gallery
                 </button>
             </div>
         {% endif %}
-	
     </div>
 {% endblock %}
 
@@ -154,44 +136,6 @@
         <h1 class="product-title unweight show-for-large">
             {{ product.title }}
         </h1>
-		<div class="in-stock">
-			{% if product.in_stock %}
-				<span class="indicator green"></span>På lager
-			{% else %}
-				<span class="indicator"></span>Leveringstid op til 1 uge
-			{% endif %}
-		</div>
-		<div class="product-meta">
-			{% if product.sku %}
-			 <div class="meta">
-				 <span class="title">Varenr.: </span>
-				 <span class="value">{{ product.sku }}</span>
-			</div>
-			{% endif %}
-			{% if product.weight %}
-			 <div class="meta">
-				 <span class="title">Vægt: </span>
-				 <span class="value">{{ product.weight }} kg</span>
-			</div>
-			{% endif %}
-			{% if product.custom_fields.product_wll %}
-			 <div class="meta">
-				 <span class="title">WLL: </span>
-				 <span class="value">{{ product.custom_fields.product_wll }}</span>
-			</div>
-			{% endif %}
-			{% if product.custom_fields.product_rom %}
-			 <div class="meta">
-				 <span class="title">Spændvidde: </span>
-				 <span class="value">{{ product.custom_fields.product_rom }}</span>
-			</div>
-			{% endif %}
-			{% if product.custom_fields.product_sheet %}
-			 <div class="meta data-sheet">
-				 <a href="{{product.custom_fields.product_sheet}}" target="_blank">Download datablad</a>
-			</div>
-			{% endif %}
-		</div>
 
         {# render pre-order shipping date #}
         {% if product.shipping_date %}
@@ -262,10 +206,10 @@
                 </a>
             {% endif %}
             {% if not modal %}
-<!--                 <div class="info-code{{ product.sku ? '' : ' hide' }}">
-                    <span class="sku">SKU: </span>
+                <div class="info-code{{ product.sku ? '' : ' hide' }}">
+                    <span class="show-for-sr">SKU</span>
                     <span class="product-sku">{{ product.sku }}</span>
-                </div> -->
+                </div>
             {% endif %}
         </div>
     </div>
@@ -405,43 +349,35 @@
             {% endif %}
             <hr>
         {% endif %}
-		{% if global.customer.trade or 11000 > product.price %}
-			{% if display_price %}
-				<div class="product-cost">
-					<div class="product-sale-price price">
-						{{ format_price(product.sale_price) }}
-					</div>
-					<div class="product-price price">
-						{{ format_price(product.price) }}
-					</div>
-					{% if product.subscription %}
-						<span class="product-price-subscription">
-							/ {{ product.subscription_interval }}
-						</span>
-					{% endif %}
-					<div class="info-reward float-right{{ product.reward_points ? '' : ' hide' }}">
-						<span>Reward points:</span>
-						<span class="product-reward-points">{{ product.reward_points }}</span>
-					</div>
-					{% if product.rrp and not modal and false %}
-						<div class="product-rrp float-right">
-							<span>RRP</span>
-							<span class="product-rrp">
-								{{ format_price(product.rrp) }}
-							</span>
-						</div>
-					{% endif %} 
-					<span class="vat-notice"><small class="margin-left">Excl. moms</small></span>
-
-				</div>
-			{% else %}
-				{% include 'partials/hidden_prices.twig' %}
-			{% endif %}
-		{% else %}
-		
-				<a href="/account/login?login_redirect={{ global.current_url }}" class="login-price">Log ind for priser</a>
-
-		{% endif%}
+        {% if display_price %}
+            <div class="product-cost">
+                <div class="product-sale-price price">
+                    {{ format_price(product.sale_price) }}
+                </div>
+                <div class="product-price price">
+                    {{ format_price(product.price) }}
+                </div>
+                {% if product.subscription %}
+                    <span class="product-price-subscription">
+                        / {{ product.subscription_interval }}
+                    </span>
+                {% endif %}
+                <div class="info-reward float-right{{ product.reward_points ? '' : ' hide' }}">
+                    <span>Reward points:</span>
+                    <span class="product-reward-points">{{ product.reward_points }}</span>
+                </div>
+                {% if product.rrp and not modal and false %}
+                    <div class="product-rrp float-right">
+                        <span>RRP</span>
+                        <span class="product-rrp">
+                            {{ format_price(product.rrp) }}
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            {% include 'partials/hidden_prices.twig' %}
+        {% endif %}
         <hr>
         {% if product.offers %}
             {# render product offers #}
@@ -463,11 +399,10 @@
         <div class="product-buy">
             <div class="buy-upper row padding-bottom" data-equalizer>
                 {% if not show_pre_order %}
-				 {% if gts.product_quantity_box and display_price and global.customer.trade %}
-                    {# if gts.product_quantity_box and display_price #}
+                    {% if gts.product_quantity_box and display_price %}
                         <div class="column small-4 product-qty-container" data-equalizer-watch>
                             <div class="product-qty input-group{{ product.in_stock ? '' : ' invisible' }}">
-                                <span class="input-group-label">Antal:</span>
+                                <span class="input-group-label">Qty:</span>
                                 {{ html.input('quantity', order_min ? order_min : '1', 'quantity-input input-group-field text-center') }}
                             </div>
                         </div>
@@ -485,38 +420,20 @@
                        id="wishlist-button"
                     >
                         {% set heart_icon = product.in_wishlist ? 'heart' : 'heart-o' %}
-						{% set star_icon = product.in_wishlist ? 'star-on' : 'star' %}
-                        {{ theme.sw_icon(star_icon) }}
+                        {{ theme.sw_icon(heart_icon) }}
                         <span data-name="{{ product.in_wishlist ? 'button_remove_from_wishlist' : 'button_add_to_wishlist' }}">{{ product.in_wishlist ? gts.button_remove_from_wishlist : gts.button_add_to_wishlist }}</span>
                     </a>
                 </div>
             </div>
-			{% if global.customer.trade  %} 
-				{% if display_price and not show_pre_order %}
-					{% set softClass = global.features.ajax_basket ? 'product-soft-add-button' : '' %}
-					{# Render add to basket button #}
-					{% if product.purchasable_when_out_of_stock %}
-						{{ html.button('cart_button', '', gts.button_add_to_basket, 'button expanded button_add-basket ' ~ softClass,'','','','data-nostock="' ~ gts.button_out_of_stock ~ '" data-text="' ~ gts.button_add_to_basket ~ '"') }}
-					{% else %}
-						{% if product.in_stock %}
-							{{ html.button('cart_button', '', gts.button_add_to_basket, 'button expanded button_add-basket product-add-button ' ~ softClass,'','','','data-nostock="' ~ gts.button_out_of_stock ~ '" data-text="' ~ gts.button_add_to_basket ~ '"') }}
-						{% else %}
-							{{ html.button('cart_button', '', gts.button_out_of_stock, 'button expanded button_add-basket product-add-button disabled ' ~ softClass,'','','','data-nostock="' ~ gts.button_out_of_stock ~ '" data-text="' ~ gts.button_add_to_basket ~ '"') }}
-						{% endif %}
-					{% endif %}
-				
-				{% endif %}
-			{% else %}
-			<div class="login-required-notice">
-				<p>
-					For at lægge varer i kurven skal du have en godkendt erhvervskonto hos os.
-				</p>
-				<p>
-					<a href="/account/login" class="margin-right padding-right">Log in</a>
-					<a href="/account/trade-application" >Opret konto</a>
-			</p>
-			</div> 
-			{% endif %}
+            {% if display_price and not show_pre_order %}
+                {% set softClass = global.features.ajax_basket ? 'product-soft-add-button' : '' %}
+                {# Render add to basket button #}
+                {% if product.in_stock %}
+                    {{ html.button('cart_button', '', gts.button_add_to_basket, 'button expanded button_add-basket product-add-button ' ~ softClass,'','','','data-nostock="' ~ gts.button_out_of_stock ~ '" data-text="' ~ gts.button_add_to_basket ~ '" id="product_add_button"', 'button_add_to_basket') }}
+                {% else %}
+                    {{ html.button('cart_button', '', gts.button_out_of_stock, 'button expanded button_add-basket product-add-button disabled ' ~ softClass,'','','','data-nostock="' ~ gts.button_out_of_stock ~ '" data-text="' ~ gts.button_add_to_basket ~ '" id="product_add_button"', 'button_out_of_stock') }}
+                {% endif %}
+            {% endif %}
             {% if show_pre_order %}
                 {# Render pre-order date #}
                 <div class="product-buy-preorder">
@@ -526,17 +443,6 @@
                     </span>
                 </div>
             {% endif %}
-			{% if product.weight > 30 %}
-			<div id="shipping-calc">
-				
-				<em>Fragt beregnes efter bestilling.
-				Læs hvordan vi beregner fragt <a href="https://files.ecommercedns.uk/266351/f79e6467af3a01ba44257a48168c184d.pdf" target="_blank">her</a>.
-				</em>
-			</div>
-			{% endif %}
-			<div class="see-related-products margin-top">
-				<a href="#related-products">Se relaterede produkter</a>
-			</div>
         </div>
         {% if (order_min or order_max) and global.features.extensions.min_max_quantity %}
             <p class="order-quantity">
@@ -552,7 +458,7 @@
         {% endif %}
         {# review form toggle #}
         <div class="row">
-            <div class="small-5 column margin-top">
+            <div class="small-5 column">
                 {% if not modal %}
                     {% if global.features.apps.product_reviews %}
                         <p>
@@ -562,7 +468,7 @@
                         </p>
                     {% endif %}
                 {% else %}
-                    <a class="product-view-link inline-link underline" href="{{ product.url }}">Se detaljer</a>
+                    <a class="product-view-link inline-link underline" href="{{ product.url }}">View details</a>
                 {% endif %}
             </div>
             <div class="small-7 column text-right product-indicators">

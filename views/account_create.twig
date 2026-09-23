@@ -1,8 +1,8 @@
 {# Extend page template #}
 {% extends 'templates/page_wrap.twig' %}
 
-{% set title = is_trade_account ? global.theme.settings.text_trade_application : 'Opret din konto' %}
-{% set breadcrumb_title = is_trade_account ? 'Ansøg om en forhandlerkonto.' : 'Opret din konto.' %}
+{% set title = is_trade_account ? global.theme.settings.text_trade_application : 'Create your account.' %}
+{% set breadcrumb_title = is_trade_account ? 'Apply for an account.' : 'Create your account.' %}
 {% set hideTitle = 1 %}
 {% set hideDesc = 1 %}
 
@@ -10,7 +10,7 @@
 {% block page_content %}
     <div class="text-center">
         <h1>
-            Tilmeld
+            Sign Up
         </h1>
         <h4 class="subheader" data-name="{{ is_trade_account ? 'text_trade_application' : '' }}">
             {{ title }}
@@ -22,20 +22,20 @@
             <form class="form-with-validation account-create clearblock" action="{{ global.current_url }}" method="post">
                 {% if (global.theme.settings.company_name_field and not is_trade_account) or is_trade_account %}
                     <label class="field-block">
-                        <span class="field-label">Virksomhed</span>
+                        <span class="field-label">Company Name</span>
                         {{ html.input('company', form_field_value('firstname', global.customer.company), 'required') }}
                     </label>
                 {% endif %}
                 <div class="row">
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Fornavn</span>
+                            <span class="field-label">First Name</span>
                             {{ html.input('firstname', form_field_value('firstname', global.customer.first_name), 'required') }}
                         </label>
                     </div>
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Efternavn</span>
+                            <span class="field-label">Last Name</span>
                             {{ html.input('lastname', form_field_value('lastname', global.customer.last_name), 'form-control required') }}
                         </label>
                     </div>
@@ -44,7 +44,7 @@
                     <div class="row">
                         <div class="large-6 column">
                             <label class="field-block">
-                                <span class="field-label">Fødselsdag</span>
+                                <span class="field-label">Date Of Birth</span>
                                 {{ html.input('date_of_birth', form_field_value('date_of_birth', global.customer.date_of_birth), 'form-control', '', '', 'readonly') }}
                             </label>
                         </div>
@@ -53,13 +53,13 @@
                 <div class="row">
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Email adresse</span>
+                            <span class="field-label">Email Address</span>
                             {{ html.input('email', form_field_value('email', global.customer.email), 'required', '','email', 'autocomplete="off"') }}
                         </label>
                     </div>
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Telefonnummer</span>
+                            <span class="field-label">Telephone</span>
                             {{ html.input('phone', form_field_value('phone', global.customer.phone), '') }}
                         </label>
                     </div>
@@ -68,7 +68,7 @@
                     <div class="row">
                         <div class="large-6 column">
                             <label class="field-block">
-                                <span class="field-label">Mobilnummer</span>
+                                <span class="field-label">Mobile</span>
                                 {{ html.input('mobile', form_field_value('mobile', global.customer.mobile), 'jsv_digits') }}
                             </label>
                         </div>
@@ -83,24 +83,24 @@
                     </div>
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Bekræft password</span>
+                            <span class="field-label">Confirm Password</span>
                             <input type="password" name="password_confirm" value="" placeholder="" required>
                         </label>
                     </div>
                 </div>
                 <h3>
-                    Adresse
+                    Your address
                 </h3>
                 <div class="row">
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Adresselinje 1</span>
+                            <span class="field-label">Address Line 1</span>
                             {{ html.input('address_line1', form_field_value('address_line1', global.customer.address_line1), '') }}
                         </label>
                     </div>
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Adresselinje 2</span>
+                            <span class="field-label">Address Line 2</span>
                             {{ html.input('address_line2', form_field_value('address_line2', global.customer.address_line2), '') }}
                         </label>
                     </div>
@@ -108,7 +108,7 @@
                 <div class="row">
                     <div class="column">
                         <label class="field-block">
-                            <span class="field-label">By</span>
+                            <span class="field-label">Town/City</span>
                             {{ html.input('city', form_field_value('city', global.customer.city), '') }}
                         </label>
                     </div>
@@ -116,13 +116,13 @@
                 <div class="row">
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Postnummer</span>
+                            <span class="field-label">Postcode</span>
                             {{ html.input('zip', form_field_value('zip', global.customer.zip), '') }}
                         </label>
                     </div>
                     <div class="large-6 column">
                         <label class="field-block">
-                            <span class="field-label">Land</span>
+                            <span class="field-label">Country</span>
                             {{ html.select('country_id', countries, form_field_value('country_id', global.customer.country_id|default(222)), 'form-control medium custom-select', 'Select...') }}
                         </label>
                     </div>
@@ -140,7 +140,7 @@
                         {% if global.theme.settings.trade_vat_number_field %}
                             <div class="large-6 column">
                                 <label class="field-block">
-                                    <span class="field-label">CVR nummer</span>
+                                    <span class="field-label">VAT Number</span>
                                     {{ html.input('vat_number', form_field_value('vat_number', global.customer.vat_number), 'required') }}
                                 </label>
                             </div>
@@ -151,13 +151,13 @@
                     <div class="column large-8 large-push-2">
                         {% if customer_sources|length %}
                             <label class="field-block">
-                                <span class="field-label">Hvordan har du hørt om os?</span>
+                                <span class="field-label">How did you hear about us?</span>
                                 {{ html.select('source', customer_sources, form_field_value('source'), 'form-control medium custom-select', 'Select...') }}
                             </label>
                         {% endif %}
                         <div class="field--newsletter margin-bottom">
-                            <input id="newsletter" type="checkbox" name="marketing" value="0" class="mod--1">
-                            <label for="newsletter">Vil du modtage vores nyhedsbrev?</label>
+                            <input id="newsletter" type="checkbox" name="marketing" class="mod--1">
+                            <label for="newsletter">Do you want to receive our newsletters?</label>
                         </div>
                         <input type="text" name="{{ global.honeypot_field_name }}" class="hide" autocomplete="off">
                         {% if recaptcha %}
@@ -167,7 +167,7 @@
                         {% set button_setting = is_trade_account ? 'button_create_trade_account' : 'button_create_account' %}
                         <button type="submit" class="button expanded" data-name="{{ button_setting }}">{{ button_text }}</button>
                         <p class="text-center">
-                            Har du allerede en konto? <a class="link--emphasis" href="/account/login">Log ind</a>
+                            Already have an account? <a class="link--emphasis" href="/account/login">Sign in now</a>
                         </p>
                     </div>
                 </div>

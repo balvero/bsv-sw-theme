@@ -3,56 +3,56 @@
 
 {% set account_links = [
     {
-        'text': 'Min konto',
+        'text': 'Account Home',
         'url':  '/account',
         'icon':  'account-home'
     },
     {
-        'text': 'Mine ordre',
+        'text': 'My Orders',
         'url':  '/account/orders',
         'icon':  'my-orders'
     },
     {
-        'text': 'Mine favoritter',
+        'text': 'My Favourites',
         'url':  '/account/favourites',
         'icon':  'my-favourites'
     },
     {
-        'text': 'Mine abonnementer',
+        'text': 'My Subscriptions',
         'url':  '/account/subscriptions',
         'icon':  'my-subscriptions',
         'condition': global.features.extensions.stripe_subscriptions
     },
     {
-        'text': 'Adressebog',
+        'text': 'Address Book',
         'url':  '/account/addresses',
         'icon':  'address-book',
         'condition': global.features.extensions.address_book
     },
     {
-        'text': 'Mine oplysninger',
+        'text': 'My Details',
         'url':  '/account/edit',
         'icon':  'edit'
     },
     {
-        'text': 'Mit password',
+        'text': 'My Password',
         'url':  '/account/password',
         'icon':  'my-password'
     },
     {
-        'text': 'Henviste venner',
+        'text': 'Referred Friends',
         'url':  '/account/referred-friends',
         'icon':  'referred-friends',
         'condition': global.theme.settings.ref_friends_accounts_pages
     },
     {
-        'text': 'Bonuspoint',
+        'text': 'Reward Points',
         'url':  '/account/reward-points',
         'icon':  'reward-points',
         'condition': global.features.apps.reward_points
     },
     {
-        'text': 'Log ud',
+        'text': 'Log Out',
         'url':  '/account/logout',
         'icon':  'log-out'
     }
@@ -68,7 +68,7 @@
                             {{ global.customer.first_name|slice(0, 1) }}{{ global.customer.last_name|slice(0, 1) }}
                         </span>
                         <div class="sw-account-name">
-                            Hej, <br>
+                            Hi, <br>
                             <strong>{{ global.customer.first_name }} {{ global.customer.last_name }}</strong>
                         </div>
                         {% if global.customer.company %}
@@ -98,7 +98,7 @@
                             <a href="/account" class="sw-account-home-button">
                                 <i class="icon-back" aria-hidden="true"></i>
                                 <i class="icon-profile" aria-hidden="true"></i>
-                                <span class="show-for-sr">Min konto</span>
+                                <span class="show-for-sr">Account home</span>
                             </a>
                         </div>
                     {% endif %}

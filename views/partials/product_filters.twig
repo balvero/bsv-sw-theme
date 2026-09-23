@@ -1,113 +1,13 @@
 {% set identifier = context|default('') %}
 
-<section id="desktop-filter" class="show-for-medium row">
-    <h3 class="show-for-sr">
-        Refine Products
-    </h3>
-    <ul class="dropdown menu prod-filters" data-dropdown-menu >
-        {% for filter_group in filter_groups %}
-            {% set filter_group_count = 0 %}
-            {% for filter in filter_group.filters %}
-                {% set filter_group_count = filter_group_count + filter.product_count %}
-            {% endfor %}
-           {# <li class=" title {{ filter_group.type == 1 and theme_config.price_slider ? ' filter-box' : ' filter-group' }}{{ filter_group_count ? ' show' : '  disabled' }}" style="display: inline-block !important; float: left;"> #}
-			{% if filter_group.id == 9917 %}
-				<li class="title filter-group new-filter-container 
-						   {% for filter in filter_group.filters %}
-						   		{{filter.product_count > 0 ? 'show-new-filter opens-right'}}
-                        	{% endfor %}
-						   " style="" role="menuitem">
-					<input id="7-New-desktop" class="filter hide" type="checkbox" value="7-New" data-value="7-New">
-					<label for="7-New-desktop" class="field-label">
-					New
-					</label>
-				</li>
-		
-			{% else %}
-		      <li data-test="{{filter_group|json_encode}}" class=" title {{ filter_group.type == 1 and theme_config.price_slider ? ' filter-box' : ' filter-group' }}{{ filter_group_count ? ' show' : '  hide' }}" >
-
-                <a href="#" class=""><span>{{ filter_group.name }}</span></a>
-                <ul class="accordion-content menu">
-                    {% if filter_group.type == 1 and theme_config.price_slider and (identifier == 'desktop' and not global.visitor.is_mobile or identifier == 'mobile' and global.visitor.is_mobile) %}
-                        <div class="price-range-container">
-                            <div class="price-range-slider slider"
-                                 data-slider
-                                 data-start="{{ min_price|round(0, 'floor') }}"
-                                 data-end="{{ max_price|round(0, 'ceil') }}"
-                                 data-initial-start="{{ min_price|round(0, 'floor') }}"
-                                 data-initial-end="{{ max_price|round(0, 'ceil') }}"
-                            >
-                                <span class="slider-handle" data-slider-handle role="slider" tabindex="1" aria-controls="sliderOutputMin" aria-valuemax="{{ max_price|round(0, 'ceil')|default('0') }}" aria-valuemin="{{ min_price|round(0, 'floor')|default('0') }}" aria-valuenow="{{ min_price|round(0, 'floor')|default('0') }}"></span>
-                                <span class="slider-fill" data-slider-fill></span>
-                                <span class="slider-handle" data-slider-handle role="slider" tabindex="1" aria-controls="sliderOutputMax" aria-valuemin="{{ min_price|round(0, 'floor')|default('0') }}" aria-valuemax="{{ max_price|round(0, 'ceil')|default('0') }}" aria-valuenow="{{ max_price|round(0, 'ceil')|default('0') }}"></span>
-                            </div>
-                            <div class="slider-output">
-                                <div class="row hide">
-                                    <div class="column small-6">
-                                        <label>Min</label>
-                                        <div class="input-group">
-                                            <input type="text" class="input-group-field" id="sliderOutputMin" value="{{ min_price|round(0, 'floor')|default('0') }}">
-                                        </div>
-                                    </div>
-                                    <div class="column small-6">
-                                        <label>Max</label>
-                                        <div class="input-group">
-                                            <input type="text" class="input-group-field" id="sliderOutputMax" value="{{ max_price|round(0, 'ceil')|default('0') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="slider-range-values">From
-                                    <strong class="range-min" data-currency="{{ global.currency.symbol|raw }}">{{ min_price|round(0, 'floor')|default('0') }}</strong> to
-                                    <strong class="range-max" data-currency="{{ global.currency.symbol|raw }}">{{ max_price|round(0, 'ceil')|default('0') }}</strong>
-                                </span>
-                            </div>
-                            <input type="checkbox" class="price-range hide">
-                        </div>
-                    {% else %}
-                        {% for filter in filter_group.filters %}
-                            <li data-filter="{{filter|json_encode}}" class="filter-container" style="{{ filter.product_count > 0 ? '' : 'display: none;' }}">
-                                {% if filter_group.type == 1 %}
-                                    <input id="filter-{{ filter.id ~ '-' ~ identifier }}" class="price-range {{ filter.active ? 'current' : '' }}" type="checkbox" value="{{ filter.id }}" data-value="{{ filter.id }}" {{ filter.active ? 'checked="checked"' : '' }}>
-                                    <label for="filter-{{ filter.id ~ '-' ~ identifier }}" class="field-label">
-                                        {{ filter.name|raw }}
-                                       (<span class="filter-count">{{ filter.product_count }}</span>)
-                                    </label>
-                                {% else %}
-                                    <input id="{{ filter.id ~ '-' ~ identifier }}" class="filter {{ filter.active ? 'current' : '' }}" type="checkbox" value="{{ filter.id }}" data-value="{{ filter.id }}" {{ filter.active ? 'checked="checked"' : '' }}>
-                                    <label for="{{ filter.id ~ '-' ~ identifier }}" class="field-label">
-                                        {{ filter.name }}
-                                       (<span class="filter-count">{{ filter.product_count }}</span>)
-                                    </label>
-                                {% endif %}
-                            </li>
-					
-                        {% endfor %}
-                    {% endif %}
-                </ul>
-            </li>
-			{% endif %}
-        {% endfor %}
-		<li class="title clear">
-			<button  class="reset-all-button remove-button margin-left">Nulstil</button>
-		</li>
-		<li class="total ">
-			<div class="filtered-total-items ml-3">
-				<span class="item-count-value">{{ total_products }}</span>
-                        <span class="item-count-context">{{ total_products == 1 ? 'Produkt' : 'Produkter' }}</span>
-			</div>
-		</li>
-    </ul>
-    <button class="reset-all-button hide">Clear all filters</button>
-</section>
-
-<section id="mobile-filter" class="filters hide-for-medium">
+<section class="filters">
     <ul class="product-filters accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
         {% for filter_group in filter_groups %}
             {% set filter_group_count = 0 %}
             {% for filter in filter_group.filters %}
                 {% set filter_group_count = filter_group_count + filter.product_count %}
             {% endfor %}
-            <li class="accordion-item {{ filter_group.type == 1 and theme_config.price_slider ? ' filter-box' : ' filter-group' }}{{ filter_group_count ? '' : ' hide' }}" data-accordion-item>
+            <li class="accordion-item is-active{{ filter_group.type == 1 and theme_config.price_slider ? ' filter-box' : ' filter-group' }}{{ filter_group_count ? '' : ' hide' }}" data-accordion-item>
                 <a href="#" class="accordion-title">{{ filter_group.name }}</a>
 
                 <div class="accordion-content" data-tab-content>
@@ -166,15 +66,6 @@
                 </div>
             </li>
         {% endfor %}
-		<li class="title clear">
-			<button  class="reset-all-button remove-button margin-left">Nulstil</button>
-		</li>
-		<li class="total ">
-			<div class="filtered-total-items ml-3">
-				<span class="item-count-value">{{ total_products }}</span>
-                        <span class="item-count-context">{{ total_products == 1 ? 'Produkt' : 'Produkter' }}</span>
-			</div>
-		</li>
     </ul>
-    {#<button class="remove-button reset-all-button" data-busy="false">Nulstil</button> #}
+    <button class="remove-button reset-all-button" data-busy="false">Clear all filters</button>
 </section>

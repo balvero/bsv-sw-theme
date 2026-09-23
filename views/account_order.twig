@@ -1,7 +1,7 @@
 {# Extend page template #}
 {% extends 'templates/account_pages.twig' %}
 
-{% set title = 'Ordre reference #' ~ order.reference %}
+{% set title = 'Order Reference #' ~ order.reference %}
 
 {% set voucher_count = 0 %}
 
@@ -12,27 +12,27 @@
 {% block breadcrumbs %}
     {# Add account link #}
     <li>
-        <a href="/account">Konto</a>
+        <a href="/account">Account</a>
     </li>
 {% endblock %}
 
 {% block page_content %}
     <h2 class="sw-account-heading">
         <i class="icon-my-orders" aria-hidden="true"></i>
-        <span>Ordre #{{ order.reference }}</span>
+        <span>Order #{{ order.reference }}</span>
     </h2>
     <div class="sw-account-panel">
         <p>
-            Tak for din ordre. Du kan se dine ordre detaljer nedenfor.
+            Thanks for your order. You can review the details below.
             {% if order.tracking_url|length %}
-                Du kan følge din ordre her <a class="sw-account-link" href="{{ order.tracking_url }}" target="_blank">{{ order.tracking_url }}</a>
+                You can track this order at <a class="sw-account-link" href="{{ order.tracking_url }}" target="_blank">{{ order.tracking_url }}</a>
             {% endif %}
         </p>
     </div>
     <div class="sw-account-panel">
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                Ordre reference
+                Order reference
             </div>
             <div class="column medium-6 large-7">
                 #{{ order.reference }}
@@ -40,7 +40,7 @@
         </div>
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                Ordre dato
+                Order date
             </div>
             <div class="column medium-6 large-7">
                 <time datetime="{{ order.date|date('Y-m-d') }}">{{ order.date|date('jS F Y') }}</time>
@@ -48,7 +48,7 @@
         </div>
         <div class="row">
             <div class="column medium-6 large-5">
-                Faktura/kvittering
+                Invoice/receipt
             </div>
             <div class="column medium-6 large-7">
                 <a href="{{ order.url }}?pdf" target="_blank" class="sw-account-icon-link">
@@ -62,7 +62,7 @@
         <div class="sw-account-container-box-header">
             <div class="row">
                 <div class="column small-{{ voucher_count ? 12 : 6 }}">
-                    <strong class="sw-upper">{{ order.products|length }} {{ order.products|length == 1 ? 'stk' : 'stk.' }}</strong>
+                    <strong class="sw-upper">{{ order.products|length }} Item{{ order.products|length == 1 ? '' : 's' }}</strong>
                 </div>
                 {% if not voucher_count %}
                     <div class="column small-6 text-right">
@@ -70,7 +70,7 @@
                             <input type="hidden" name="add_to_basket" value="1">
                             <button type="submit" class="sw-account-icon-link">
                                 <i class="icon-re-order" aria-hidden="true"></i>
-                                <span>genbestil</span>
+                                <span>re-order</span>
                             </button>
                         </form>
                     </div>
@@ -94,7 +94,7 @@
                                     <div class="sw-margin-b-xs">{{ format_price(product.original_price_including_vat) }}</div>
                                     {% if not product.is_gift_voucher %}
                                         <a href="{{ product.url }}" class="sw-account-button small" target="_blank">
-                                            Se produkt
+                                            View product
                                         </a>
                                     {% endif %}
                                 </div>
@@ -107,7 +107,7 @@
                                     </dl>
                                 </div>
                                 <div class="large-3 column sw-upper">
-                                    <span>Antal: </span>
+                                    <span>Quantity: </span>
                                     <span>{{ product.quantity }}</span>
                                     <br>
                                     <span class="price">{{ format_price(product.original_price_including_vat * product.quantity) }}</span>
@@ -122,7 +122,7 @@
     <div class="sw-account-panel">
         <div class="row">
             <div class="column medium-6">
-                <strong class="sw-account-subheading">Fakturerings adresse</strong>
+                <strong class="sw-account-subheading">Billing address</strong>
 
                 {{ order.billing_name }} <br>
                 {{ order.billing_address|nl2br }} <br>
@@ -130,7 +130,7 @@
                 {{ order.billing_email }} <br>
             </div>
             <div class="column medium-6">
-                <strong class="sw-account-subheading">Leverings adresse</strong>
+                <strong class="sw-account-subheading">Delivery address</strong>
 
                 {{ order.shipping_name }} <br>
                 {{ order.shipping_address|nl2br }} <br>
@@ -140,10 +140,10 @@
         </div>
     </div>
     <div class="sw-account-panel">
-        <strong class="sw-account-subheading">Ordre i alt</strong>
+        <strong class="sw-account-subheading">Order total</strong>
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                Produkter i alt
+                Product Total
             </div>
             <div class="column medium-6 large-7">
                 <strong>{{ format_price( order.original_sub_total_including_vat ) }}</strong>
@@ -151,7 +151,7 @@
         </div>
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                Levering i alt
+                Shipping Total
             </div>
             <div class="column medium-6 large-7">
                 <strong>{{ format_price( order.original_shipping_total_including_vat ) }}</strong>
@@ -159,7 +159,7 @@
         </div>
         <div class="row sw-margin-b-xs">
             <div class="column medium-6 large-5">
-                Rabat i alt
+                Discount Total
             </div>
             <div class="column medium-6 large-7">
                 <strong>-{{ format_price( order.discount_total ) }}</strong>
@@ -168,7 +168,7 @@
         {% if order.vat %}
             <div class="row sw-margin-b-xs">
                 <div class="column medium-6 large-5">
-                    Inklusiv moms
+                    Including VAT
                 </div>
                 <div class="column medium-6 large-7">
                     <strong>{{ format_price( order.vat ) }}</strong>
@@ -177,7 +177,7 @@
         {% endif %}
         <div class="row">
             <div class="column medium-6 large-5">
-                I alt
+                Grand Total
             </div>
             <div class="column medium-6 large-7">
                 <div class="row collapse">
@@ -186,7 +186,7 @@
                     </div>
                     <div class="column medium-8">
                         {% for partial_payment in order.partial_payments %}
-                            Delbetaling på <strong>{{ format_price( partial_payment.amount ) }}</strong> blev tilføjet
+                            A partial payment of <strong>{{ format_price( partial_payment.amount ) }}</strong> was applied
                         {% endfor %}
                     </div>
                 </div>
@@ -196,13 +196,13 @@
     {% if order.reward_points.earned %}
         <p>
             <i class="icon-reward-points" aria-hidden="true"></i>
-            Du har optjent <strong>{{ order.reward_points.earned }} point{{ order.reward_points.earned|length == 1 ? '' : '' }}</strong> on this order.
+            You earned <strong>{{ order.reward_points.earned }} reward point{{ order.reward_points.earned|length == 1 ? '' : 's' }}</strong> on this order.
         </p>
     {% endif %}
     {% if order.reward_points.converted %}
         <p>
             <i class="icon-reward-points" aria-hidden="true"></i>
-            Du indløste <strong>{{ order.reward_points.converted }} bonus point{{ order.reward_points.converted|length == 1 ? '' : '' }}</strong> on this order.
+            You converted <strong>{{ order.reward_points.converted }} reward point{{ order.reward_points.converted|length == 1 ? '' : 's' }}</strong> on this order.
         </p>
     {% endif %}
 {% endblock %}

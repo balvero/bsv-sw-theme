@@ -4,10 +4,10 @@
     <footer>
         <div class="footer-top">
             <div class="row">
-                <div class="small-6 large-7 column">
+                <div class="show-for-large large-7 column">
                     {% set fcats = featured_categories(5) %}
                     {% if fcats|length %}
-                        <ul class="menu hide">
+                        <ul class="menu">
                             {# Render featured category links #}
                             {% for category in fcats %}
                                 <li>
@@ -16,86 +16,18 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-					<div class="logos-top">
-						<img src="https://cdn.ecommercedns.uk/files/1/266351/9/48685229/logo.png" />
-						<img src="https://files.ecommercedns.uk/266351/c3a47f89974a2c3dd18461a78869c7cc.png" />
-					</div>
                 </div>
-                <div class="small-6 large-5 column text-right ">
+                <div class="large-5 column large-text-right">
                     {{ block('footer_social') }}
                 </div>
             </div>
         </div>
         <div class="footer-middle">
             <div class="row">
-              
-                <div class="large-12 column expand small-collapse medium-collapse large-collapse">
-					{#<div class="logos margin-top">
-						<img src="https://cdn.ecommercedns.uk/files/1/266351/9/48685229/logo.png" />
-						<img src="https://files.ecommercedns.uk/266351/c3a47f89974a2c3dd18461a78869c7cc.png" />
-					</div> #}
-						
-					<div class="large-4 column">
-						<div class="company-info margin-bottom">
-								BSV Krantilbehør A/S<br>
-								Knudevejen 3 B<br>
-								6600 Vejen<br>
-								(+45) 75 36 21 22<br>
-								<a href="mailto:salg@bsv.dk">salg@bsv.dk</a>
-								<div class="margin-top">
-									<strong>Man – tors:</strong> 8:00-16:15<br>
-									<strong>fredag:</strong> 8:00 -14:30
-								</div>
-							</div>
-						
-					</div>
-					<div class="large-3 column">
-						    {# theme.link_list('footer', 'footer-middle-menu menu vertical', 0) #}
-				
-							<ul class="footer-middle-menu menu vertical">
-								
-								<li>
-									<a href="https://www.iubenda.com/privacy-policy/11516785">Privatlivspolitik</a>
-								</li>
-								<li>
-									<a href="/salg-og-leveringsbetingelser">Salgs og leveringsbetingelser</a>
-								</li>
-								<li class="margin-bottom">
-									<a href="https://bsv.dk/" target="_blank"><strong>Læs mere om BSV</strong></a>
-								</li>
-								
-							</ul>
-					</div>
-					<div class="large-2">
-						
-					</div>
-					{#<div class="large-4 column">
-						  <div class="certificates margin-top padding-top">
-<!-- 					   	   <a href="https://files.ecommercedns.uk/266351/369fe607b374a35d7af918063d65453a.pdf" target="_blank" class="margin-top"><img src="https://files.ecommercedns.uk/266351/ed63693f18b0f5d8c9344ba9d4f05869.png" /></a> -->
-						   	<a href="https://files.ecommercedns.uk/266351/1d277965f66ced11c0b138f04227659c.pdf" target="_blank" class="margin-top"><img src="https://files.ecommercedns.uk/266351/5cb5883cdc7890b00f0ebedbb0406446.png" /></a>
-							  <a href="https://files.ecommercedns.uk/266351/07cceac999019fa702655bfaa8853702.pdf" target="_blank" class="margin-top"><img src="https://files.ecommercedns.uk/266351/d5d8ce2cb3e845eebd50a48bbe0038e0.png" /></a>
-							<div class="iso  margin-top">
-								Klik for at åbne certifikater
-							</div>
-					   </div>
-					</div>#}
-					<div class="large-3 column iso-images">
-						<div class="iso ">
-								<a href="{{ global.theme.settings.iso_9001 }}" target="_blank"><img src="{{ asset_url('images/9001.png')}}" /></a>
-								Download ISO 9001 
-							</div>
-						<div class="iso ">
-								<a href="{{ global.theme.settings.iso_14001 }}" target="_blank"><img src="{{ asset_url('images/14001.png')}}" /></a>
-								Download ISO 14001
-						</div>
-					</div>
-
-                    {# block('footer_payment') #}
-                </div>
-				 {# <div class="large-4 column end">
-                   <div class="row">
-				 
+                <div class="large-8 column">
+                    <div class="row">
                         <div class="large-4 column">
+                            {{ theme.link_list('footer', 'footer-middle-menu menu vertical', 0) }}
                         </div>
                         <div class="large-4 column">
                             {{ theme.link_list('footer_middle', 'footer-middle-menu menu vertical', 0) }}
@@ -103,12 +35,11 @@
                         <div class="large-4 column">
                             {{ theme.link_list('footer_right', 'footer-middle-menu menu vertical', 0) }}
                         </div>
-					   
-					 
-					
-                    </div> 
-                </div>#}
-				
+                    </div>
+                </div>
+                <div class="large-4 column end">
+                    {{ block('footer_payment') }}
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
@@ -116,16 +47,8 @@
                 <div class="large-6 column">
                     {{ block('footer_copyright') }}
                 </div>
-				 <div class="large-6 column large-text-right">
-                        <div class="footer-copy">
-							<div class="inner">
-							 <a href="{{ global.service_provider.website_url }}" target="_blank">Ecommerce Websites</a> by {{ global.service_provider.name }}
-
-							</div>
-                        </div>
-                    </div>
             </div>
-           {# <div class="footer-right">
+            <div class="footer-right">
                 <div class="row">
                     <div class="footer-subscribe large-6 large-push-6 column">
                         <div class="inner">
@@ -139,7 +62,7 @@
                     </div>
 
                 </div>
-            </div> #}
+            </div>
         </div>
     </footer>
 {% endblock %}
@@ -269,7 +192,7 @@
                 <span class="input-group-label">
                     {{ theme.sw_icon('speech') }}
                 </span>
-                {{ html.input('EMAIL', '', 'input-group-field jsv_email required', 'Indtast din email og modtag vores nyhedsbrev...') }}
+                {{ html.input('EMAIL', '', 'input-group-field jsv_email required', 'enter your email address for our newsletter...') }}
                 <div class="input-group-button">
                     {{ html.button('', '', '', 'button', true, 'submit', 'right-arrow') }}
                 </div>
@@ -281,7 +204,7 @@
                 <span class="input-group-label">
                     {{ theme.sw_icon('speech') }}
                 </span>
-                {{ html.input('email', '', 'input-group-field jsv_email required', 'Indtast din email og modtag vores nyhedsbrev...') }}
+                {{ html.input('email', '', 'input-group-field jsv_email required', 'enter your email address for our newsletter...') }}
                 <div class="input-group-button">
                     {{ html.button('', '', '', 'button', true, 'submit', 'right-arrow') }}
                 </div>
@@ -294,7 +217,7 @@
 {% block footer_payment %}
     <div class="footer-payment">
         <h4 class="footer-payment-heading show-for-large">
-            Du kan betale på disse måder
+            Ways you can pay
         </h4>
         {% include 'partials/payment_icons.twig' with { 'classes' : 'footer-payment-list' } %}
     </div>

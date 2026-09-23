@@ -1,17 +1,17 @@
 {% extends 'templates/account_pages.twig' %}
 
-{% set title = 'Mine henviste venner' %}
+{% set title = 'My Referred Friends' %}
 
 {% block page_content %}
     <h1 class="sw-account-heading">
         <i class="icon-referred-friends" aria-hidden="true"></i>
-        <span>Henviste venner</span>
+        <span>Referred Friends</span>
     </h1>
     <p>
-        Venner du har henvist er vist nedenfor.
+        Friends you have referred are shown below.
     </p>
     <p>
-        Henvis venner og optjen bonuspoint ved at sende dem til
+        Refer your friends and earn rewards by sending them to
         <a class="sw-account-link" href="{{ global.customer.referral_scheme_url }}">{{ global.customer.referral_scheme_url }}</a>
     </p>
     <ul class="no-bullet">
@@ -23,7 +23,7 @@
                             {{ referred_customer.first_name }} {{ referred_customer.last_name }}
                         </div>
                         <div class="column medium-6 medium-text-right">
-                            <strong>+ {{ referred_customer.reward_points_generated }} point</strong>
+                            <strong>+ {{ referred_customer.reward_points_generated }} points</strong>
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
             <li>
                 <div class="sw-account-panel list-item">
                     <div class="row column">
-                        Du har endnu ingen henviste venner.
+                        You have not referred any friends yet.
                     </div>
                 </div>
             </li>

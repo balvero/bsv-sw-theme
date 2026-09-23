@@ -1,7 +1,7 @@
 {# Extend page template #}
 {% extends 'templates/page.twig' %}
 
-{% set title = 'Din kurv' %}
+{% set title = 'Your Basket' %}
 {% set description = 'The contents of your shopping basket are shown below. Please select your delivery rate and then click the proceed to checkout button at the bottom of the page.' %}
 {% set hideTitle = 0 %}
 {% set hideDesc = 1 %}
@@ -16,8 +16,16 @@
         </div>
     {% endif %}
     <div class="row">
-        {# Render basket table #}
         <div class="large-8 column">
+            {% if basket.errors.has_both_normal_and_subscription_products %}
+                <div class="basket-subscription-error">
+                    <div class="inner">
+                        {% include 'partials/warning_svg.twig' %}
+                        <span>Your basket cannot contain both subscription and one-off products, please place separate orders to continue</span>
+                    </div>
+                </div>
+            {% endif %}
+            {# Render basket table #}
             <form action="{{ global.current_url }}" method="post" class="basket-form">
                 <table class="basket-table unstriped" role="grid">
                     <caption class="show-for-sr">
@@ -25,11 +33,11 @@
                     </caption>
                     {% if basket.items %}
                         <tr class="basket-headings show-for-sr">
-                            <th colspan="2">Produkt</th>
-                            <th>Pris</th>
-                            <th>Anatal</th>
+                            <th colspan="2">Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
                             <th>Total</th>
-                            <th>Fjern</th>
+                            <th>Remove</th>
                         </tr>
                     {% endif %}
                     {# basket items #}
@@ -93,6 +101,12 @@
                                         {% endif %}
                                     </dl>
                                 {% endif %}
+                                {# render pre-order shipping date #}
+                                {% if item.product.shipping_date %}
+                                    <p class="basket-item-options">
+                                        This product will be shipped on <strong>{{ item.product.shipping_date|date('jS F Y', 'Europe/London') }}</strong>
+                                    </p>
+                                {% endif %}
                                 {# Render min max order values #}
                                 {% if order_min or order_max %}
                                    {% set order_qty = [] %}
@@ -109,14 +123,14 @@
                                 {# Render item remove button #}
                                 <div class="remove">
                                     <a href="{{ item.remove_url }}" class="remove-button js-basket-remove">
-                                        <span>Fjern</span>
+                                        <span>Remove</span>
                                     </a>
                                 </div>
                                 {% if not item.is_gift_voucher %}
                                     {# move to wishlist button #}
                                     <a href="{{ item.remove_url }}&amp;add_to_wishlist=1" class="basket-wishlist-button inline-link">
                                         {{ theme.sw_icon('heart-o')}}
-                                        <span>Flyt til favoritliste</span>
+                                        <span>Move to wishlist</span>
                                     </a>
                                 {% endif %}
                                 {# Render product offers #}
@@ -135,7 +149,7 @@
                                     <div class="input-group-button">
                                         <button class="basket-update" type="submit">
                                             {{ theme.sw_icon('update') }}
-                                            <span class="show-for-sr">Opdater</span>
+                                            <span class="show-for-sr">Update</span>
                                         </button>
                                     </div>
                                 </div>
@@ -144,7 +158,7 @@
                                {# Render item cost #}
                                 {% if item.product.reward_points_enabled %}
                                     <div class="price">{{ item.total }}</div>
-                                    point
+                                    points
                                 {% else %}
                                     <div class="price">{{ format_price(item.total) }}</div>
                                 {% endif %}
@@ -179,28 +193,28 @@
                         </div>
                         <div class="column small-10 medium-11" data-equalizer-watch>
                             <h3 class="basket-rewards-heading">
-                                Bonus Point
+                                Reward Points
                             </h3>
                             {% if basket.reward_points_earned %}
                                 <p class="basket-rewards-text">
-                                    Du optjener
-                                    <em>{{ basket.reward_points_earned }} bonuspoint</em>
-                                     med dette køb.
+                                    You will earn
+                                    <em>{{ basket.reward_points_earned }} reward points</em>
+                                     with this purchase.
                                 </p>
                             {% endif %}
                             {% if basket.has_redeemed_points %}
                                 <p class="basket-rewards-text">
-                                    Dine bonuspoint er ombyttet til en rabat på
+                                    Your points have been redeemed for a discount of
                                     <strong>{{ format_price(basket.reward_points_discount) }}</strong>.
                                     <a href="/checkout/basket/unconvert-reward-points" class="inline-link">
-                                        Fortryd indløsning af dine point
+                                        Un-redeem your points
                                     </a>
                                 </p>
                             {% elseif basket.reward_points > 0 %}
                                 <p class="basket-rewards-text">
-                                    Du har nu {{ basket.reward_points }} bonus point.
+                                    You currently have {{ basket.reward_points }} reward points.
                                     {% if basket.can_redeem_points %}
-                                            <a href="/checkout/basket/convert-reward-points" class="inline-link text-underline">Indløs dem og få rabat.</a>
+                                            <a href="/checkout/basket/convert-reward-points" class="inline-link text-underline">Redeem them for a discount.</a>
                                     {% endif %}
                                 </p>
                             {% endif %}
@@ -211,15 +225,15 @@
             {# basket voucher form #}
             <div class="basket-voucher">
                 <a data-toggle="voucherForm" class="basket-voucher-toggle">
-                    Har du en rabat kode?
+                    Do you have a voucher code?
                 </a>
                 <form class="hide" action="{{ global.current_url }}" id="voucherForm" method="post" data-toggler=".hide">
                     <div class="row">
                         <div class="column large-6">
                             <div class="input-group">
-                                <input class="input-group-field" name="voucher_code" placeholder="Skriv rabatkode..." type="text">
+                                <input class="input-group-field" name="voucher_code" placeholder="Enter a voucher code..." type="text">
                                 <div class="input-group-button">
-                                    <button type="submit" class="button">INDLØS</button>
+                                    <button type="submit" class="button">Apply</button>
                                 </div>
                             </div>
                         </div>
@@ -234,15 +248,15 @@
                         <div class="basket-info-shipping display-box">
                             <div class="basket-shipping">
                                 <h3 class="basket-controls-title">
-                                    Leveringsmuligheder
+                                    Delivery options
                                 </h3>
                                 {# Render country drop down #}
                                 <label class="field-block">
                                     <span class="field-label">
-                                        Leveringsland
+                                        Delivery country
                                     </span>
                                     <select name="countryId">
-                                        <option value="">Vælg venligst...</option>
+                                        <option value="">Please select...</option>
                                         {% if basket.shipping_countries|first is iterable %}
                                             {% for name, states in basket.shipping_countries %}
                                                 <optgroup label="{{ name|default('Other Countries') }}">
@@ -269,7 +283,7 @@
                                             <input type="text" placeholder="Enter your postcode" class="postcode input-group-field required" value="{{ global.basket.postcode }}">
                                             <div class="input-group-button">
                                                 <button type="button" class="button postcode-validate">
-                                                    Gå
+                                                    Go
                                                 </button>
                                             </div>
                                         </div>
@@ -278,7 +292,7 @@
                                 {% if gts.rates_as_radios %}
                                     {# Render rates as radio buttons #}
                                     <fieldset name="rateId" class="rates rates-container">
-                                        <legend class="field-label dark">Levering</legend>
+                                        <legend class="field-label dark">Delivery method</legend>
                                         <div class="rateId">
                                             {% for rate in basket.shipping_rates %}
                                                 <div class="row column">
@@ -298,10 +312,10 @@
                                     <div class="rates rates-container">
                                         <label class="field-block">
                                             <span class="field-label">
-                                                Vælg levering
+                                                Select your delivery method
                                             </span>
                                             <select name="rateId">
-                                                <option value="">Venligst vælg levering...</option>
+                                                <option value="">Please select your delivery rate...</option>
                                                 {% for rate in basket.shipping_rates %}
                                                     <option value="{{ rate.id }}"{% if rate.current %} selected="selected"{% endif %}>
                                                         {{ rate.name }}
@@ -315,7 +329,7 @@
                                 {# Render delivery date field #}
                                 {% if gts.checkout_delivery_date %}
                                     <div class="delivery-date-container">
-                                        <label for="delivery_date">Vælg den dato du foretrækker</label>
+                                        <label for="delivery_date">Select a preferred date</label>
                                         <input type="text" name="delivery_date" value="{{ basket.delivery_date }}" readonly>
                                     </div>
                                 {% endif %}
@@ -324,31 +338,26 @@
                     {% endif %}
                     <div class="basket-info-totals display-box">
                         <h3 class="basket-controls-title">
-                            Din ordre ({{ global.basket.items }}{{ global.basket.items == 1 ? 'stk' : 'stk.' }})
+                            Your Order ({{ global.basket.items }} item{{ global.basket.items == 1 ? '' : 's' }})
                         </h3>
                         <table class="basket-totals unstriped text-right">
                             <tr>
                                 <td>Subtotal</td>
                                 <td>
-                                    <span class="basket-sub-total">{{ format_price(basket.original_sub_total_excluding_tax) }}</span>
+                                    <span class="basket-sub-total">{{ format_price(basket.original_sub_total) }}</span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Levering</td>
-                                <td>
-                                    <span class="basket-delivery">{{ format_price(basket.original_shipping) }}</span>
-                                </td>
-                            </tr>
-							<tr>
-                                <td>Moms</td>
-                                <td>
-                                    <span class="basket-delivery">{{ format_price(basket.vat) }}</span>
-                                </td>
-                            </tr>
-							
+							{% if not global.features.shipping_on_checkout %}
+								<tr>
+									<td>Delivery</td>
+									<td>
+										<span class="basket-delivery">{{ format_price(basket.original_shipping) }}</span>
+									</td>
+								</tr>
+							{% endif %}
                             <tr>
                                 <td>
-                                    Rabatter
+                                    Discounts
                                     {% if basket.voucher_discount or basket.has_redeemed_points %}
                                         <a data-voucher="{{ basket.voucher_discount ? 1 : 0 }}" data-rewards="{{ basket.has_redeemed_points ? 1 : 0 }}" class="remove-voucher js-remove-discount text-underline" href="/checkout/basket/clear-vouchers">remove</a>
                                     {% endif %}
@@ -359,7 +368,7 @@
                             </tr>
                             {% if basket.partial_payment_total %}
                                 <tr>
-                                    <td>Tilgodebevis</td>
+                                    <td>Vouchers</td>
                                     <td>
                                         -<span class="basket-partial">{{ format_price(basket.partial_payment_total) }}</span>
                                     </td>
@@ -378,12 +387,12 @@
 
                             {% if basket.payment_methods|length %}
                                 <p class="basket-buttons-note text-center">
-                                    Du har mulighed for at gennemgå din ordre før du bekræfter
+                                    You can review your order before it's final
                                 </p>
                                 {% for payment_method in basket.payment_methods %}
                                     {% if payment_method.id == 33 or payment_method.id == 34 %}
                                         <button type="submit" name="{{ payment_method.field_name }}" value="1" class="image-button paypal-button basket-payment-button">
-                                            <span class="show-for-sr">Betal med PayPal</span>
+                                            <span class="show-for-sr">Checkout with PayPal</span>
                                             <img src="{{ asset_url('images/paypal-button.png') }}" alt="Check out with PayPal" width="170">
                                         </button>
                                     {% else %}
@@ -396,6 +405,9 @@
                         {% else %}
                             <p class="text-right">{{ theme.text_snippet('checkout_disable') }}</p>
                         {% endif %}
+						{% if global.features.shipping_on_checkout %}
+							<p class="text-right">Shipping and taxes calculated at checkout</p>
+						{% endif %}
                     </div>
                 </form>
             </div>
@@ -436,9 +448,9 @@
         {# convert date input #}
         {% set holidays_raw = global.theme.settings.checkout_delivery_holidays|replace({' ':''})|split(',') %}
         {% set hols_parsed = [] %}
-        {% for date in holidays_raw %}
+        {% for date in holidays_raw %}{% if date|length %}
             {% set parsed = date|date('j-n-Y') %} {# format d-m-yy #}
-            {% set hols_parsed = hols_parsed|merge([parsed]) %}
+            {% set hols_parsed = hols_parsed|merge([parsed]) %}{% endif %}
         {% endfor %}
         {% set lead = global.theme.settings.checkout_delivery_lead|default(1) %}
         {% set cutoff = global.theme.settings.checkout_delivery_cut_off|split(':')[0]|default(15) %}
@@ -476,7 +488,7 @@
                         country = country_select.val(),
                         user_lead = {{ lead }},
                         user_cutoff = {{ cutoff }},
-                        min_date = country == '222' && hrs < user_cutoff ? (1 + user_lead) : (2 + user_lead);     // allow next for UK (before 3pm)
+                        min_date = country == '222' || country == '246' && hrs < user_cutoff ? (user_lead) : (1 + user_lead);     // allow next for UK (before 3pm)
                         days_array = [{{ global.theme.settings.checkout_delivery_days|raw }}],
                         holidays = {{ hols_parsed|json_encode()|raw }};
 
