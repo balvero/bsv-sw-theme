@@ -195,20 +195,15 @@
 
 
 {% block header_search %}
-    <div class="js-algolia-search">
-        <form class="input-group" action="/search/products" method="get">
-            <input type="search" name="keywords" placeholder="Skriv for at søge" class="input-group-field js-algolia-search-input" autocomplete="off">
-            <div class="input-group-button">
-                <button type="submit" value="Submit" class="button">
-                    {{ theme.sw_icon('glass-2') }}
-                    <span class="show-for-sr">Søg</span>
-                </button>
-            </div>
-        </form>
-        {% if gts.text_algolia_app_id and gts.text_algolia_api_key %}
-            <div class="js-algolia-search-results algolia-search-results"></div>
-        {% endif %}
-    </div>
+    <form class="input-group" action="/search/products" method="get">
+        <input type="search" name="keywords" placeholder="Skriv for at søge" class="input-group-field">
+        <div class="input-group-button">
+            <button type="submit" value="Submit" class="button">
+                {{ theme.sw_icon('glass-2') }}
+                <span class="show-for-sr">Søg</span>
+            </button>
+        </div>
+    </form>
 {% endblock %}
 
 

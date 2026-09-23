@@ -1,10 +1,8 @@
 {# Extend collection template #}
 {% extends 'templates/collection.twig' %}
 
-{% set gts = global.theme.settings %}
 {% set title = 'Søge resultat' %}
 {% set contentClass = 'bg-shade' %}
-{% set algoliaSearch = gts.text_algolia_app_id and gts.text_algolia_api_key ? true : false %}
 
 {% set filter_product_count = 0 %}
 {% for filter_group in filter_groups %}
@@ -22,11 +20,6 @@
 {% endblock %}
 
 {% block items %}
-	{% if algoliaSearch %}
-		{# Algolia-powered search results #}
-		{% include 'partials/items.twig' with { 'item_type': 'algolia', 'initial_query': keywords|default('') } %}
-	{% else %}
-		{# Render products #}
-		{% include 'partials/items.twig' with { 'classes': 'small-up-2 medium-up-3' ~  grid_classes } %}
-	{% endif %}
+	{# Render products #}
+	{% include 'partials/items.twig' with { 'classes': 'small-up-2 medium-up-3' ~  grid_classes } %}
 {% endblock %}

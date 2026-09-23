@@ -2672,49 +2672,6 @@
             ]
         },
         {
-            "title": "Algolia Search",
-            "group": 3,
-            "icon": "text",
-            "description": "Connect Algolia to power the header autocomplete and the /search/products results page. Leave the App ID and API Key blank to fall back to the default search.",
-            "resettable": true,
-            "settings": [
-                {
-                    "name": "text_algolia_app_id",
-                    "type": "text",
-                    "label": "Algolia App ID",
-                    "defaultValue": "",
-                    "livePreview": false,
-                    "separator": true
-                },
-                {
-                    "name": "text_algolia_api_key",
-                    "type": "text",
-                    "label": "Algolia API Key",
-                    "note": "Use a search-only API key, not your admin key.",
-                    "defaultValue": "",
-                    "livePreview": false,
-                    "separator": true
-                },
-                {
-                    "name": "text_algolia_index_name",
-                    "type": "text",
-                    "label": "Algolia Index Name",
-                    "defaultValue": "",
-                    "livePreview": false,
-                    "separator": true
-                },
-                {
-                    "name": "text_algolia_filters",
-                    "type": "text",
-                    "label": "Algolia Filters Logic",
-                    "note": "Optional filter expression applied to every search, e.g. active:true AND hasImage:true",
-                    "defaultValue": "",
-                    "livePreview": false,
-                    "separator": true
-                }
-            ]
-        },
-        {
             "title": "Disable Checkout",
             "group": 3,
             "icon": "checkout",
