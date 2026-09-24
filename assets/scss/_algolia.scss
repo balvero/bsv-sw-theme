@@ -30,7 +30,7 @@ body.search-open {
 
 @media (max-width: 1023px) {
     #header-search {
-        height: 100vh;
+        min-height: 60vh;
         max-height: 100vh;
     }
 }
