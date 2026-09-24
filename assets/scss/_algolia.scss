@@ -25,6 +25,7 @@ body.search-open {
 
     &:not(.hide) {
         display: block;
+        z-index: 9999;
     }
 }
 

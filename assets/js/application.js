@@ -1811,11 +1811,25 @@ function algoliaHeaderSearch() {
     }
 
     $input.on('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            return false;
+        }
+
         if (e.key === 'Escape') {
             $(this).val('');
             clearResults();
         }
     });
+
+    // Algolia drives search exclusively once configured — disable native form submit
+    var $form = $input.closest('form');
+    if ($form.length) {
+        $form.on('submit', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    }
 
     $input.on('input', function() {
         var query = $(this).val().trim();
