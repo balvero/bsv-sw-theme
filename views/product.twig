@@ -643,9 +643,9 @@
                     Relaterede produkter
                 </h2>
             </div>
-            <div class="products items-container row product-slider" data-slick='{"slidesToShow": 4}'>
-                {% for product in product.related_products %}
-                    <div class="column">
+            <div class="products items-container row small-up-2 medium-up-3 large-up-4" data-equalizer="related-products" data-equalize-by-row="true">
+                {% for product in product.related_products|slice(0, 8) %}
+                    <div class="column" data-equalizer-watch="related-products">
                         <div class="recent-box card item-box item-image{{ global.current_path == '/wishlist' ? ' js-wish-list-view' : '' }}">
                             <a class="image-container" href="{{ product.url }}" data-fit="0">
                                 <img src="{{ product.photo_url }}" alt="{{ product.photo_description }}">
@@ -661,7 +661,6 @@
                     </div>
                 {% endfor %}
             </div>
-            {{ theme.slider('', '', 0, items|length) }}
         </section>
     {% endif %}
 {% endblock %}
